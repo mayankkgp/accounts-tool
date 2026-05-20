@@ -18,7 +18,10 @@ export default function EntityList({
   const [isLoading, setIsLoading] = useState(true);
   const [autoSelectFirst, setAutoSelectFirst] = useState(false);
 
-  // Debouncing the search text (300ms)
+  // ARCHITECTURAL DECISION (Search Debounce):
+  // The 300ms debounce window is an optimized sweet spot balancing real-time responsiveness and system load.
+  // Because search query execution involves simulated network latency and reads from a localStorage database layer, 
+  // debouncing prevents continuous heavy disk-read operations and UI thread stuttering while a user is actively typing.
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedQuery(searchQuery);
@@ -51,7 +54,11 @@ export default function EntityList({
     fetchEntities();
   }, [fetchEntities, refreshTrigger]);
 
-  // Auto-select first element on type toggled retention
+  // ARCHITECTURAL DECISION (Logical Master-Detail Selection Retention):
+  // When a user toggles between active entity types (e.g. Brands to Factories or Vendors), 
+  // we auto-select the first item of the new list if they already had an item selected.
+  // This prevents the split-screen master-detail dual panel detail container from jarringly collapsing,
+  // assuring a seamless data-browsing flow without unexpected template shifts or empty space flickers.
   useEffect(() => {
     if (autoSelectFirst && !isLoading) {
       if (entitiesList.length > 0) {

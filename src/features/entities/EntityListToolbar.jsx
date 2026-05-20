@@ -1,6 +1,6 @@
 import React from "react";
-import * as Tabs from "@radix-ui/react-tabs";
-import * as Select from "@radix-ui/react-select";
+import Tabs from "../../components/ui/Tabs";
+import Select from "../../components/ui/Select";
 import { Search, Plus, ChevronDown, Check, X } from "lucide-react";
 
 export default function EntityListToolbar({
