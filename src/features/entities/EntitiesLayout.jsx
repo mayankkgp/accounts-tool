@@ -1,21 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
+import EntityList from "./EntityList";
 
 export default function EntitiesLayout() {
+  const [selectedEntityId, setSelectedEntityId] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const handleRefresh = () => {
+    setRefreshTrigger((prev) => prev + 1);
+  };
+
   return (
     <div className="flex-1 h-full grid grid-cols-[210px_1fr] overflow-hidden" id="entities-layout-grid">
-      {/* Fixed Left Column Pane (210px) */}
-      <div className="bg-slate-100 border-r border-slate-200 flex flex-col p-2 overflow-hidden justify-between select-none" id="entities-sidebar-pane">
-        <div className="flex flex-col gap-1">
-          <span className="text-[10px] uppercase tracking-wide text-slate-500 font-mono font-medium">
-            Entities Register
-          </span>
-          <span className="text-xs text-slate-400 font-mono">
-            Fixed [210px]
-          </span>
-        </div>
-        <div className="text-[10px] font-mono text-slate-400 border-t border-slate-200/60 pt-1">
-          Panel Base: Empty
-        </div>
+      {/* High Density Left Column Directory (210px) */}
+      <div className="bg-slate-50 border-r border-slate-200 flex flex-col p-2 overflow-hidden justify-between" id="entities-sidebar-pane">
+        <EntityList
+          selectedEntityId={selectedEntityId}
+          onSelectEntity={setSelectedEntityId}
+          onAddNew={() => console.log("Form drawer requested (Step 4)")}
+          refreshTrigger={refreshTrigger}
+          onRefresh={handleRefresh}
+        />
       </div>
 
       {/* Fluid Right Details Pane (1fr) */}
@@ -25,7 +29,7 @@ export default function EntitiesLayout() {
             Entity Details Column
           </span>
           <span className="text-xs text-slate-400 font-mono">
-            Fluid [1fr]
+            Selected Entity ID: {selectedEntityId || "None"}
           </span>
         </div>
         <div className="text-[10px] font-mono text-slate-400 border-t border-slate-100 pt-1">
