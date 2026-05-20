@@ -16,6 +16,7 @@ export default function EntityList({
   const [statusFilter, setStatusFilter] = useState("active");
   const [entitiesList, setEntitiesList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [autoSelectFirst, setAutoSelectFirst] = useState(false);
 
   // Debouncing the search text (300ms)
   useEffect(() => {
@@ -50,6 +51,18 @@ export default function EntityList({
     fetchEntities();
   }, [fetchEntities, refreshTrigger]);
 
+  // Auto-select first element on type toggled retention
+  useEffect(() => {
+    if (autoSelectFirst && !isLoading) {
+      if (entitiesList.length > 0) {
+        onSelectEntity(entitiesList[0].id);
+      } else {
+        onSelectEntity(null);
+      }
+      setAutoSelectFirst(false);
+    }
+  }, [entitiesList, isLoading, autoSelectFirst, onSelectEntity]);
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden h-full gap-1.5" id="entity-list-container">
       {/* Search and control filters */}
@@ -57,13 +70,18 @@ export default function EntityList({
         activeType={activeType}
         setActiveType={(type) => {
           setActiveType(type);
-          onSelectEntity(null); // Clear selected item to trigger correct first-loader selection
+          if (selectedEntityId !== null) {
+            setAutoSelectFirst(true);
+          } else {
+            onSelectEntity(null);
+          }
         }}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         statusFilter={statusFilter}
         setStatusFilter={setStatusFilter}
         onAddNew={onAddNew}
+        isCompressed={!!selectedEntityId}
       />
 
       {/* Grid Headers (Adapts to expanded/compressed split states with higher contrast) */}
@@ -100,9 +118,9 @@ export default function EntityList({
             ))}
           </div>
         ) : entitiesList.length === 0 ? (
-          <div className="h-32 flex flex-col items-center justify-center text-slate-400 select-none text-[10px]" id="empty-record-state">
+          <div className="h-32 flex flex-col items-center justify-center text-slate-500 font-medium select-none text-[10px]" id="empty-record-state">
             <span>No records found</span>
-            <span className="text-[9px] text-slate-300 mt-0.5 font-mono">Isolated Type: {activeType}</span>
+            <span className="text-[9px] text-slate-500 font-medium mt-0.5 font-mono">Isolated Type: {activeType}</span>
           </div>
         ) : (
           entitiesList.map((ent) => (

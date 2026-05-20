@@ -6,6 +6,7 @@ import { updateEntity } from "../../services/entityService";
 export default function EntitiesLayout() {
   const [selectedEntityId, setSelectedEntityId] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [activeTab, setActiveTab] = useState("overview");
 
   const handleRefresh = () => {
     setRefreshTrigger((prev) => prev + 1);
@@ -55,6 +56,8 @@ export default function EntitiesLayout() {
           onClose={() => setSelectedEntityId(null)}
           onToggleArchive={handleToggleArchive}
           refreshTrigger={refreshTrigger}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
         />
       </div>
     </div>
