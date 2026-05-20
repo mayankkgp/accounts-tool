@@ -1,0 +1,6 @@
+{
+  "name": "Fabrito Accounts Management",
+  "description": "A high-density B2B accounts management tool for managing sales, purchases, inventory, credits, and debits.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
