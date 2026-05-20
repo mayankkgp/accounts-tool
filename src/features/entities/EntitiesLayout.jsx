@@ -58,6 +58,7 @@ export default function EntitiesLayout() {
           refreshTrigger={refreshTrigger}
           activeTab={activeTab}
           onTabChange={setActiveTab}
+          onRefresh={handleRefresh}
         />
       </div>
     </div>

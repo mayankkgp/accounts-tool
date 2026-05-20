@@ -324,3 +324,13 @@ export async function deleteAddress(addressId) {
   setStorageItem("fabrito_addresses", addresses);
   return { success: true };
 }
+
+/**
+ * mapConnections Service
+ * Traces to mock mapping rules with simulated delay.
+ * Preset: 'large' (1200ms sleep)
+ */
+export async function mapConnections(entityId, type, mappedTargetIds) {
+  return saveBrandFactoryConnections(entityId, type, mappedTargetIds);
+}
+

@@ -1,8 +1,9 @@
 import React from "react";
 import Tabs from "../../components/ui/Tabs";
 import EntityOverviewTab from "./EntityOverviewTab";
+import EntityConnectionsTab from "./EntityConnectionsTab";
 
-export default function EntityDetailTabs({ profile, activeTab, onTabChange }) {
+export default function EntityDetailTabs({ profile, activeTab, onTabChange, onRefresh }) {
   return (
     <Tabs.Root value={activeTab || "overview"} onValueChange={onTabChange} className="flex-1 flex flex-col overflow-hidden w-full font-sans" id="detail-tabs-root">
       <Tabs.List className="flex border-b border-slate-200 bg-slate-100 p-0.5 rounded-sm gap-0.5 select-none shrink-0 mb-1" id="detail-tabs-list">
@@ -23,7 +24,7 @@ export default function EntityDetailTabs({ profile, activeTab, onTabChange }) {
 
       <div className="flex-1 overflow-y-auto pr-0.5" id="detail-tabs-content-viewport">
         <Tabs.Content value="overview" className="space-y-3 outline-none py-1 flex flex-col flex-1" id="tab-content-overview">
-          <EntityOverviewTab profile={profile} />
+          <EntityOverviewTab profile={profile} onRefresh={onRefresh} />
         </Tabs.Content>
 
         <Tabs.Content value="ledger" className="outline-none" id="tab-content-ledger">
@@ -35,7 +36,7 @@ export default function EntityDetailTabs({ profile, activeTab, onTabChange }) {
         </Tabs.Content>
 
         <Tabs.Content value="connections" className="outline-none" id="tab-content-connections">
-          <div className="p-4 border border-slate-100 bg-slate-50 rounded-sm text-center text-slate-500 font-medium text-[10px] italic select-none">Supplier mapped connections empty. Built in Step 7.</div>
+          <EntityConnectionsTab profile={profile} onRefresh={onRefresh} />
         </Tabs.Content>
       </div>
     </Tabs.Root>
