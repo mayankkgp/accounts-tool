@@ -5,8 +5,12 @@ import PurchasesLayout from "./features/purchases/PurchasesLayout";
 import SalesLayout from "./features/sales/SalesLayout";
 import InventoryLayout from "./features/inventory/InventoryLayout";
 import LedgerLayout from "./features/ledger/LedgerLayout";
+import { useInitializeData } from "./hooks/useInitializeData";
 
 export default function App() {
+  // Seed local storage with B2B mock dataset if not present
+  useInitializeData();
+
   const [activeModule, setActiveModule] = useState("Entities");
 
   // Render the appropriate layout for the active module

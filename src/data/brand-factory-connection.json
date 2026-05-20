@@ -1,0 +1,47 @@
+[
+  { "brandId": "ent_005", "factoryId": "ent_025" },
+  { "brandId": "ent_006", "factoryId": "ent_026" },
+  { "brandId": "ent_007", "factoryId": "ent_027" },
+  { "brandId": "ent_008", "factoryId": "ent_028" },
+  
+  { "brandId": "ent_009", "factoryId": "ent_029" },
+  { "brandId": "ent_009", "factoryId": "ent_030" },
+  { "brandId": "ent_010", "factoryId": "ent_031" },
+  { "brandId": "ent_010", "factoryId": "ent_032" },
+  { "brandId": "ent_011", "factoryId": "ent_029" },
+  { "brandId": "ent_011", "factoryId": "ent_030" },
+  { "brandId": "ent_012", "factoryId": "ent_031" },
+  { "brandId": "ent_012", "factoryId": "ent_032" },
+  
+  { "brandId": "ent_013", "factoryId": "ent_033" },
+  { "brandId": "ent_013", "factoryId": "ent_034" },
+  { "brandId": "ent_013", "factoryId": "ent_035" },
+  
+  { "brandId": "ent_014", "factoryId": "ent_036" },
+  { "brandId": "ent_014", "factoryId": "ent_037" },
+  { "brandId": "ent_014", "factoryId": "ent_038" },
+  
+  { "brandId": "ent_015", "factoryId": "ent_039" },
+  { "brandId": "ent_015", "factoryId": "ent_040" },
+  { "brandId": "ent_015", "factoryId": "ent_033" },
+  
+  { "brandId": "ent_016", "factoryId": "ent_034" },
+  { "brandId": "ent_016", "factoryId": "ent_035" },
+  { "brandId": "ent_016", "factoryId": "ent_036" },
+  
+  { "brandId": "ent_017", "factoryId": "ent_037" },
+  { "brandId": "ent_017", "factoryId": "ent_038" },
+  { "brandId": "ent_017", "factoryId": "ent_039" },
+  
+  { "brandId": "ent_018", "factoryId": "ent_040" },
+  { "brandId": "ent_018", "factoryId": "ent_033" },
+  { "brandId": "ent_018", "factoryId": "ent_034" },
+  
+  { "brandId": "ent_019", "factoryId": "ent_035" },
+  { "brandId": "ent_019", "factoryId": "ent_036" },
+  { "brandId": "ent_019", "factoryId": "ent_037" },
+  
+  { "brandId": "ent_020", "factoryId": "ent_038" },
+  { "brandId": "ent_020", "factoryId": "ent_039" },
+  { "brandId": "ent_020", "factoryId": "ent_040" }
+]
