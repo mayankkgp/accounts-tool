@@ -102,6 +102,16 @@ export default function EntityDetailTabs({ profile, activeTab, onTabChange }) {
               <div className="flex flex-col gap-1" id="detail-overview-address-cards">
                 {profile.addresses.map((addr) => {
                   const hasBadges = addr.isDefaultBilling || addr.isDefaultShipping;
+                  
+                  // Construct clean geographic string: {city}, {state} - {pincode} with fallback protection
+                  const geoParts = [];
+                  if (addr.city) geoParts.push(addr.city.trim());
+                  if (addr.state) geoParts.push(addr.state.trim());
+                  const cityState = geoParts.join(", ");
+                  const geoString = cityState && addr.pincode
+                    ? `${cityState} - ${addr.pincode.trim()}`
+                    : (cityState || addr.pincode || "");
+
                   return (
                     <div key={addr.id} className="bg-slate-50 border-l-2 border-l-emerald-400 hover:bg-slate-100/50 p-1.5 rounded-sm flex flex-col gap-1 relative text-[10px] transition-all" id={`address-card-${addr.id}`}>
                       {hasBadges && (
@@ -111,10 +121,8 @@ export default function EntityDetailTabs({ profile, activeTab, onTabChange }) {
                         </div>
                       )}
                       <p className="text-slate-800 font-medium leading-tight">{addr.addressLine1}{addr.addressLine2 ? `, ${addr.addressLine2}` : ""}</p>
-                      <div className="text-[9px] text-slate-505 font-bold font-mono flex gap-1.5 uppercase leading-none mt-0.5">
-                        <span>City: <strong className="text-slate-700 font-bold">{addr.city || "--"}</strong></span>
-                        <span>State: <strong className="text-slate-700 font-bold">{addr.state || "--"}</strong></span>
-                        <span>PIN: <strong className="text-slate-800 font-bold">{addr.pincode || "--"}</strong></span>
+                      <div className="text-[9px] text-slate-500 font-mono font-medium uppercase mt-0.5 leading-none truncate">
+                        {geoString}
                       </div>
                     </div>
                   );

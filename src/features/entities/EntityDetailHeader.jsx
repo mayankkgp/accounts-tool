@@ -13,13 +13,21 @@ export default function EntityDetailHeader({ profile, onClose, onToggleArchive }
       id={`detail-header-${profile.id}`}
     >
       <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-        <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap">
           {/* Entity Type Tag */}
           <span className="text-[8px] font-bold uppercase tracking-wider px-1 py-0.25 bg-slate-100 text-slate-700 border border-slate-250 rounded-[2px] shrink-0">
             {typeLabel}
           </span>
 
-          {/* Global Archive / Restore button next to Entity Type Tag */}
+          {/* Business Name */}
+          <h2 className="text-[13px] font-semibold text-slate-900 leading-tight truncate max-w-[140px]" title={title}>
+            {title}
+          </h2>
+          {isBrand && profile.brandName && (
+            <span className="text-[10px] text-slate-505 font-semibold truncate max-w-[80px]">({profile.brandName})</span>
+          )}
+
+          {/* Global Archive / Restore button next to Entity Type Tag, inline and middle-aligned */}
           <button
             onClick={() => onToggleArchive(profile)}
             className={`h-5 w-5 rounded-sm flex items-center justify-center border transition-all cursor-pointer shrink-0 ${
@@ -32,14 +40,6 @@ export default function EntityDetailHeader({ profile, onClose, onToggleArchive }
           >
             {isArchived ? <RotateCcw size={10} className="stroke-[2.5]" /> : <Archive size={10} className="stroke-[2.5]" />}
           </button>
-
-          {/* Business Name */}
-          <h2 className="text-[13px] font-semibold text-slate-900 leading-tight truncate max-w-[140px]" title={title}>
-            {title}
-          </h2>
-          {isBrand && profile.brandName && (
-            <span className="text-[10px] text-slate-505 font-semibold truncate max-w-[80px]">({profile.brandName})</span>
-          )}
         </div>
         
         {/* GSTIN / ID */}
