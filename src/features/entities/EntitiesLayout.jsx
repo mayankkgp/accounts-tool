@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import EntityList from "./EntityList";
 import EntityDetailPane from "./EntityDetailPane";
+import { updateEntity } from "../../services/entityService";
 
 export default function EntitiesLayout() {
   const [selectedEntityId, setSelectedEntityId] = useState(null);
@@ -8,6 +9,18 @@ export default function EntitiesLayout() {
 
   const handleRefresh = () => {
     setRefreshTrigger((prev) => prev + 1);
+  };
+
+  const handleToggleArchive = async (entity) => {
+    if (!entity) return;
+    const isNowArchived = entity.status === "archived";
+    const nextStatus = isNowArchived ? "active" : "archived";
+    try {
+      await updateEntity(entity.id, { status: nextStatus });
+      handleRefresh();
+    } catch (e) {
+      console.error("Failed to update entity archiving state", e);
+    }
   };
 
   const isPaneSelected = !!selectedEntityId;
@@ -40,6 +53,8 @@ export default function EntitiesLayout() {
         <EntityDetailPane
           selectedEntityId={selectedEntityId}
           onClose={() => setSelectedEntityId(null)}
+          onToggleArchive={handleToggleArchive}
+          refreshTrigger={refreshTrigger}
         />
       </div>
     </div>

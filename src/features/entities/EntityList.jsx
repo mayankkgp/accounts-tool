@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { searchEntities, updateEntity } from "../../services/entityService";
+import { searchEntities } from "../../services/entityService";
 import EntityListToolbar from "./EntityListToolbar";
 import EntityListRow from "./EntityListRow";
 
@@ -43,27 +43,12 @@ export default function EntityList({
     } finally {
       setIsLoading(false);
     }
-  }, [debouncedQuery, activeType, statusFilter, selectedEntityId, onSelectEntity]);
+  }, [debouncedQuery, activeType, statusFilter]);
 
   // Refetch when dependencies shift
   useEffect(() => {
     fetchEntities();
   }, [fetchEntities, refreshTrigger]);
-
-  // Fast toggle archive action service handler
-  const handleToggleArchive = async (entity) => {
-    const isNowArchived = entity.status === "archived";
-    const nextStatus = isNowArchived ? "active" : "archived";
-    setIsLoading(true);
-    try {
-      await updateEntity(entity.id, { status: nextStatus });
-      onRefresh(); // Notify container to trigger refetch
-    } catch (e) {
-      console.error("Failed to update status", e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden h-full gap-1.5" id="entity-list-container">
@@ -81,26 +66,35 @@ export default function EntityList({
         onAddNew={onAddNew}
       />
 
-      {/* Grid Headers */}
-      <div className="grid grid-cols-[1.5fr_1fr_1.1fr_10px] gap-1 px-1.5 py-0.5 border-b border-slate-300 text-[9px] uppercase tracking-wider font-semibold text-slate-400 select-none shrink-0 bg-slate-100">
+      {/* Grid Headers (Adapts to expanded/compressed split states with higher contrast) */}
+      <div 
+        className={`grid gap-1 px-1.5 py-0.5 border-b border-slate-300 text-[9px] uppercase tracking-wider font-semibold text-slate-500 select-none shrink-0 bg-slate-100 ${
+          selectedEntityId ? "grid-cols-[1fr_16px]" : "grid-cols-[1.5fr_1fr_1.1fr_16px]"
+        }`}
+        id="entity-grid-header-row"
+      >
         <span>Name</span>
-        <span>POC / Contact</span>
-        <span>GSTIN</span>
-        <span className="text-center">St</span>
+        {!selectedEntityId && <span>POC / Contact</span>}
+        {!selectedEntityId && <span>GSTIN</span>}
+        <span></span>
       </div>
 
       {/* Data Row list with compact loader spinner/skeleton lines */}
       <div className="flex-1 overflow-x-hidden overflow-y-auto" id="entity-list-rows">
         {isLoading ? (
-          // Renders ultra-compact loading rows with standard simulated structure
+          // Renders ultra-compact loading rows with standard simulated structure (Adapts dynamically)
           <div className="flex flex-col select-none divide-y divide-slate-100" id="list-skeleton-loader">
             {Array.from({ length: 12 }).map((_, i) => (
               <div key={i} className="h-6 flex items-center px-1.5 bg-slate-50 animate-pulse">
-                <div className="flex-1 grid grid-cols-[1.5fr_1fr_1.1fr_10px] gap-1 items-center">
+                <div 
+                  className={`flex-1 grid gap-1 items-center ${
+                    selectedEntityId ? "grid-cols-[1fr_16px]" : "grid-cols-[1.5fr_1fr_1.1fr_16px]"
+                  }`}
+                >
                   <div className="h-2 bg-slate-200 rounded-sm w-4/5" />
-                  <div className="h-2 bg-slate-200 rounded-sm w-3/4" />
-                  <div className="h-1.5 bg-slate-200 rounded-sm font-mono w-2/3" />
-                  <div className="h-1.5 bg-slate-200 rounded-full w-1.5 justify-self-center" />
+                  {!selectedEntityId && <div className="h-2 bg-slate-200 rounded-sm w-3/4" />}
+                  {!selectedEntityId && <div className="h-1.5 bg-slate-200 rounded-sm font-mono w-2/3" />}
+                  <div className="h-1.5 bg-slate-200 rounded-full w-1.5 justify-self-center shrink-0" />
                 </div>
               </div>
             ))}
@@ -117,16 +111,16 @@ export default function EntityList({
               entity={ent}
               isSelected={selectedEntityId === ent.id}
               onSelect={() => onSelectEntity(ent.id)}
-              onToggleArchive={handleToggleArchive}
+              isCompressed={!!selectedEntityId}
             />
           ))
         )}
       </div>
 
-      {/* Quick overview of total counts */}
-      <div className="text-[9px] uppercase tracking-wider font-semibold text-slate-400 border-t border-slate-200 pt-1 px-1 flex justify-between shrink-0 select-none" id="list-footer-analytics">
+      {/* Quick overview of total counts with improved contrast */}
+      <div className="text-[9px] uppercase tracking-wider font-semibold text-slate-500 border-t border-slate-200 pt-1 px-1 flex justify-between shrink-0 select-none bg-slate-100/55" id="list-footer-analytics">
         <span>Records: {entitiesList.length}</span>
-        <span className="font-mono text-[8px]">scoped_entity_db</span>
+        <span className="font-mono text-[8px] text-slate-500">scoped_entity_db</span>
       </div>
     </div>
   );

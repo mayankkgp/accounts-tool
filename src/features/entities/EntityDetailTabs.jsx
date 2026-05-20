@@ -31,28 +31,28 @@ export default function EntityDetailTabs({ profile }) {
           <div className="grid grid-cols-2 gap-1.5 bg-slate-50 border border-slate-200/60 p-1.5 rounded-sm" id="detail-overview-grid">
             {/* POC name */}
             <div className="flex items-start gap-1">
-              <Briefcase size={11} className="text-slate-400 mt-0.5 shrink-0" />
+              <Briefcase size={11} className="text-slate-500 mt-0.5 shrink-0" />
               <div className="min-w-0">
-                <span className="text-[8px] uppercase tracking-wide text-slate-450 block leading-tight">Contact Person</span>
-                <span className="text-[11px] text-slate-800 font-medium truncate block leading-tight">{profile.pocName || "--"}</span>
+                <span className="text-[8px] uppercase tracking-wide text-slate-500 font-semibold block leading-tight">Contact Person</span>
+                <span className="text-[11px] text-slate-800 font-semibold truncate block leading-tight">{profile.pocName || "--"}</span>
               </div>
             </div>
 
             {/* Phone/POC contact */}
             <div className="flex items-start gap-1">
-              <Phone size={11} className="text-slate-400 mt-0.5 shrink-0" />
+              <Phone size={11} className="text-slate-500 mt-0.5 shrink-0" />
               <div className="min-w-0">
-                <span className="text-[8px] uppercase tracking-wide text-slate-450 block leading-tight">POC Contact Info</span>
-                <span className="text-[11px] text-slate-800 font-medium truncate block leading-tight">{profile.pocContact || "--"}</span>
+                <span className="text-[8px] uppercase tracking-wide text-slate-500 font-semibold block leading-tight">POC Contact Info</span>
+                <span className="text-[11px] text-slate-800 font-semibold truncate block leading-tight">{profile.pocContact || "--"}</span>
               </div>
             </div>
 
             {/* PAN number */}
             <div className="flex items-start gap-1">
-              <Hash size={11} className="text-slate-400 mt-0.5 shrink-0" />
+              <Hash size={11} className="text-slate-500 mt-0.5 shrink-0" />
               <div className="min-w-0">
-                <span className="text-[8px] uppercase tracking-wide text-slate-455 block leading-tight">PAN Number</span>
-                <span className="text-[11px] text-slate-800 font-mono font-medium truncate block uppercase leading-tight">
+                <span className="text-[8px] uppercase tracking-wide text-slate-500 font-semibold block leading-tight">PAN Number</span>
+                <span className="text-[11px] text-slate-800 font-mono font-bold truncate block uppercase leading-tight">
                   {profile.pan || (profile.gst && profile.gst.length >= 12 ? profile.gst.substring(2, 12) : "--")}
                 </span>
               </div>
@@ -60,10 +60,10 @@ export default function EntityDetailTabs({ profile }) {
 
             {/* Default terms etc */}
             <div className="flex items-start gap-1">
-              <Award size={11} className="text-slate-400 mt-0.5 shrink-0" />
+              <Award size={11} className="text-slate-500 mt-0.5 shrink-0" />
               <div className="min-w-0">
-                <span className="text-[8px] uppercase tracking-wide text-slate-455 block leading-tight">Default Terms</span>
-                <span className="text-[11px] text-slate-800 font-medium truncate block leading-tight">
+                <span className="text-[8px] uppercase tracking-wide text-slate-500 font-semibold block leading-tight">Default Terms</span>
+                <span className="text-[11px] text-slate-800 font-semibold truncate block leading-tight">
                   {profile.terms && typeof profile.terms === "object"
                     ? `${profile.terms.creditDays !== undefined ? `CR: ${profile.terms.creditDays}D` : ""}${profile.terms.creditDays !== undefined && profile.terms.debitDays !== undefined ? " / " : ""}${profile.terms.debitDays !== undefined ? `DB: ${profile.terms.debitDays}D` : ""}`
                     : (typeof profile.terms === "string" ? profile.terms : "Net 30 Days")}
@@ -75,24 +75,24 @@ export default function EntityDetailTabs({ profile }) {
           {/* Bank details subsection */}
           {profile.bankDetails ? (
             <div className="border border-slate-205 p-1.5 rounded-sm bg-slate-50/50" id="detail-bank-info">
-              <span className="text-[8px] uppercase tracking-wider font-semibold text-slate-400 block mb-0.5">Corporate Bank Details</span>
-              <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px] font-mono text-slate-600">
+              <span className="text-[8px] uppercase tracking-wider font-bold text-slate-500 block mb-0.5">Corporate Bank Details</span>
+              <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px] font-mono text-slate-605">
                 <div className="truncate">
-                  <span className="text-slate-400">BENEFICIARY:</span> {profile.bankDetails.beneficiary || profile.businessName || "--"}
+                  <span className="text-slate-500 font-medium">BENEFICIARY:</span> {profile.bankDetails.beneficiary || profile.businessName || "--"}
                 </div>
                 <div className="truncate">
-                  <span className="text-slate-400">BANK:</span> {profile.bankDetails.bankName || "Corporate Bank"}
+                  <span className="text-slate-500 font-medium">BANK:</span> {profile.bankDetails.bankName || "Corporate Bank"}
                 </div>
                 <div className="truncate">
-                  <span className="text-slate-400">A/C:</span> {profile.bankDetails.accountNo || "--"}
+                  <span className="text-slate-500 font-medium">A/C:</span> {profile.bankDetails.accountNo || "--"}
                 </div>
                 <div className="truncate">
-                  <span className="text-slate-400">IFSC:</span> {profile.bankDetails.ifscCode || profile.bankDetails.ifsc || "--"}
+                  <span className="text-slate-500 font-medium">IFSC:</span> {profile.bankDetails.ifscCode || profile.bankDetails.ifsc || "--"}
                 </div>
               </div>
             </div>
           ) : (
-            <div className="border border-dashed border-slate-200 p-1.5 rounded-sm bg-slate-50/30 text-[9px] text-slate-400" id="detail-bank-missing">
+            <div className="border border-dashed border-slate-200 p-1.5 rounded-sm bg-slate-50/30 text-[9px] text-slate-500 font-medium" id="detail-bank-missing">
               No bank account specified for this entity profile.
             </div>
           )}
@@ -100,8 +100,8 @@ export default function EntityDetailTabs({ profile }) {
           {/* Mapped Address Stack */}
           <div className="flex flex-col gap-1.5" id="detail-addresses-section">
             <div className="flex items-center justify-between border-b border-slate-100 pb-0.5 shrink-0 select-none">
-              <span className="text-[9px] uppercase tracking-wider font-bold text-slate-405 flex items-center gap-1">
-                <MapPin size={10} /> Registered Locations ({profile.addresses ? profile.addresses.length : 0})
+              <span className="text-[9px] uppercase tracking-wider font-bold text-slate-500 flex items-center gap-1">
+                <MapPin size={10} className="text-slate-500" /> Registered Locations ({profile.addresses ? profile.addresses.length : 0})
               </span>
             </div>
 
@@ -119,12 +119,12 @@ export default function EntityDetailTabs({ profile }) {
                       {hasBadges && (
                         <div className="flex gap-1 items-center self-start mb-0.5">
                           {addr.isDefaultBilling && (
-                            <span className="text-[7px] font-bold uppercase tracking-widest px-1 py-0.2 bg-indigo-50 border border-indigo-205 text-indigo-600 rounded-[2px]" title="Default Billing Directs">
+                            <span className="text-[7px] font-bold uppercase tracking-widest px-1 py-0.2 bg-indigo-50 border border-indigo-250 text-indigo-600 rounded-[2px]" title="Default Billing Directs">
                               Default Billing
                             </span>
                           )}
                           {addr.isDefaultShipping && (
-                            <span className="text-[7px] font-bold uppercase tracking-widest px-1 py-0.2 bg-emerald-50 border border-emerald-205 text-emerald-600 rounded-[2px]" title="Default Shipping Directs">
+                            <span className="text-[7px] font-bold uppercase tracking-widest px-1 py-0.2 bg-emerald-50 border border-emerald-250 text-emerald-600 rounded-[2px]" title="Default Shipping Directs">
                               Default Shipping
                             </span>
                           )}
@@ -132,15 +132,15 @@ export default function EntityDetailTabs({ profile }) {
                       )}
 
                       {/* Content details of the address */}
-                      <p className="text-slate-700 leading-tight">
+                      <p className="text-slate-800 font-medium leading-tight">
                         {addr.addressLine1}
                         {addr.addressLine2 ? `, ${addr.addressLine2}` : ""}
                       </p>
                       
-                      <div className="text-[9px] text-slate-400 font-mono flex gap-1.5 uppercase leading-none mt-0.5">
-                        <span>City: <strong className="text-slate-500 font-medium">{addr.city || "--"}</strong></span>
-                        <span>State: <strong className="text-slate-500 font-medium">{addr.state || "--"}</strong></span>
-                        <span>PIN: <strong className="text-slate-500 font-bold">{addr.pincode || "--"}</strong></span>
+                      <div className="text-[9px] text-slate-500 font-bold font-mono flex gap-1.5 uppercase leading-none mt-0.5">
+                        <span>City: <strong className="text-slate-700 font-bold">{addr.city || "--"}</strong></span>
+                        <span>State: <strong className="text-slate-700 font-bold">{addr.state || "--"}</strong></span>
+                        <span>PIN: <strong className="text-slate-800 font-bold">{addr.pincode || "--"}</strong></span>
                       </div>
                     </div>
                   );

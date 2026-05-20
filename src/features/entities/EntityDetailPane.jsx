@@ -3,7 +3,7 @@ import { loadEntityProfile } from "../../services/entityService";
 import EntityDetailHeader from "./EntityDetailHeader";
 import EntityDetailTabs from "./EntityDetailTabs";
 
-export default function EntityDetailPane({ selectedEntityId, onClose }) {
+export default function EntityDetailPane({ selectedEntityId, onClose, onToggleArchive, refreshTrigger }) {
   const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,7 +35,7 @@ export default function EntityDetailPane({ selectedEntityId, onClose }) {
     return () => {
       isMounted = false;
     };
-  }, [selectedEntityId]);
+  }, [selectedEntityId, refreshTrigger]);
 
   // Support closing the pane via Escape key
   useEffect(() => {
@@ -71,7 +71,7 @@ export default function EntityDetailPane({ selectedEntityId, onClose }) {
         </div>
       ) : profile ? (
         <>
-          <EntityDetailHeader profile={profile} onClose={onClose} />
+          <EntityDetailHeader profile={profile} onClose={onClose} onToggleArchive={onToggleArchive} />
           <EntityDetailTabs profile={profile} />
         </>
       ) : (
