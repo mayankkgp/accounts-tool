@@ -38,16 +38,6 @@ export default function EntityList({
         status: statusFilter,
       });
       setEntitiesList(results);
-
-      // Auto-select the first item in list if nothing is selected or if previous selection is not in the list
-      if (results.length > 0) {
-        const alreadySelectedInList = results.some((r) => r.id === selectedEntityId);
-        if (!selectedEntityId || !alreadySelectedInList) {
-          onSelectEntity(results[0].id);
-        }
-      } else {
-        onSelectEntity(null);
-      }
     } catch (e) {
       console.error("Failed to load entity directory list", e);
     } finally {
