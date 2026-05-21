@@ -14,11 +14,11 @@ export default function EntityBankSection({
         <span className="text-[10px] uppercase font-bold text-slate-500">Bank Details</span>
       </div>
       {currentProfile.bankDetails || isEditing ? (
-        <div className="bg-slate-50 border-l-2 border-l-blue-400 p-1.5 rounded-sm" id="detail-bank-info">
+        <div className="bg-slate-50 border-l-2 border-l-blue-400 px-1.5 py-1 rounded-sm" id="detail-bank-info">
           {isEditing ? (
             <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[10px] font-mono text-slate-600">
               <div className="flex flex-col gap-0.5">
-                <span className="text-[7px] text-slate-400 font-bold uppercase block leading-none">Beneficiary</span>
+                <span className="text-[8px] uppercase tracking-wide text-slate-500 font-semibold block leading-tight">Beneficiary</span>
                 <input
                   type="text"
                   className="h-6 text-xs px-1 py-0.5 border border-slate-200 bg-white rounded-sm focus:border-indigo-500 focus:outline-none w-full text-slate-800 font-mono"
@@ -27,7 +27,7 @@ export default function EntityBankSection({
                 />
               </div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-[7px] text-slate-400 font-bold uppercase block leading-none">Bank Name</span>
+                <span className="text-[8px] uppercase tracking-wide text-slate-500 font-semibold block leading-tight">Bank Name</span>
                 <input
                   type="text"
                   className="h-6 text-xs px-1 py-0.5 border border-slate-200 bg-white rounded-sm focus:border-indigo-500 focus:outline-none w-full text-slate-800 font-mono"
@@ -36,7 +36,7 @@ export default function EntityBankSection({
                 />
               </div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-[7px] text-slate-400 font-bold uppercase block leading-none">Account No</span>
+                <span className="text-[8px] uppercase tracking-wide text-slate-500 font-semibold block leading-tight">Account No</span>
                 <input
                   type="text"
                   className="h-6 text-xs px-1 py-0.5 border border-slate-200 bg-white rounded-sm focus:border-indigo-500 focus:outline-none w-full text-slate-800 font-mono"
@@ -45,7 +45,7 @@ export default function EntityBankSection({
                 />
               </div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-[7px] text-slate-400 font-bold uppercase block leading-none">IFSC Code</span>
+                <span className="text-[8px] uppercase tracking-wide text-slate-500 font-semibold block leading-tight">IFSC Code</span>
                 <input
                   type="text"
                   className="h-6 text-xs px-1 py-0.5 border border-slate-200 bg-white rounded-sm focus:border-indigo-500 focus:outline-none w-full text-slate-800 font-mono uppercase"

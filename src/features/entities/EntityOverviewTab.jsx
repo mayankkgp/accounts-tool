@@ -81,9 +81,6 @@ export default function EntityOverviewTab({ profile, onRefresh }) {
       ...(prev || profile),
       addresses: newAddresses
     }));
-    if (onRefresh) {
-      onRefresh();
-    }
   };
 
   const currentProfile = localProfileOverride || profile;
