@@ -63,28 +63,28 @@ export default function EntityAddressSection({ currentProfile, onUpdateProfile }
   const renderForm = (isEdit, addrId) => (
     <div className="bg-slate-50 border-l-2 border-l-emerald-400 p-1.5 rounded-sm flex flex-col gap-1.5 animate-fade-in text-xs mb-1 bg-opacity-70">
       <div className="grid grid-cols-2 gap-1.5 w-full">
-        <label className="flex flex-col gap-0.5 w-full">
-          <span className="text-[10px] uppercase font-bold text-slate-500">Address Line 1</span>
-          <input type="text" placeholder="Address Line 1" className="w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium text-slate-800" value={form.addressLine1} onChange={e => setForm({ ...form, addressLine1: e.target.value })} required />
-        </label>
-        <label className="flex flex-col gap-0.5 w-full">
-          <span className="text-[10px] uppercase font-bold text-slate-500">Address Line 2</span>
-          <input type="text" placeholder="Address Line 2 (Optional)" className="w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-550 font-medium text-slate-800" value={form.addressLine2} onChange={e => setForm({ ...form, addressLine2: e.target.value })} />
-        </label>
+        <div className="flex flex-col gap-0.5 w-full">
+          <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wide">Address Line 1</span>
+          <input type="text" className="w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium text-slate-800" value={form.addressLine1} onChange={e => setForm({ ...form, addressLine1: e.target.value })} required />
+        </div>
+        <div className="flex flex-col gap-0.5 w-full">
+          <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wide">Address Line 2</span>
+          <input type="text" className="w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-550 font-medium text-slate-800" value={form.addressLine2} onChange={e => setForm({ ...form, addressLine2: e.target.value })} />
+        </div>
       </div>
       <div className="flex items-end gap-1.5 w-full">
-        <label className="flex flex-col gap-0.5 flex-1 w-full">
-          <span className="text-[10px] uppercase font-bold text-slate-500">Pincode</span>
-          <input type="text" placeholder="Pincode" className="w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium text-slate-800" value={form.pincode} onChange={e => setForm({ ...form, pincode: e.target.value })} required />
-        </label>
-        <label className="flex flex-col gap-0.5 flex-1 w-full">
-          <span className="text-[10px] uppercase font-bold text-slate-500">City</span>
-          <input type="text" placeholder={isPinLoading ? "Loading..." : "City"} disabled={isPinLoading} className={`w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium ${isPinLoading ? "text-slate-400 italic bg-slate-50" : "text-slate-800"}`} value={form.city} onChange={e => setForm({ ...form, city: e.target.value })} required />
-        </label>
-        <label className="flex flex-col gap-0.5 flex-1 w-full">
-          <span className="text-[10px] uppercase font-bold text-slate-500">State</span>
-          <input type="text" placeholder={isPinLoading ? "Loading..." : "State"} disabled={isPinLoading} className={`w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium ${isPinLoading ? "text-slate-400 italic bg-slate-50" : "text-slate-800"}`} value={form.state} onChange={e => setForm({ ...form, state: e.target.value })} required />
-        </label>
+        <div className="flex flex-col gap-0.5 flex-1 w-full">
+          <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wide">Pincode</span>
+          <input type="text" className="w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium text-slate-800" value={form.pincode} onChange={e => setForm({ ...form, pincode: e.target.value })} required />
+        </div>
+        <div className="flex flex-col gap-0.5 flex-1 w-full">
+          <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wide">City</span>
+          <input type="text" disabled={isPinLoading} className={`w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium ${isPinLoading ? "text-slate-400 italic bg-slate-50" : "text-slate-800"}`} value={form.city} onChange={e => setForm({ ...form, city: e.target.value })} required />
+        </div>
+        <div className="flex flex-col gap-0.5 flex-1 w-full">
+          <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wide">State</span>
+          <input type="text" disabled={isPinLoading} className={`w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium ${isPinLoading ? "text-slate-400 italic bg-slate-50" : "text-slate-800"}`} value={form.state} onChange={e => setForm({ ...form, state: e.target.value })} required />
+        </div>
         <button type="button" onClick={() => { setIsAdding(false); setEditId(null); }} className="h-5 px-1.5 flex items-center justify-center gap-0.5 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-sm cursor-pointer text-[9px] font-bold uppercase shrink-0"><X size={10} /> Cancel</button>
         <button type="button" onClick={() => handleSave(isEdit, addrId)} className="h-5 px-1.5 flex items-center justify-center gap-0.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-sm cursor-pointer text-[9px] font-bold uppercase shrink-0"><Check size={10} /> Save</button>
       </div>
@@ -122,17 +122,19 @@ export default function EntityAddressSection({ currentProfile, onUpdateProfile }
                   </div>
                 </div>
                 <p className="text-slate-800 font-semibold leading-tight">{addr.addressLine1}{addr.addressLine2 ? `, ${addr.addressLine2}` : ""}</p>
-                <div className="text-[9px] text-slate-500 font-mono font-medium uppercase mt-0.5 leading-none truncate">{geo}</div>
-                <div className="flex justify-end gap-1.5 mt-1 w-full pt-1 border-t border-slate-200/50 text-[8px] font-bold">
-                  {!addr.isDefaultBilling && (
-                    <button type="button" onClick={() => handleSetDefault(addr.id, "isDefaultBilling")} className="uppercase text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer">Set Billing</button>
-                  )}
-                  {!addr.isDefaultBilling && !addr.isDefaultShipping && <span className="text-slate-300 select-none">|</span>}
-                  {!addr.isDefaultShipping && (
-                    <button type="button" onClick={() => handleSetDefault(addr.id, "isDefaultShipping")} className="uppercase text-slate-400 hover:text-emerald-600 transition-colors cursor-pointer">Set Shipping</button>
-                  )}
-                  {(!addr.isDefaultBilling || !addr.isDefaultShipping) && <span className="text-slate-300 select-none">|</span>}
-                  <button type="button" onClick={() => startForm(addr)} className="uppercase text-slate-400 hover:text-blue-600 transition-colors cursor-pointer">Edit</button>
+                <div className="flex justify-between items-center mt-0.5 w-full">
+                  <div className="text-[9px] text-slate-500 font-mono font-medium uppercase leading-none truncate">{geo}</div>
+                  <div className="flex gap-1.5 items-center flex-shrink-0 text-[8px] font-bold text-slate-400">
+                    {!addr.isDefaultBilling && (
+                      <button type="button" onClick={() => handleSetDefault(addr.id, "isDefaultBilling")} className="uppercase hover:text-indigo-600 transition-colors cursor-pointer">Set Billing</button>
+                    )}
+                    {!addr.isDefaultBilling && !addr.isDefaultShipping && <span className="text-slate-300 select-none">|</span>}
+                    {!addr.isDefaultShipping && (
+                      <button type="button" onClick={() => handleSetDefault(addr.id, "isDefaultShipping")} className="uppercase hover:text-emerald-600 transition-colors cursor-pointer">Set Shipping</button>
+                    )}
+                    {(!addr.isDefaultBilling || !addr.isDefaultShipping) && <span className="text-slate-300 select-none">|</span>}
+                    <button type="button" onClick={() => startForm(addr)} className="uppercase hover:text-blue-600 transition-colors cursor-pointer">Edit</button>
+                  </div>
                 </div>
               </div>
             );
