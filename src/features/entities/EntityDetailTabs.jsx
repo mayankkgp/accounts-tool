@@ -28,11 +28,15 @@ export default function EntityDetailTabs({ profile, activeTab, onTabChange, onRe
         </Tabs.Content>
 
         <Tabs.Content value="ledger" className="outline-none" id="tab-content-ledger">
-          <div className="p-4 border border-slate-100 bg-slate-50 rounded-sm text-center text-slate-500 font-medium text-[10px] italic select-none">Financial ledger logs empty. Built in Step 5.</div>
+          <div className="p-4 border border-slate-100 bg-slate-50 rounded-sm text-center text-slate-500 font-medium text-[10px] italic select-none">
+            Financial Ledger module pending. This tab will feature a high-density data grid tracking cash flow, debits, credits, and the running account balance.
+          </div>
         </Tabs.Content>
 
         <Tabs.Content value="operations" className="outline-none" id="tab-content-operations">
-          <div className="p-4 border border-slate-100 bg-slate-50 rounded-sm text-center text-slate-500 font-medium text-[10px] italic select-none">Active operation pipelines empty. Built in Step 5.</div>
+          <div className="p-4 border border-slate-100 bg-slate-50 rounded-sm text-center text-slate-500 font-medium text-[10px] italic select-none">
+            Operations module pending. This tab will feature a historical table of order history, fulfillment items, and quantities.
+          </div>
         </Tabs.Content>
 
         <Tabs.Content value="connections" className="outline-none" id="tab-content-connections">
