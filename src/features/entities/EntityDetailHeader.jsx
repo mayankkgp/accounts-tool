@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X, Archive, RotateCcw, Pencil, Check, Loader2 } from "lucide-react";
 import { updateEntity } from "../../services/entityService";
 
+// EntityDetailHeader renders the main header, profile name edit states, and archive controls inside the expanded details drawer.
 export default function EntityDetailHeader({ profile, onClose, onToggleArchive }) {
   const [isEditingIdentity, setIsEditingIdentity] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -29,19 +30,24 @@ export default function EntityDetailHeader({ profile, onClose, onToggleArchive }
   const isArchived = currentProfile.status === "archived";
 
   const handleSaveIdentity = async () => {
+    // Stage modified text fields and prevent loss of unedited elements
     const updatedFields = {
       businessName: editForm.businessName,
       brandName: isBrand ? editForm.brandName : currentProfile.brandName
     };
 
+    // Lock interactive buttons and project the saving indicator
     setIsSaving(true);
     try {
+      // Direct remote update call via service abstraction layer
       await updateEntity(currentProfile.id, updatedFields);
+      // Seamlessly pass updated data down via local override hook on successful commit
       setLocalProfileOverride({ ...currentProfile, ...updatedFields });
       setIsEditingIdentity(false);
     } catch (e) {
       console.error("Failed to update identity", e);
     } finally {
+      // Re-enable input interfaces by lifting saving lock status
       setIsSaving(false);
     }
   };

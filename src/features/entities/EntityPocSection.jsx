@@ -74,11 +74,41 @@ export default function EntityPocSection({
 
         <div className="min-w-0">
           <span className="text-[8px] uppercase tracking-wide text-slate-500 font-semibold block leading-tight">Default Terms</span>
-          <span className="text-[11px] text-slate-800 font-semibold truncate block leading-tight">
-            {currentProfile.terms && typeof currentProfile.terms === "object"
-              ? `${currentProfile.terms.creditDays !== undefined ? `CR: ${currentProfile.terms.creditDays}D` : ""}${currentProfile.terms.creditDays !== undefined && currentProfile.terms.debitDays !== undefined ? " / " : ""}${currentProfile.terms.debitDays !== undefined ? `DB: ${currentProfile.terms.debitDays}D` : ""}`
-              : (typeof currentProfile.terms === "string" ? currentProfile.terms : "Net 30 Days")}
-          </span>
+          {isEditing ? (
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <div className="flex items-center gap-0.5">
+                <span className="text-[8px] font-bold text-slate-400 mt-0.5">CR:</span>
+                <input
+                  type="number"
+                  placeholder="Days"
+                  className="w-10 h-6 text-xs px-1 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  value={formData.creditDays}
+                  onChange={(e) => setFormData({ ...formData, creditDays: e.target.value })}
+                />
+              </div>
+              <div className="flex items-center gap-0.5">
+                <span className="text-[8px] font-bold text-slate-400 mt-0.5">DB:</span>
+                <input
+                  type="number"
+                  placeholder="Days"
+                  className="w-10 h-6 text-xs px-1 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  value={formData.debitDays}
+                  onChange={(e) => setFormData({ ...formData, debitDays: e.target.value })}
+                />
+              </div>
+            </div>
+          ) : (
+            <span className="text-[11px] text-slate-800 font-semibold truncate block leading-tight">
+              {currentProfile.terms && typeof currentProfile.terms === "object" ? (
+                [
+                  currentProfile.terms.creditDays !== undefined && currentProfile.terms.creditDays !== null && currentProfile.terms.creditDays !== "" && `CR: ${currentProfile.terms.creditDays}D`,
+                  currentProfile.terms.debitDays !== undefined && currentProfile.terms.debitDays !== null && currentProfile.terms.debitDays !== "" && `DB: ${currentProfile.terms.debitDays}D`
+                ].filter(Boolean).join(" / ") || "--"
+              ) : (
+                "--"
+              )}
+            </span>
+          )}
         </div>
       </div>
     </div>

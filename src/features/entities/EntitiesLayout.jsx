@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import EntityList from "./EntityList";
 import EntityDetailPane from "./EntityDetailPane";
+import EntityCreateDrawer from "./EntityCreateDrawer";
 import { updateEntity } from "../../services/entityService";
 
 export default function EntitiesLayout() {
   const [selectedEntityId, setSelectedEntityId] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [activeTab, setActiveTab] = useState("overview");
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
   const handleRefresh = () => {
     setRefreshTrigger((prev) => prev + 1);
@@ -38,7 +40,7 @@ export default function EntitiesLayout() {
         <EntityList
           selectedEntityId={selectedEntityId}
           onSelectEntity={setSelectedEntityId}
-          onAddNew={() => console.log("Form drawer requested (Step 4)")}
+          onAddNew={() => setIsCreateDrawerOpen(true)}
           refreshTrigger={refreshTrigger}
           onRefresh={handleRefresh}
         />
@@ -61,6 +63,12 @@ export default function EntitiesLayout() {
           onRefresh={handleRefresh}
         />
       </div>
+
+      <EntityCreateDrawer
+        isOpen={isCreateDrawerOpen}
+        onClose={() => setIsCreateDrawerOpen(false)}
+        onRefresh={handleRefresh}
+      />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Search, X, Plus, ExternalLink, Loader2 } from "lucide-react";
 import { searchEntities, mapConnections } from "../../services/entityService";
 
+// EntityConnectionsTab manages the relational mapping ledger between Brand profiles and Factory manufacturing hubs.
 export default function EntityConnectionsTab({ profile }) {
   const [localConnections, setLocalConnections] = useState([]);
   const [candidates, setCandidates] = useState([]);
@@ -42,42 +43,52 @@ export default function EntityConnectionsTab({ profile }) {
 
   const handleAdd = async (candidate) => {
     const updated = [...localConnections, candidate];
+    // Trigger progress spinner on the selected candidate row immediately
     setProcessingId(candidate.id);
     try {
+      // Direct API write to ensure relation integrity persists on backend database
       await mapConnections(profile.id, profile.type, updated.map((c) => c.id));
+      // Upon confirmed server acknowledgment, append item to local list & dismiss dropdown
       setLocalConnections(updated);
       setSearchQuery("");
       setIsOpen(false);
     } catch {
+      // Recover baseline state if mapped API fails
       setLocalConnections(profile.connections || []);
     } finally {
+      // Clear specific row processing key to release interactive buttons
       setProcessingId(null);
     }
   };
 
   const handleRemove = async (targetId) => {
     const updated = localConnections.filter((c) => c.id !== targetId);
+    // Bind specific target identification key to process loader state over exact row
     setProcessingId(targetId);
     try {
+      // Fire relation severance on target endpoint
       await mapConnections(profile.id, profile.type, updated.map((c) => c.id));
+      // Flush removed connection locally after api response settles, offering clean spinner UX during API delays
       setLocalConnections(updated);
     } catch {
+      // Restore cached connections vector in case of transaction fault
       setLocalConnections(profile.connections || []);
     } finally {
+      // Unblock UI interaction
       setProcessingId(null);
     }
   };
 
   const targetLabel = profile.type === "brand" ? "Factories" : "Brands";
   const getTermsStr = (terms) => {
-    if (!terms) return "Net 30";
+    if (!terms) return "--";
     if (typeof terms === "object") {
       const parts = [];
-      if (terms.creditDays !== undefined) parts.push(`CR:${terms.creditDays}D`);
-      if (terms.debitDays !== undefined) parts.push(`DB:${terms.debitDays}D`);
-      return parts.join("/") || "Net 30";
+      if (terms.creditDays !== undefined && terms.creditDays !== null && terms.creditDays !== "") parts.push(`CR:${terms.creditDays}D`);
+      if (terms.debitDays !== undefined && terms.debitDays !== null && terms.debitDays !== "") parts.push(`DB:${terms.debitDays}D`);
+      return parts.join("/") || "--";
     }
-    return typeof terms === "string" ? terms : "Net 30";
+    return "--";
   };
 
   return (
@@ -144,6 +155,7 @@ export default function EntityConnectionsTab({ profile }) {
                   {conn.pocContact && <span className="text-[9px] text-slate-600 font-medium truncate">{conn.pocContact}</span>}
                 </div>
                 <span className="text-[9px] text-slate-500 font-mono truncate">{getTermsStr(conn.terms)}</span>
+                {/* Mouse interaction tracking area equipped with auto-abort mechanism to clear intent states */}
                 <div className="flex items-center gap-2.5 justify-end shrink-0" onMouseLeave={() => setConfirmDeleteId(null)}>
                   <button
                     type="button" disabled={conn.id === processingId} onClick={() => window.open(`/entities/${conn.id}`, '_blank')}
@@ -156,6 +168,7 @@ export default function EntityConnectionsTab({ profile }) {
                       <Loader2 size={10} className="animate-spin text-slate-400" />
                     </div>
                   ) : confirmDeleteId === conn.id ? (
+                    /* Inline double-state confirmation designed to prevent accidental clicks without relying on blocking modal popups */
                     <button
                       type="button" onClick={() => { handleRemove(conn.id); setConfirmDeleteId(null); }}
                       className="px-2 h-6 rounded-sm bg-red-100 text-red-700 hover:bg-red-200 flex items-center font-bold text-[9px] uppercase tracking-wide transition-all shrink-0 cursor-pointer"
