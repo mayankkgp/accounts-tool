@@ -62,18 +62,16 @@ export default function EntityAddressSection({ currentProfile, onUpdateProfile }
 
   const renderForm = (isEdit, addrId) => (
     <div className="bg-slate-50 border-l-2 border-l-emerald-400 p-1.5 rounded-sm flex flex-col gap-1 animate-fade-in text-xs mb-1 bg-opacity-70">
-      <div className="grid grid-cols-2 gap-1">
+      <div className="grid grid-cols-2 gap-1 w-full">
         <input type="text" placeholder="Address Line 1" className="w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium text-slate-800" value={form.addressLine1} onChange={e => setForm({ ...form, addressLine1: e.target.value })} required />
         <input type="text" placeholder="Address Line 2 (Optional)" className="w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium text-slate-800" value={form.addressLine2} onChange={e => setForm({ ...form, addressLine2: e.target.value })} />
       </div>
-      <div className="grid grid-cols-3 gap-1">
-        <input type="text" placeholder="Pincode" className="h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium text-slate-800" value={form.pincode} onChange={e => setForm({ ...form, pincode: e.target.value })} required />
-        <input type="text" placeholder={isPinLoading ? "Loading..." : "City"} disabled={isPinLoading} className={`h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium ${isPinLoading ? "text-slate-400 italic bg-slate-50" : "text-slate-800"}`} value={form.city} onChange={e => setForm({ ...form, city: e.target.value })} required />
-        <input type="text" placeholder={isPinLoading ? "Loading..." : "State"} disabled={isPinLoading} className={`h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium ${isPinLoading ? "text-slate-400 italic bg-slate-50" : "text-slate-800"}`} value={form.state} onChange={e => setForm({ ...form, state: e.target.value })} required />
-      </div>
-      <div className="flex justify-end gap-1 mt-1 border-t border-slate-200/60 pt-1">
-        <button type="button" onClick={() => { setIsAdding(false); setEditId(null); }} className="h-5 px-1.5 flex items-center justify-center gap-0.5 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-sm cursor-pointer text-[8px] font-bold uppercase"><X size={10} /> Cancel</button>
-        <button type="button" onClick={() => handleSave(isEdit, addrId)} className="h-5 px-1.5 flex items-center justify-center gap-0.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-sm cursor-pointer text-[8px] font-bold uppercase"><Check size={10} /> Save</button>
+      <div className="flex items-center gap-1 w-full">
+        <input type="text" placeholder="Pincode" className="h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium text-slate-800 flex-1 w-full" value={form.pincode} onChange={e => setForm({ ...form, pincode: e.target.value })} required />
+        <input type="text" placeholder={isPinLoading ? "Loading..." : "City"} disabled={isPinLoading} className={`h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium flex-1 w-full ${isPinLoading ? "text-slate-400 italic bg-slate-50" : "text-slate-800"}`} value={form.city} onChange={e => setForm({ ...form, city: e.target.value })} required />
+        <input type="text" placeholder={isPinLoading ? "Loading..." : "State"} disabled={isPinLoading} className={`h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium flex-1 w-full ${isPinLoading ? "text-slate-400 italic bg-slate-50" : "text-slate-800"}`} value={form.state} onChange={e => setForm({ ...form, state: e.target.value })} required />
+        <button type="button" onClick={() => { setIsAdding(false); setEditId(null); }} className="h-6 px-1.5 flex items-center justify-center gap-0.5 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-sm cursor-pointer text-xs font-bold uppercase shrink-0"><X size={10} /> Cancel</button>
+        <button type="button" onClick={() => handleSave(isEdit, addrId)} className="h-6 px-1.5 flex items-center justify-center gap-0.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-sm cursor-pointer text-xs font-bold uppercase shrink-0"><Check size={10} /> Save</button>
       </div>
     </div>
   );
