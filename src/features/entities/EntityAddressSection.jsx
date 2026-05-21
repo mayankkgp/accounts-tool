@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { MapPin, Plus, Check, X } from "lucide-react";
 import { updateEntity, manageAddress } from "../../services/entityService";
 import { fetchLocationByPin } from "../../services/api";
-
 export default function EntityAddressSection({ currentProfile, onUpdateProfile }) {
   const [isAdding, setIsAdding] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -64,25 +63,25 @@ export default function EntityAddressSection({ currentProfile, onUpdateProfile }
     <div className="bg-slate-50 border-l-2 border-l-emerald-400 p-1.5 rounded-sm flex flex-col gap-1.5 animate-fade-in text-xs mb-1 bg-opacity-70">
       <div className="grid grid-cols-2 gap-1.5 w-full">
         <div className="flex flex-col gap-0.5 w-full">
-          <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wide">Address Line 1</span>
+          <span className="text-[7px] text-slate-400 font-bold uppercase block leading-none">Address Line 1</span>
           <input type="text" className="w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium text-slate-800" value={form.addressLine1} onChange={e => setForm({ ...form, addressLine1: e.target.value })} required />
         </div>
         <div className="flex flex-col gap-0.5 w-full">
-          <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wide">Address Line 2</span>
+          <span className="text-[7px] text-slate-400 font-bold uppercase block leading-none">Address Line 2</span>
           <input type="text" className="w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-550 font-medium text-slate-800" value={form.addressLine2} onChange={e => setForm({ ...form, addressLine2: e.target.value })} />
         </div>
       </div>
       <div className="flex items-end gap-1.5 w-full">
         <div className="flex flex-col gap-0.5 flex-1 w-full">
-          <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wide">Pincode</span>
+          <span className="text-[7px] text-slate-400 font-bold uppercase block leading-none">Pincode</span>
           <input type="text" className="w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium text-slate-800" value={form.pincode} onChange={e => setForm({ ...form, pincode: e.target.value })} required />
         </div>
         <div className="flex flex-col gap-0.5 flex-1 w-full">
-          <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wide">City</span>
+          <span className="text-[7px] text-slate-400 font-bold uppercase block leading-none">City</span>
           <input type="text" disabled={isPinLoading} className={`w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium ${isPinLoading ? "text-slate-400 italic bg-slate-50" : "text-slate-800"}`} value={form.city} onChange={e => setForm({ ...form, city: e.target.value })} required />
         </div>
         <div className="flex flex-col gap-0.5 flex-1 w-full">
-          <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wide">State</span>
+          <span className="text-[7px] text-slate-400 font-bold uppercase block leading-none">State</span>
           <input type="text" disabled={isPinLoading} className={`w-full h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium ${isPinLoading ? "text-slate-400 italic bg-slate-50" : "text-slate-800"}`} value={form.state} onChange={e => setForm({ ...form, state: e.target.value })} required />
         </div>
         <button type="button" onClick={() => { setIsAdding(false); setEditId(null); }} className="h-5 px-1.5 flex items-center justify-center gap-0.5 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-sm cursor-pointer text-[9px] font-bold uppercase shrink-0"><X size={10} /> Cancel</button>
