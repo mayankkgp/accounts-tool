@@ -41,7 +41,7 @@ export default function EntityCreateTermsAddresses({ formData, setFormData, extr
           {extraAddresses.map((addrStr, idx) => (
             <div key={idx} className="flex gap-1 items-center w-full animate-fade-in">
               <input
-                type="text" required placeholder="123 Street, City, State, 110001" value={addrStr}
+                type="text" required placeholder="123 Street, 110001, City, State" value={addrStr}
                 className="flex-1 h-6 text-xs px-1.5 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-medium"
                 onChange={(e) => {
                   const updated = [...extraAddresses];
