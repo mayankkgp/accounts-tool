@@ -48,7 +48,6 @@ export default function EntityOverviewTab({ profile, onRefresh }) {
 
     try {
       await updateEntity(profile.id, updatedFields);
-      if (onRefresh) onRefresh();
     } catch (e) {
       console.error("Failed to update entity", e);
       setLocalProfileOverride(null);
