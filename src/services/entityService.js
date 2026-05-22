@@ -25,9 +25,8 @@ function setStorageItem(key, val) {
 }
 
 /**
- * 1. Directory Search Service
- * Filters the active entity array by search query, entity type, and status.
- * Preset: 'small' (200ms sleep)
+ * Filters and searches companies stored in the 'fabrito_entities' namespace based on query, type, and status.
+ * This query simulator runs with a small simulated network latency.
  */
 export async function searchEntities({ query = "", type = "all", status = "all" } = {}) {
   await simulateNetwork("small");
@@ -56,9 +55,8 @@ export async function searchEntities({ query = "", type = "all", status = "all" 
 }
 
 /**
- * 2. Load Profile Detail Service
- * Fetches accurate company logs, addresses, and relational connection lists.
- * Preset: 'medium' (600ms sleep)
+ * Loads a comprehensive profile from the 'fabrito_entities', 'fabrito_addresses', and 'fabrito_connections' namespaces.
+ * This profile details fetch operation is run with a medium simulated network delay.
  */
 export async function loadEntityProfile(entityId) {
   await simulateNetwork("medium");
@@ -97,9 +95,8 @@ export async function loadEntityProfile(entityId) {
 }
 
 /**
- * 3. Create Entity Service
- * Saves a new profile record to local storage with simulated server latency.
- * Preset: 'large' (1200ms sleep)
+ * Creates a new company profile and appends it to 'fabrito_entities', plus saves any initial address to 'fabrito_addresses'.
+ * The write operation executes with a large simulated network latency.
  */
 export async function createEntity(entityPayload) {
   await simulateNetwork("large");
@@ -148,9 +145,8 @@ export async function createEntity(entityPayload) {
 }
 
 /**
- * 4. Update Entity Service
- * Saves inline modifications or archives/unarchives an existing profile.
- * Preset: 'large' (1200ms sleep)
+ * Updates an existing company's fields inside the 'fabrito_entities' namespace.
+ * The edit operation is executed under a large simulated network latency.
  */
 export async function updateEntity(entityId, updatedFields) {
   await simulateNetwork("large");
@@ -177,9 +173,8 @@ export async function updateEntity(entityId, updatedFields) {
 }
 
 /**
- * 5. GST Compliance Auto-fill Service
- * Simulates third-party government database checkout.
- * Preset: 'medium' (600ms sleep)
+ * Resolves a mockup address from public identifiers, mimicking government databases without direct mutations to 'fabrito_' namespaces.
+ * The compliance checker executes with a medium simulated network latency.
  */
 export async function autoFillGstData(gstNumber) {
   await simulateNetwork("medium");
@@ -225,9 +220,8 @@ export async function autoFillGstData(gstNumber) {
 }
 
 /**
- * 6. Connection Mapping Service
- * Mutates structural relational lists between Brands and factories.
- * Preset: 'large' (1200ms sleep)
+ * Commits a list of brand-to-factory relational mappings to the 'fabrito_connections' local storage namespace.
+ * The operation completes under a large simulated network latency.
  */
 export async function saveBrandFactoryConnections(entityId, type, mappedTargetIds) {
   await simulateNetwork("large");
@@ -254,9 +248,8 @@ export async function saveBrandFactoryConnections(entityId, type, mappedTargetId
 }
 
 /**
- * 7. Address Management Service
- * Manages adding/updating/deleting addresses, and updates billing/shipping default flags correctly.
- * Preset: 'large' (1200ms sleep)
+ * Creates or updates address resources inside the 'fabrito_addresses' namespace and configures billing/shipping flags.
+ * This persistence action runs with a large simulated network latency.
  */
 export async function manageAddress(entityId, addressPayload) {
   await simulateNetwork("large");
@@ -316,8 +309,8 @@ export async function manageAddress(entityId, addressPayload) {
 }
 
 /**
- * Deletes an address from localStorage.
- * Preset: 'large'
+ * Deletes a designated address record from the 'fabrito_addresses' namespace.
+ * The deletion executes with a large simulated network latency.
  */
 export async function deleteAddress(addressId) {
   await simulateNetwork("large");
@@ -328,9 +321,8 @@ export async function deleteAddress(addressId) {
 }
 
 /**
- * mapConnections Service
- * Traces to mock mapping rules with simulated delay.
- * Preset: 'large' (1200ms sleep)
+ * Maps connections between brands and factories by writing to the 'fabrito_connections' namespace via saveBrandFactoryConnections.
+ * This process executes under a large simulated network latency.
  */
 export async function mapConnections(entityId, type, mappedTargetIds) {
   return saveBrandFactoryConnections(entityId, type, mappedTargetIds);

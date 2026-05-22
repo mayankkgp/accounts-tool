@@ -3,7 +3,7 @@ import { loadEntityProfile } from "../../services/entityService";
 import EntityDetailHeader from "./EntityDetailHeader";
 import EntityDetailTabs from "./EntityDetailTabs";
 
-export default function EntityDetailPane({ selectedEntityId, onClose, onToggleArchive, refreshTrigger, activeTab, onTabChange, onRefresh }) {
+export default function EntityDetailPane({ selectedEntityId, onClose, onToggleArchive, refreshTrigger, activeTab, onTabChange, onRefresh, isArchiving }) {
   const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -71,7 +71,7 @@ export default function EntityDetailPane({ selectedEntityId, onClose, onToggleAr
         </div>
       ) : profile ? (
         <>
-          <EntityDetailHeader profile={profile} onClose={onClose} onToggleArchive={onToggleArchive} />
+          <EntityDetailHeader profile={profile} onClose={onClose} onToggleArchive={onToggleArchive} isArchiving={isArchiving} />
           <EntityDetailTabs profile={profile} activeTab={activeTab} onTabChange={onTabChange} onRefresh={onRefresh} />
         </>
       ) : (

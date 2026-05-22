@@ -3,7 +3,7 @@ import { X, Archive, RotateCcw, Pencil, Check, Loader2 } from "lucide-react";
 import { updateEntity } from "../../services/entityService";
 
 // EntityDetailHeader renders the main header, profile name edit states, and archive controls inside the expanded details drawer.
-export default function EntityDetailHeader({ profile, onClose, onToggleArchive }) {
+export default function EntityDetailHeader({ profile, onClose, onToggleArchive, isArchiving }) {
   const [isEditingIdentity, setIsEditingIdentity] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [localProfileOverride, setLocalProfileOverride] = useState(null);
@@ -137,7 +137,8 @@ export default function EntityDetailHeader({ profile, onClose, onToggleArchive }
           {/* Global Archive / Restore button next to Entity Type Tag, inline and middle-aligned */}
           <button
             onClick={() => onToggleArchive(currentProfile)}
-            className={`h-5 w-5 rounded-sm flex items-center justify-center border transition-all cursor-pointer shrink-0 ${
+            disabled={isArchiving}
+            className={`h-5 w-5 rounded-sm flex items-center justify-center border transition-all cursor-pointer shrink-0 disabled:opacity-50 disabled:cursor-not-allowed ${
               isArchived
                 ? "bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100 hover:text-emerald-700"
                 : "bg-red-50 text-red-650 border-red-200 hover:bg-red-100 hover:text-red-750"
@@ -145,7 +146,13 @@ export default function EntityDetailHeader({ profile, onClose, onToggleArchive }
             title={isArchived ? "Restore Profile" : "Archive Profile"}
             id="btn-archive-detail-toggle"
           >
-            {isArchived ? <RotateCcw size={10} className="stroke-[2.5]" /> : <Archive size={10} className="stroke-[2.5]" />}
+            {isArchiving ? (
+              <Loader2 size={10} className="animate-spin" />
+            ) : isArchived ? (
+              <RotateCcw size={10} className="stroke-[2.5]" />
+            ) : (
+              <Archive size={10} className="stroke-[2.5]" />
+            )}
           </button>
         </div>
         

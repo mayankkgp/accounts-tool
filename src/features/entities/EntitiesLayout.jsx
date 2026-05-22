@@ -9,6 +9,7 @@ export default function EntitiesLayout() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [activeTab, setActiveTab] = useState("overview");
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+  const [isArchiving, setIsArchiving] = useState(false);
 
   const handleRefresh = () => {
     setRefreshTrigger((prev) => prev + 1);
@@ -18,11 +19,14 @@ export default function EntitiesLayout() {
     if (!entity) return;
     const isNowArchived = entity.status === "archived";
     const nextStatus = isNowArchived ? "active" : "archived";
+    setIsArchiving(true);
     try {
       await updateEntity(entity.id, { status: nextStatus });
       handleRefresh();
     } catch (e) {
       console.error("Failed to update entity archiving state", e);
+    } finally {
+      setIsArchiving(false);
     }
   };
 
@@ -61,6 +65,7 @@ export default function EntitiesLayout() {
           activeTab={activeTab}
           onTabChange={setActiveTab}
           onRefresh={handleRefresh}
+          isArchiving={isArchiving}
         />
       </div>
 
