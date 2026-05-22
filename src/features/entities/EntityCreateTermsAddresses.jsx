@@ -25,9 +25,6 @@ function ExtraAddressItem({ index, address, onUpdate, onRemove }) {
 
   return (
     <div className="bg-slate-50 border-l-2 border-l-emerald-400 p-1.5 rounded-sm flex flex-col gap-1.5 animate-fade-in text-xs bg-opacity-70">
-      <div className="flex items-center justify-between">
-        <span className="text-[8px] uppercase tracking-wide text-slate-500 font-bold">Additional Location #{index + 1}</span>
-      </div>
       <div className="grid grid-cols-2 gap-1.5 w-full">
         <div className="flex flex-col gap-0.5 w-full">
           <span className={spanClass}>Address Line 1</span>

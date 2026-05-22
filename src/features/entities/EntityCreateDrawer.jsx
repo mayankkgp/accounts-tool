@@ -18,6 +18,18 @@ export default function EntityCreateDrawer({ isOpen, onClose, onRefresh }) {
   const [gstAddress, setGstAddress] = useState(null);
 
   useEffect(() => {
+    if (isOpen) {
+      setFormData({
+        type: "brand", businessName: "", brandName: "", pocName: "", pocContact: "",
+        gst: "", creditDays: "", debitDays: "",
+        beneficiary: "", bankName: "", accountNo: "", ifscCode: ""
+      });
+      setExtraAddresses([]);
+      setGstAddress(null);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
     const handleKeyDown = (e) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -80,7 +92,7 @@ export default function EntityCreateDrawer({ isOpen, onClose, onRefresh }) {
 
   return (
     <>
-      <div className="fixed inset-0 bg-slate-900/30 backdrop-blur-[1px] z-40 transition-opacity" onClick={onClose} id="create-drawer-overlay" />
+      <div className="fixed inset-0 bg-slate-900/30 backdrop-blur-[1px] z-40 transition-opacity" id="create-drawer-overlay" />
       <div className="fixed top-0 right-0 bottom-0 w-[420px] sm:w-[520px] bg-white border-l border-slate-200 shadow-2xl z-50 flex flex-col h-full font-sans text-xs" id="create-drawer-body">
         <div className="flex items-center justify-between p-3 border-b border-slate-200 shrink-0">
           <div>
@@ -136,7 +148,7 @@ export default function EntityCreateDrawer({ isOpen, onClose, onRefresh }) {
               <div className="flex flex-col gap-0.5">
                 <span className={spanClass}>GST Number *</span>
                 <div className="relative">
-                  <input type="text" required maxLength={15} value={formData.gst} onChange={handleGstChange} className="w-full h-6 text-xs pl-1.5 pr-6 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-mono uppercase font-medium text-slate-800" />
+                  <input type="text" required maxLength={15} value={formData.gst} onChange={handleGstChange} disabled={isGstLoading} className="w-full h-6 text-xs pl-1.5 pr-6 border border-slate-200 bg-white rounded-sm outline-none focus:border-indigo-500 font-mono uppercase font-medium text-slate-800 disabled:opacity-50 disabled:bg-slate-50" />
                   {isGstLoading && <span className="absolute right-1.5 top-1/2 -translate-y-1/2"><Loader2 size={10} className="animate-spin text-indigo-500" /></span>}
                 </div>
               </div>
