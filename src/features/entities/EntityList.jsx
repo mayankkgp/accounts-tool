@@ -59,7 +59,7 @@ export default function EntityList({
   );
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden h-full gap-1.5" id="entity-list-container">
+    <div className="flex-1 flex flex-col overflow-hidden h-full" id="entity-list-container">
       <EntityListToolbar
         activeType={activeType}
         setActiveType={(type) => {
