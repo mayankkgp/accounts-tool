@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import React from "react";
 
 /**
  * PurchaseDataGrid Component
- * Implements a high-density, compact data grid structure matching EntityList.jsx.
+ * Implements a high-density, compact data grid structure.
  * Respects 24px fixed row heights, micro-scale typography, and flush stacking boundaries.
  */
 export default function PurchaseDataGrid({
@@ -12,9 +11,9 @@ export default function PurchaseDataGrid({
   selectedPurchaseId = null,
   onSelectPurchase,
   vendorLookup = {},
+  sortConfig = { column: "purchaseDate", direction: "desc" },
+  setSortConfig,
 }) {
-  const [sortDir, setSortDir] = useState("default");
-
   // Commercial totals calculation taking into account taxes and overall/item-wise discounts
   const calculateTotalAmount = (pur) => {
     const subtotal = (pur.items || []).reduce((sum, item) => {
@@ -34,23 +33,36 @@ export default function PurchaseDataGrid({
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
-      maximumFractionDigits: 0
+      maximumFractionDigits: 0,
     }).format(num);
   };
 
-  // Toggles alphabetical or chronological sort states
-  const toggleSort = () => {
-    setSortDir((p) => (p === "default" ? "asc" : p === "asc" ? "desc" : "default"));
+  // Cycle column sorts: default -> asc -> desc -> default
+  const handleHeaderClick = (colName) => {
+    if (!setSortConfig) return;
+    if (sortConfig.column !== colName) {
+      setSortConfig({ column: colName, direction: "asc" });
+    } else if (sortConfig.direction === "asc") {
+      setSortConfig({ column: colName, direction: "desc" });
+    } else if (sortConfig.direction === "desc") {
+      setSortConfig({ column: "default", direction: "default" });
+    } else {
+      setSortConfig({ column: colName, direction: "asc" });
+    }
   };
 
-  // Sorting operation mimicking EntityList.jsx
-  const sortedPurchases = sortDir === "default"
-    ? purchases
-    : [...purchases].sort((a, b) => {
-        const vendorA = vendorLookup[a.vendorId] || "";
-        const vendorB = vendorLookup[b.vendorId] || "";
-        return (sortDir === "asc" ? 1 : -1) * vendorA.localeCompare(vendorB);
-      });
+  // Renders the tiny sort status indicator
+  const renderSortIndicator = (colName) => {
+    const isCurrent = sortConfig.column === colName;
+    if (!isCurrent || sortConfig.direction === "default") {
+      return <span className="opacity-30 font-extrabold text-[8px] tracking-normal inline-block ml-0.5">&#8645;</span>;
+    }
+    return sortConfig.direction === "asc" ? (
+      <span className="text-indigo-600 font-extrabold text-[9px] inline-block ml-0.5">&#8593;</span>
+    ) : (
+      <span className="text-indigo-600 font-extrabold text-[9px] inline-block ml-0.5">&#8595;</span>
+    );
+  };
 
   const isCompressed = !!selectedPurchaseId;
   const gridLayoutClass = isCompressed
@@ -59,28 +71,54 @@ export default function PurchaseDataGrid({
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden h-full" id="purchases-directory-container">
-      {/* Dense Grid Header matching EntityList.jsx */}
-      <div 
+      {/* Dense Grid Header with Sort Controls */}
+      <div
         className={`grid gap-1 px-1.5 py-0.5 border-b border-slate-300 text-[9px] uppercase tracking-wider font-semibold text-slate-500 select-none shrink-0 bg-slate-100 ${gridLayoutClass}`}
         id="purchase-grid-header-row"
       >
-        {!isCompressed && <span>Date</span>}
-        
+        {!isCompressed && (
+          <button
+            type="button"
+            onClick={() => handleHeaderClick("purchaseDate")}
+            className="flex items-center gap-0.5 hover:text-slate-800 transition-colors cursor-pointer text-slate-500 text-left font-semibold outline-none border-none p-0 bg-transparent self-center text-[9px] uppercase tracking-wider font-sans"
+            id="date-header-sort-btn"
+          >
+            <span>Date</span>
+            {renderSortIndicator("purchaseDate")}
+          </button>
+        )}
+
         <button
           type="button"
-          onClick={toggleSort}
-          className="flex items-center gap-1 hover:text-slate-800 transition-colors cursor-pointer text-slate-500 text-left font-semibold outline-none border-none p-0 bg-transparent self-center text-[9px] uppercase tracking-wider font-sans"
+          onClick={() => handleHeaderClick("vendorName")}
+          className="flex items-center gap-0.5 hover:text-slate-800 transition-colors cursor-pointer text-slate-500 text-left font-semibold outline-none border-none p-0 bg-transparent self-center text-[9px] uppercase tracking-wider font-sans"
           id="vendor-header-sort-btn"
         >
           <span>Vendor Name</span>
-          {sortDir === "default" && <span className="opacity-40 font-bold">&#8645;</span>}
-          {sortDir === "asc" && <span className="text-indigo-600 font-bold">&#8593;</span>}
-          {sortDir === "desc" && <span className="text-indigo-600 font-bold">&#8595;</span>}
+          {renderSortIndicator("vendorName")}
         </button>
 
-        {!isCompressed && <span>Invoice Number</span>}
-        
-        <span className={isCompressed ? "text-right" : "text-right"}>Total Amount</span>
+        {!isCompressed && (
+          <button
+            type="button"
+            onClick={() => handleHeaderClick("invoiceNumber")}
+            className="flex items-center gap-0.5 hover:text-slate-800 transition-colors cursor-pointer text-slate-500 text-left font-semibold outline-none border-none p-0 bg-transparent self-center text-[9px] uppercase tracking-wider font-sans"
+            id="invoice-header-sort-btn"
+          >
+            <span>Invoice Number</span>
+            {renderSortIndicator("invoiceNumber")}
+          </button>
+        )}
+
+        <button
+          type="button"
+          onClick={() => handleHeaderClick("totalAmount")}
+          className="flex items-center gap-0.5 hover:text-slate-800 transition-colors cursor-pointer text-slate-500 justify-self-end font-semibold outline-none border-none p-0 bg-transparent self-center text-[9px] uppercase tracking-wider font-sans text-right"
+          id="amount-header-sort-btn"
+        >
+          <span>Total Amount</span>
+          {renderSortIndicator("totalAmount")}
+        </button>
       </div>
 
       {/* Row Scrolling Body Section */}
@@ -98,13 +136,13 @@ export default function PurchaseDataGrid({
               </div>
             ))}
           </div>
-        ) : sortedPurchases.length === 0 ? (
+        ) : purchases.length === 0 ? (
           <div className="h-32 flex flex-col items-center justify-center text-slate-500 font-medium select-none text-[10px]" id="empty-purchase-state">
             <span>No purchase records found</span>
             <span className="text-[9px] text-slate-400 font-medium mt-0.5 font-mono">Scoped ledger partition empty</span>
           </div>
         ) : (
-          sortedPurchases.map((p) => {
+          purchases.map((p) => {
             const vendorName = vendorLookup[p.vendorId] || "Unknown Vendor";
             const computedTotal = calculateTotalAmount(p);
             const isSelected = selectedPurchaseId === p.id;
@@ -151,9 +189,9 @@ export default function PurchaseDataGrid({
         )}
       </div>
 
-      {/* Analytics Footer matching EntityList.jsx */}
+      {/* Analytics Footer */}
       <div className="text-[9px] uppercase tracking-wider font-semibold text-slate-500 border-t border-slate-200 pt-1 px-1 flex justify-between shrink-0 select-none bg-slate-100/55" id="purchases-footer-analytics">
-        <span>Active Grid Lines: {sortedPurchases.length}</span>
+        <span>Active Grid Lines: {purchases.length}</span>
         <span className="font-mono text-[8px] text-slate-500">scoped_purchases_db</span>
       </div>
     </div>
