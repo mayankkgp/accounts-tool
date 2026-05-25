@@ -1,17 +1,63 @@
 import { simulateNetwork } from "../utils/simulateNetwork";
 
+// Helper parsers for robust date boundary checks in backend scope
+const parseDateDDMMYYYY = (dateStr) => {
+  if (!dateStr) return null;
+  const parts = dateStr.split("-");
+  if (parts.length === 3) {
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1;
+    const year = parseInt(parts[2], 10);
+    return new Date(year, month, day);
+  }
+  return new Date(dateStr);
+};
+
+const parseDateYYYYMMDD = (dateStr) => {
+  if (!dateStr) return null;
+  const parts = dateStr.split("-");
+  if (parts.length === 3) {
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1;
+    const day = parseInt(parts[2], 10);
+    return new Date(year, month, day);
+  }
+  return new Date(dateStr);
+};
+
+// Reusable math engine mapping for amount filtering in backend scope
+const calculateTotalAmountInService = (pur) => {
+  const subtotal = (pur.items || []).reduce((sum, item) => {
+    const rawTotal = (Number(item.rate) || 0) * (Number(item.quantity) || 0);
+    const lineTotal = Math.max(0, rawTotal - (Number(item.itemDiscount) || 0));
+    return sum + lineTotal;
+  }, 0);
+
+  const netTaxableValue = Math.max(0, subtotal - (Number(pur.overallDiscount) || 0));
+  const tax = netTaxableValue * 0.18; // standard 18% standard GST rate
+  const grandTotal = netTaxableValue + tax + (Number(pur.freight) || 0);
+  return Math.max(0, parseFloat(grandTotal.toFixed(2)));
+};
+
 /**
  * 1. The List Fetcher (GET /purchases)
  * Retrieves a filtered and searched list of purchases from the 'fabrito_purchases' LocalStorage partition.
  * It maps vendor names from 'fabrito_entities' to support real-time searches by company names.
  * Uses 'medium' (600ms) simulated delay.
  * 
- * @param {Object} filters - Search query, tab filter (draft/finalized/all), and pagination tools.
+ * @param {Object} filters - Search query, tab filter (draft/finalized/all), date ranges, vendor ids, amount limits.
  * @returns {Promise<Array>} Resets and resolves with matching purchase entries.
  */
-export async function fetchPurchases({ query = "", status = "all" } = {}) {
-  await simulateNetwork("medium");
-
+export async function fetchPurchases({
+  query = "",
+  status = "all",
+  fromDate = "",
+  toDate = "",
+  financialYear = "",
+  vendorIds = [],
+  minAmount = "",
+  maxAmount = ""
+} = {}) {
   const purchases = JSON.parse(localStorage.getItem("fabrito_purchases") || "[]");
   const entities = JSON.parse(localStorage.getItem("fabrito_entities") || "[]");
 
@@ -24,7 +70,7 @@ export async function fetchPurchases({ query = "", status = "all" } = {}) {
     };
   });
 
-  return purchases.filter((item) => {
+  const filtered = purchases.filter((item) => {
     // 1. Filter by Status (Draft vs Finalized vs All)
     if (status !== "all" && item.status !== status) {
       return false;
@@ -43,11 +89,40 @@ export async function fetchPurchases({ query = "", status = "all" } = {}) {
         (it.hsnCode || "").toLowerCase().includes(q)
       );
 
-      return matchVendor || matchInvoice || matchPO || matchItems;
+      if (!matchVendor && !matchInvoice && !matchPO && !matchItems) {
+        return false;
+      }
     }
+
+    // 3. Date Boundary Checking
+    const itemDate = parseDateDDMMYYYY(item.purchaseDate);
+    const fromDateObj = fromDate ? parseDateYYYYMMDD(fromDate) : null;
+    const toDateObj = toDate ? parseDateYYYYMMDD(toDate) : null;
+    if (fromDateObj && itemDate && itemDate < fromDateObj) return false;
+    if (toDateObj && itemDate && itemDate > toDateObj) return false;
+
+    // 4. Financial Year Filters
+    if (financialYear && item.financialYear !== financialYear) {
+      return false;
+    }
+
+    // 5. Multi-Select Vendor Filter Checklist
+    if (vendorIds && vendorIds.length > 0 && !vendorIds.includes(item.vendorId)) {
+      return false;
+    }
+
+    // 6. Amount Ranges
+    const computedTotal = calculateTotalAmountInService(item);
+    if (minAmount !== "" && computedTotal < Number(minAmount)) return false;
+    if (maxAmount !== "" && computedTotal > Number(maxAmount)) return false;
 
     return true;
   });
+
+  // Call simulated network delay after filtering, just before returning the final array, to simulate database query time.
+  await simulateNetwork("medium");
+
+  return filtered;
 }
 
 /**

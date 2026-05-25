@@ -91,7 +91,7 @@ export default function PurchasesLayout() {
     }
   }, [refreshTrigger]);
 
-  // Pessimistic list loading cycle (fetch everything matching active tab)
+  // Pessimistic list loading cycle (fetch everything matching active filters from service)
   useEffect(() => {
     let isCurrentFetch = true;
 
@@ -99,8 +99,14 @@ export default function PurchasesLayout() {
       setIsLoading(true);
       try {
         const results = await fetchPurchases({
-          query: "", // Apply search locally or fetch all to allow immediate local sub-filtering
+          query: debouncedQuery,
           status: activeTab,
+          fromDate: filters.fromDate,
+          toDate: filters.toDate,
+          financialYear: filters.financialYear,
+          vendorIds: filters.vendorIds,
+          minAmount: filters.minAmount,
+          maxAmount: filters.maxAmount,
         });
         if (isCurrentFetch) {
           setPurchases(results);
@@ -119,50 +125,10 @@ export default function PurchasesLayout() {
     return () => {
       isCurrentFetch = false;
     };
-  }, [activeTab, refreshTrigger]);
-
-  // --- Real-time Filter & Search Logic mapping client-side results ---
-  const filteredPurchases = purchases.filter((item) => {
-    // 1. Text Search across multiple keys (Vendor name lookup, Invoice#, PO#)
-    if (debouncedQuery) {
-      const q = debouncedQuery.toLowerCase().trim();
-      const vendorName = (vendorLookup[item.vendorId] || "").toLowerCase();
-      const matchVendor = vendorName.includes(q);
-      const matchInvoice = (item.invoiceNumber || "").toLowerCase().includes(q);
-      const matchPO = (item.poNumber || "").toLowerCase().includes(q);
-
-      if (!matchVendor && !matchInvoice && !matchPO) {
-        return false;
-      }
-    }
-
-    // 2. Date Boundary Checking
-    const itemDate = parseDateDDMMYYYY(item.purchaseDate);
-    const fromDateObj = filters.fromDate ? parseDateYYYYMMDD(filters.fromDate) : null;
-    const toDateObj = filters.toDate ? parseDateYYYYMMDD(filters.toDate) : null;
-    if (fromDateObj && itemDate && itemDate < fromDateObj) return false;
-    if (toDateObj && itemDate && itemDate > toDateObj) return false;
-
-    // 3. Financial Year Filters
-    if (filters.financialYear && item.financialYear !== filters.financialYear) {
-      return false;
-    }
-
-    // 4. Multi-Select Vendor Filter Checklist
-    if (filters.vendorIds.length > 0 && !filters.vendorIds.includes(item.vendorId)) {
-      return false;
-    }
-
-    // 5. Amount Ranges
-    const computedTotal = calculateTotalAmount(item);
-    if (filters.minAmount !== "" && computedTotal < Number(filters.minAmount)) return false;
-    if (filters.maxAmount !== "" && computedTotal > Number(filters.maxAmount)) return false;
-
-    return true;
-  });
+  }, [activeTab, debouncedQuery, filters, refreshTrigger]);
 
   // --- Multi-Column Sort Logic mapping grid headers in order ---
-  const sortedPurchases = [...filteredPurchases].sort((a, b) => {
+  const sortedPurchases = [...purchases].sort((a, b) => {
     if (sortConfig.column === "default" || !sortConfig.column) {
       return 0; // Natural unsorted fallback
     }

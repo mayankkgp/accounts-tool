@@ -94,13 +94,7 @@ export default function PurchaseListToolbar({
   }
 
   return (
-    <div className="flex flex-col gap-1.5 border-b border-slate-200 pb-1.5 shrink-0 select-none font-sans" id="purchases-toolbar">
-      {/* 1. Dense Mini Header Segment */}
-      <div className="flex items-center justify-between px-1.5 py-0.5 bg-slate-100/50 rounded-xs border border-slate-200/40" id="purchases-mini-header">
-        <span className="text-[10px] uppercase font-bold tracking-wider text-slate-700">Commercial Ledger</span>
-        <span className="text-[9px] font-mono text-slate-400 bg-slate-200/40 px-1 rounded-sm">Purchases</span>
-      </div>
-
+    <div className="flex flex-col gap-1 border-b border-slate-200 pb-1.5 shrink-0 select-none font-sans" id="purchases-toolbar">
       <div className="max-w-md w-full flex flex-col gap-1" id="purchases-toolbar-inner">
         {/* 2. Navigation Sub-Tabs Toggle */}
         <Tabs.Root value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -193,49 +187,49 @@ export default function PurchaseListToolbar({
             )}
           </button>
         </div>
-
-        {/* 4. Active Filter Chips Row */}
-        {chips.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1 pt-1 border-t border-slate-100 mt-1 max-h-16 overflow-y-auto" id="purchases-filter-chips-row">
-            {chips.map((chip) => (
-              <div
-                key={chip.id}
-                className="h-5 px-1.5 bg-slate-200/70 hover:bg-slate-200/90 border border-slate-300/40 rounded-sm flex items-center gap-1 text-[9px] text-slate-700 font-medium select-none"
-                id={`filter-chip-${chip.id}`}
-              >
-                <span className="truncate max-w-[125px]">{chip.label}</span>
-                <button
-                  onClick={chip.onRemove}
-                  className="text-slate-500 hover:text-slate-800 cursor-pointer flex items-center justify-center p-0.5 rounded-xs"
-                  type="button"
-                  id={`remove-chip-btn-${chip.id}`}
-                >
-                  <X size={8} className="stroke-[2.5]" />
-                </button>
-              </div>
-            ))}
-            {chips.length > 1 && (
-              <button
-                onClick={() =>
-                  setFilters({
-                    fromDate: "",
-                    toDate: "",
-                    financialYear: "",
-                    vendorIds: [],
-                    minAmount: "",
-                    maxAmount: "",
-                  })
-                }
-                className="text-[9px] uppercase tracking-wider font-bold text-indigo-600 hover:text-indigo-500 cursor-pointer ml-1.5"
-                type="button"
-                id="clear-all-chips-btn"
-              >
-                Clear All
-              </button>
-            )}
-          </div>
-        )}
       </div>
+
+      {/* 4. Active Filter Chips Row - Moved outside to span the entire horizontal width */}
+      {chips.length > 0 && (
+        <div className="w-full flex flex-wrap items-center gap-1 max-h-16 overflow-y-auto" id="purchases-filter-chips-row">
+          {chips.map((chip) => (
+            <div
+              key={chip.id}
+              className="h-5 px-1.5 bg-slate-200/70 hover:bg-slate-200/90 border border-slate-300/40 rounded-sm flex items-center gap-1 text-[9px] text-slate-700 font-medium select-none"
+              id={`filter-chip-${chip.id}`}
+            >
+              <span className="truncate max-w-[125px]">{chip.label}</span>
+              <button
+                onClick={chip.onRemove}
+                className="text-slate-500 hover:text-slate-800 cursor-pointer flex items-center justify-center p-0.5 rounded-xs"
+                type="button"
+                id={`remove-chip-btn-${chip.id}`}
+              >
+                <X size={8} className="stroke-[2.5]" />
+              </button>
+            </div>
+          ))}
+          {chips.length > 1 && (
+            <button
+              onClick={() =>
+                setFilters({
+                  fromDate: "",
+                  toDate: "",
+                  financialYear: "",
+                  vendorIds: [],
+                  minAmount: "",
+                  maxAmount: "",
+                })
+              }
+              className="text-[9px] uppercase tracking-wider font-bold text-indigo-600 hover:text-indigo-500 cursor-pointer ml-1.5"
+              type="button"
+              id="clear-all-chips-btn"
+            >
+              Clear All
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
