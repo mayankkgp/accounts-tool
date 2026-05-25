@@ -72,7 +72,7 @@ export default function PurchaseDataGrid({
     : "grid-cols-[1.1fr_2fr_1.5fr_1.4fr]"; // Full View displaying Date, Vendor name, Invoice number, Total Amount
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden h-full mt-1 bg-white border border-slate-200 rounded-sm shadow-xs" id="purchases-directory-container">
+    <div className="flex-1 flex flex-col overflow-hidden h-full" id="purchases-directory-container">
       {/* Dense Grid Header matching EntityList.jsx */}
       <div 
         className={`grid gap-1 px-1.5 py-0.5 border-b border-slate-300 text-[9px] uppercase tracking-wider font-semibold text-slate-500 select-none shrink-0 bg-slate-100 ${gridLayoutClass}`}
@@ -98,7 +98,7 @@ export default function PurchaseDataGrid({
       </div>
 
       {/* Row Scrolling Body Section */}
-      <div className="flex-grow overflow-x-hidden overflow-y-auto" id="purchase-list-scrollable-area">
+      <div className="flex-1 overflow-x-hidden overflow-y-auto" id="purchase-list-scrollable-area">
         {isLoading ? (
           <div className="flex flex-col select-none divide-y divide-slate-100" id="purchase-list-skeleton-loader">
             {Array.from({ length: 12 }).map((_, i) => (

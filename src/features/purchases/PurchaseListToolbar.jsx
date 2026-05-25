@@ -75,7 +75,7 @@ export default function PurchaseListToolbar({
           {/* Static Uniform Filter Trigger */}
           <button
             type="button"
-            className="h-6 bg-white border border-slate-300 rounded-sm px-2 text-[11px] text-slate-700 outline-none hover:bg-slate-50 cursor-pointer font-semibold uppercase tracking-wider font-mono flex items-center justify-between gap-1 transition-all"
+            className="h-6 bg-white border border-slate-300 rounded-sm px-2 text-[11px] text-slate-700 outline-none hover:bg-slate-50 focus:border-indigo-500 cursor-pointer font-sans flex items-center justify-center gap-1 transition-all"
             id="purchases-filter-visual-btn"
           >
             <SlidersHorizontal size={10} className="text-slate-500 shrink-0" />
