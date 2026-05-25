@@ -1,0 +1,598 @@
+[
+  {
+    "id": "pur_001",
+    "vendorId": "ent_041",
+    "invoiceNumber": "VY-25-805",
+    "purchaseDate": "07-09-2025",
+    "financialYear": "2025-2026",
+    "poNumber": "PO-8813",
+    "freight": 450,
+    "overallDiscount": 2200,
+    "lValue": 96,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Combed Cotton Yarn 30s",
+        "description": null,
+        "hsnCode": "5205",
+        "rate": 276,
+        "quantity": 190,
+        "uom": "kg",
+        "itemDiscount": 0
+      },
+      {
+        "rowId": "r2",
+        "itemName": "Polyester Spun Yarn",
+        "description": null,
+        "hsnCode": "5509",
+        "rate": 144,
+        "quantity": 30,
+        "uom": "kg",
+        "itemDiscount": 0
+      }
+    ]
+  },
+  {
+    "id": "pur_002",
+    "vendorId": "ent_041",
+    "invoiceNumber": "VY-25-746",
+    "purchaseDate": "05-11-2025",
+    "financialYear": "2025-2026",
+    "poNumber": null,
+    "freight": 250,
+    "overallDiscount": 0,
+    "lValue": 97,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Viscose Blend Yarn",
+        "description": "70/30 blending ring spinning",
+        "hsnCode": "5403",
+        "rate": 172,
+        "quantity": 340,
+        "uom": "kg",
+        "itemDiscount": 0
+      }
+    ]
+  },
+  {
+    "id": "pur_008",
+    "vendorId": "ent_042",
+    "invoiceNumber": "ADW-25-432",
+    "purchaseDate": "16-11-2025",
+    "financialYear": "2025-2026",
+    "poNumber": "PO-8079",
+    "freight": null,
+    "overallDiscount": 0,
+    "lValue": 95,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Combed Cotton Yarn 30s",
+        "description": null,
+        "hsnCode": "5205",
+        "rate": 271,
+        "quantity": 210,
+        "uom": "kg",
+        "itemDiscount": 300
+      }
+    ]
+  },
+  {
+    "id": "pur_014",
+    "vendorId": "ent_043",
+    "invoiceNumber": "GBZ-25-726",
+    "purchaseDate": "16-10-2025",
+    "financialYear": "2025-2026",
+    "poNumber": null,
+    "freight": 600,
+    "overallDiscount": 1400,
+    "lValue": 98,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Cotton Shirting Fabric",
+        "description": null,
+        "hsnCode": "5208",
+        "rate": 197,
+        "quantity": 390,
+        "uom": "m",
+        "itemDiscount": 0
+      }
+    ]
+  },
+  {
+    "id": "draft_001",
+    "vendorId": "ent_041",
+    "invoiceNumber": null,
+    "purchaseDate": "23-11-2025",
+    "financialYear": null,
+    "poNumber": null,
+    "freight": 150,
+    "overallDiscount": 1000,
+    "lValue": null,
+    "status": "draft",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Cotton Slub Yarn",
+        "description": "Natural cream unbleached cone",
+        "hsnCode": "5205",
+        "rate": 267,
+        "quantity": 240,
+        "uom": "kg",
+        "itemDiscount": 0
+      },
+      {
+        "rowId": "r2",
+        "itemName": "Silk Spun Yarn",
+        "description": "Natural bright golden luster",
+        "hsnCode": "5005",
+        "rate": 869,
+        "quantity": 370,
+        "uom": "kg",
+        "itemDiscount": 0
+      }
+    ]
+  },
+  {
+    "id": "draft_002",
+    "vendorId": "ent_041",
+    "invoiceNumber": "VY-25-370",
+    "purchaseDate": "10-12-2025",
+    "financialYear": "2025-2026",
+    "poNumber": null,
+    "freight": null,
+    "overallDiscount": 0,
+    "lValue": null,
+    "status": "draft",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Cotton Voile Fabric",
+        "description": "Superfine 80s count fabric",
+        "hsnCode": "5208",
+        "rate": 92,
+        "quantity": 480,
+        "uom": "m",
+        "itemDiscount": 450
+      }
+    ]
+  },
+  {
+    "id": "pur_023",
+    "vendorId": "ent_044",
+    "invoiceNumber": "YKK-25-952",
+    "purchaseDate": "26-08-2025",
+    "financialYear": "2025-2026",
+    "poNumber": null,
+    "freight": null,
+    "overallDiscount": 0,
+    "lValue": 96,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Worsted Wool Suiting",
+        "description": "Super 120s luxurious count",
+        "hsnCode": "5112",
+        "rate": 477,
+        "quantity": 760,
+        "uom": "m",
+        "itemDiscount": 750
+      }
+    ]
+  },
+  {
+    "id": "pur_032",
+    "vendorId": "ent_045",
+    "invoiceNumber": "WTC-25-111",
+    "purchaseDate": "21-09-2025",
+    "financialYear": "2025-2026",
+    "poNumber": "PO-9188",
+    "freight": 450,
+    "overallDiscount": 0,
+    "lValue": 96,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Satin Lining Fabric",
+        "description": "100% micro-polyester",
+        "hsnCode": "5407",
+        "rate": 74,
+        "quantity": 400,
+        "uom": "m",
+        "itemDiscount": 0
+      }
+    ]
+  },
+  {
+    "id": "draft_006",
+    "vendorId": "ent_045",
+    "invoiceNumber": null,
+    "purchaseDate": "04-09-2025",
+    "financialYear": "2025-2026",
+    "poNumber": "PO-8823",
+    "freight": null,
+    "overallDiscount": 0,
+    "lValue": 96,
+    "status": "draft",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Viscose Blend Yarn",
+        "description": "70/30 blending ring spinning",
+        "hsnCode": "5403",
+        "rate": 209,
+        "quantity": 240,
+        "uom": "kg",
+        "itemDiscount": 300
+      }
+    ]
+  },
+  {
+    "id": "pur_041",
+    "vendorId": "ent_046",
+    "invoiceNumber": "ZPH-25-268",
+    "purchaseDate": "06-10-2025",
+    "financialYear": "2025-2026",
+    "poNumber": "PO-8782",
+    "freight": 250,
+    "overallDiscount": 0,
+    "lValue": 100,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Stretch Denim 10oz",
+        "description": null,
+        "hsnCode": "5209",
+        "rate": 195,
+        "quantity": 430,
+        "uom": "m",
+        "itemDiscount": 0
+      }
+    ]
+  },
+  {
+    "id": "pur_051",
+    "vendorId": "ent_047",
+    "invoiceNumber": "TRX-25-136",
+    "purchaseDate": "01-10-2025",
+    "financialYear": "2025-2026",
+    "poNumber": null,
+    "freight": 800,
+    "overallDiscount": 1800,
+    "lValue": 97,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Terry Towel Yarn",
+        "description": "Zero twist premium towel fiber",
+        "hsnCode": "5802",
+        "rate": 240,
+        "quantity": 250,
+        "uom": "kg",
+        "itemDiscount": 0
+      }
+    ]
+  },
+  {
+    "id": "pur_060",
+    "vendorId": "ent_048",
+    "invoiceNumber": "MTK-25-724",
+    "purchaseDate": "21-10-2025",
+    "financialYear": "2025-2026",
+    "poNumber": "PO-8404",
+    "freight": null,
+    "overallDiscount": 0,
+    "lValue": 98,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Poly-Viscose Yarn",
+        "description": null,
+        "hsnCode": "5509",
+        "rate": 223,
+        "quantity": 230,
+        "uom": "kg",
+        "itemDiscount": 600
+      }
+    ]
+  },
+  {
+    "id": "pur_066",
+    "vendorId": "ent_049",
+    "invoiceNumber": "SDR-25-362",
+    "purchaseDate": "14-09-2025",
+    "financialYear": "2025-2026",
+    "poNumber": "PO-8383",
+    "freight": 250,
+    "overallDiscount": 0,
+    "lValue": 99,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Cotton Slub Yarn",
+        "description": null,
+        "hsnCode": "5205",
+        "rate": 274,
+        "quantity": 270,
+        "uom": "kg",
+        "itemDiscount": 300
+      }
+    ]
+  },
+  {
+    "id": "pur_075",
+    "vendorId": "ent_050",
+    "invoiceNumber": "PLM-25-522",
+    "purchaseDate": "26-09-2025",
+    "financialYear": "2025-2026",
+    "poNumber": null,
+    "freight": 300,
+    "overallDiscount": 0,
+    "lValue": 95,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Cotton Canvas Fabric",
+        "description": "Unbleached natural finish",
+        "hsnCode": "5209",
+        "rate": 152,
+        "quantity": 330,
+        "uom": "m",
+        "itemDiscount": 0
+      }
+    ]
+  },
+  {
+    "id": "pur_085",
+    "vendorId": "ent_051",
+    "invoiceNumber": "KGN-25-381",
+    "purchaseDate": "05-09-2025",
+    "financialYear": "2025-2026",
+    "poNumber": null,
+    "freight": 450,
+    "overallDiscount": 0,
+    "lValue": 99,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Bamboo Cotton Yarn",
+        "description": null,
+        "hsnCode": "5205",
+        "rate": 361,
+        "quantity": 30,
+        "uom": "kg",
+        "itemDiscount": 0
+      }
+    ]
+  },
+  {
+    "id": "pur_095",
+    "vendorId": "ent_052",
+    "invoiceNumber": "BCK-25-311",
+    "purchaseDate": "20-09-2025",
+    "financialYear": "2025-2026",
+    "poNumber": null,
+    "freight": null,
+    "overallDiscount": 0,
+    "lValue": 97,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Satin Lining Fabric",
+        "description": "100% micro-polyester",
+        "hsnCode": "5407",
+        "rate": 80,
+        "quantity": 790,
+        "uom": "m",
+        "itemDiscount": 0
+      }
+    ]
+  },
+  {
+    "id": "pur_103",
+    "vendorId": "ent_053",
+    "invoiceNumber": "NXG-25-217",
+    "purchaseDate": "05-09-2025",
+    "financialYear": "2025-2026",
+    "poNumber": null,
+    "freight": 500,
+    "overallDiscount": 0,
+    "lValue": 100,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Cotton Shirting Fabric",
+        "description": "Yarn-dyed micro check layout",
+        "hsnCode": "5208",
+        "rate": 199,
+        "quantity": 110,
+        "uom": "m",
+        "itemDiscount": 0
+      }
+    ]
+  },
+  {
+    "id": "pur_112",
+    "vendorId": "ent_054",
+    "invoiceNumber": "DSF-25-824",
+    "purchaseDate": "23-08-2025",
+    "financialYear": "2025-2026",
+    "poNumber": "PO-9343",
+    "freight": null,
+    "overallDiscount": 0,
+    "lValue": 95,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Dyed Cotton Yarn",
+        "description": "Double mercerized luxury thread",
+        "hsnCode": "5205",
+        "rate": 300,
+        "quantity": 110,
+        "uom": "kg",
+        "itemDiscount": 0
+      }
+    ]
+  },
+  {
+    "id": "pur_120",
+    "vendorId": "ent_055",
+    "invoiceNumber": "HMT-25-274",
+    "purchaseDate": "20-09-2025",
+    "financialYear": "2025-2026",
+    "poNumber": "PO-8522",
+    "freight": null,
+    "overallDiscount": 0,
+    "lValue": 98,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Chambray Shirting",
+        "description": "Slub warp weave details",
+        "hsnCode": "5208",
+        "rate": 123,
+        "quantity": 170,
+        "uom": "m",
+        "itemDiscount": 300
+      }
+    ]
+  },
+  {
+    "id": "pur_127",
+    "vendorId": "ent_056",
+    "invoiceNumber": "BRL-25-980",
+    "purchaseDate": "13-11-2025",
+    "financialYear": "2025-2026",
+    "poNumber": "PO-8364",
+    "freight": null,
+    "overallDiscount": 0,
+    "lValue": 98,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Cotton Poplin Fabric",
+        "description": null,
+        "hsnCode": "5208",
+        "rate": 139,
+        "quantity": 310,
+        "uom": "m",
+        "itemDiscount": 0
+      }
+    ]
+  },
+  {
+    "id": "pur_133",
+    "vendorId": "ent_057",
+    "invoiceNumber": "VSP-25-260",
+    "purchaseDate": "13-12-2025",
+    "financialYear": "2025-2026",
+    "poNumber": null,
+    "freight": null,
+    "overallDiscount": 2400,
+    "lValue": 100,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Cotton Voile Fabric",
+        "description": null,
+        "hsnCode": "5208",
+        "rate": 100,
+        "quantity": 630,
+        "uom": "m",
+        "itemDiscount": 0
+      }
+    ]
+  },
+  {
+    "id": "pur_140",
+    "vendorId": "ent_058",
+    "invoiceNumber": "QLT-25-278",
+    "purchaseDate": "30-08-2025",
+    "financialYear": "2025-2026",
+    "poNumber": null,
+    "freight": null,
+    "overallDiscount": 0,
+    "lValue": 98,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Terry Towel Yarn",
+        "description": null,
+        "hsnCode": "5802",
+        "rate": 262,
+        "quantity": 90,
+        "uom": "kg",
+        "itemDiscount": 0
+      }
+    ]
+  },
+  {
+    "id": "pur_145",
+    "vendorId": "ent_059",
+    "invoiceNumber": "OAK-25-208",
+    "purchaseDate": "11-10-2025",
+    "financialYear": "2025-2026",
+    "poNumber": "PO-9972",
+    "freight": 500,
+    "overallDiscount": 0,
+    "lValue": 100,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Carded Cotton Yarn 20s",
+        "description": "Grey knicker fabric spinning",
+        "hsnCode": "5205",
+        "rate": 217,
+        "quantity": 130,
+        "uom": "kg",
+        "itemDiscount": 450
+      }
+    ]
+  },
+  {
+    "id": "pur_151",
+    "vendorId": "ent_060",
+    "invoiceNumber": "NEX-25-123",
+    "purchaseDate": "01-09-2025",
+    "financialYear": "2025-2026",
+    "poNumber": null,
+    "freight": null,
+    "overallDiscount": 0,
+    "lValue": 95,
+    "status": "finalized",
+    "items": [
+      {
+        "rowId": "r1",
+        "itemName": "Cotton Poplin Fabric",
+        "description": "Solid dyed black fabric",
+        "hsnCode": "5208",
+        "rate": 95,
+        "quantity": 290,
+        "uom": "m",
+        "itemDiscount": 300
+      }
+    ]
+  }
+]
