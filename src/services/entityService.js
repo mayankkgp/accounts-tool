@@ -328,3 +328,19 @@ export async function mapConnections(entityId, type, mappedTargetIds) {
   return saveBrandFactoryConnections(entityId, type, mappedTargetIds);
 }
 
+/**
+ * Synchronously retrieves a lookup dictionary of entity ID to businessName/brandName
+ * directly from localStorage (utilizing the helper to retrieve parsed entities).
+ */
+export function getVendorLookupMap() {
+  const entities = getStorageItem("fabrito_entities");
+  const lookup = {};
+  entities.forEach((entity) => {
+    if (entity && entity.id) {
+      lookup[entity.id] = entity.businessName || entity.brandName || "Unknown Vendor";
+    }
+  });
+  return lookup;
+}
+
+

@@ -6,6 +6,7 @@ import { Search, Plus, SlidersHorizontal, X } from "lucide-react";
  * PurchaseListToolbar Component
  * Renders the compact top toolbar for active search, filter triggers, and operational CTAs.
  * Designed with absolute structural parity to EntityListToolbar.jsx.
+ * Includes: Density Mini Header Segment, Micro Toolbar, and Navigation Sub-Tabs.
  */
 export default function PurchaseListToolbar({
   activeTab,
@@ -21,9 +22,15 @@ export default function PurchaseListToolbar({
   ];
 
   return (
-    <div className="flex flex-col gap-1 border-b border-slate-200 pb-1.5 shrink-0 select-none font-sans" id="purchases-toolbar">
+    <div className="flex flex-col gap-1.5 border-b border-slate-200 pb-1.5 shrink-0 select-none font-sans" id="purchases-toolbar">
+      {/* 1. Dense Mini Header Segment */}
+      <div className="flex items-center justify-between px-1.5 py-0.5 select-none bg-slate-100/50 rounded-xs border border-slate-200/40" id="purchases-mini-header">
+        <span className="text-[10px] uppercase font-bold tracking-wider text-slate-700">Commercial Ledger</span>
+        <span className="text-[9px] font-mono text-slate-400 bg-slate-200/40 px-1 rounded-sm">Purchases</span>
+      </div>
+
       <div className="max-w-md w-full flex flex-col gap-1" id="purchases-toolbar-inner">
-        {/* 1. Radix-Backed Segmented Tabs Toggle */}
+        {/* 2. Navigation Sub-Tabs (Radix-Backed Segmented Tabs Toggle) */}
         <Tabs.Root value={activeTab} onValueChange={setActiveTab} className="w-full">
           <Tabs.List className="flex bg-slate-200/60 p-0.5 rounded-sm w-full" id="purchases-segmented-toggle">
             {tabs.map((t) => {
@@ -46,7 +53,7 @@ export default function PurchaseListToolbar({
           </Tabs.List>
         </Tabs.Root>
 
-        {/* 2. Compact Search Input and Action Buttons Row */}
+        {/* 3. Micro Toolbar: Compact Search Input and Action Buttons Row */}
         <div className="flex gap-1 items-center" id="purchases-search-filter-row">
           {/* Search Input field */}
           <div className="relative flex-1">

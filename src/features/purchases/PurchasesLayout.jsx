@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PurchaseListToolbar from "./PurchaseListToolbar";
 import PurchaseDataGrid from "./PurchaseDataGrid";
 import { fetchPurchases } from "../../services/purchaseService";
+import { getVendorLookupMap } from "../../services/entityService";
 
 /**
  * PurchasesLayout Component
@@ -16,6 +17,7 @@ export default function PurchasesLayout() {
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [purchases, setPurchases] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [vendorLookup, setVendorLookup] = useState({});
 
   // Debouncing logic for keyword query tracking
   useEffect(() => {
@@ -24,6 +26,16 @@ export default function PurchasesLayout() {
     }, 300);
     return () => clearTimeout(handler);
   }, [searchQuery]);
+
+  // Generate lookup mapping from entityService on component load and triggers
+  useEffect(() => {
+    try {
+      const lookup = getVendorLookupMap();
+      setVendorLookup(lookup);
+    } catch (e) {
+      console.error("Critical: Failed to generate fast supplier identity lookup caches.", e);
+    }
+  }, [refreshTrigger]);
 
   // Handles updating table lists after actions trigger refresh states
   const handleRefresh = () => {
@@ -89,6 +101,7 @@ export default function PurchasesLayout() {
             isLoading={isLoading}
             selectedPurchaseId={selectedPurchaseId}
             onSelectPurchase={setSelectedPurchaseId}
+            vendorLookup={vendorLookup}
           />
         </div>
       </div>

@@ -11,23 +11,9 @@ export default function PurchaseDataGrid({
   isLoading = false,
   selectedPurchaseId = null,
   onSelectPurchase,
+  vendorLookup = {},
 }) {
-  const [vendorLookup, setVendorLookup] = useState({});
   const [sortDir, setSortDir] = useState("default");
-
-  // Generate lookup mapping from localStorage on component load
-  useEffect(() => {
-    try {
-      const storedEntities = JSON.parse(localStorage.getItem("fabrito_entities") || "[]");
-      const lookup = {};
-      storedEntities.forEach((ent) => {
-        lookup[ent.id] = ent.businessName || ent.brandName || "Unknown Vendor";
-      });
-      setVendorLookup(lookup);
-    } catch (e) {
-      console.error("Critical: Failed to generate fast supplier identity lookup caches.", e);
-    }
-  }, []);
 
   // Commercial totals calculation taking into account taxes and overall/item-wise discounts
   const calculateTotalAmount = (pur) => {
