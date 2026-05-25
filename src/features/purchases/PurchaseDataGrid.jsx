@@ -1,46 +1,49 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 
 /**
- * PurchaseDataGrid Component - Fully Compact Table View
- * Implements the operational ledger rows with exact 24px fixed heights,
- * 12px micro-type font styles, and strict truncation guards to align with the compact-ui.md specification.
+ * PurchaseDataGrid Component
+ * Implements a high-density, compact data grid structure matching EntityList.jsx.
+ * Respects 24px fixed row heights, micro-scale typography, and flush stacking boundaries.
  */
-export default function PurchaseDataGrid({ purchases = [], vendorLookup = {} }) {
-  
-  /**
-   * Performs dynamic commercial calculations over the complete purchase payload
-   * to determine the exact grand total matching corresponding tax regimes (flat 18%).
-   * Sub-totals are computed dynamically per row subtracting item-level discounts,
-   * then deducting manual header discounts before compiling tax and adding freight.
-   * 
-   * @param {Object} pur - Primary purchase record.
-   * @returns {number} Fully processed Grand Total amount.
-   */
+export default function PurchaseDataGrid({
+  purchases = [],
+  isLoading = false,
+  selectedPurchaseId = null,
+  onSelectPurchase,
+}) {
+  const [vendorLookup, setVendorLookup] = useState({});
+  const [sortDir, setSortDir] = useState("default");
+
+  // Generate lookup mapping from localStorage on component load
+  useEffect(() => {
+    try {
+      const storedEntities = JSON.parse(localStorage.getItem("fabrito_entities") || "[]");
+      const lookup = {};
+      storedEntities.forEach((ent) => {
+        lookup[ent.id] = ent.businessName || ent.brandName || "Unknown Vendor";
+      });
+      setVendorLookup(lookup);
+    } catch (e) {
+      console.error("Critical: Failed to generate fast supplier identity lookup caches.", e);
+    }
+  }, []);
+
+  // Commercial totals calculation taking into account taxes and overall/item-wise discounts
   const calculateTotalAmount = (pur) => {
-    // 1. Accumulate taxable baseline value from all individual row indices
     const subtotal = (pur.items || []).reduce((sum, item) => {
       const rawTotal = (Number(item.rate) || 0) * (Number(item.quantity) || 0);
       const lineTotal = Math.max(0, rawTotal - (Number(item.itemDiscount) || 0));
       return sum + lineTotal;
     }, 0);
 
-    // 2. Reduce the total taxable basin by general overall discount
     const netTaxableValue = Math.max(0, subtotal - (Number(pur.overallDiscount) || 0));
-
-    // 3. Collect Indian commercial standard GST tax (flat 18% standard rate)
-    const tax = netTaxableValue * 0.18;
-
-    // 4. Inject physical freight overhead to construct the final grand ledger amount
+    const tax = netTaxableValue * 0.18; // Flat standard 18% GST routing
     const grandTotal = netTaxableValue + tax + (Number(pur.freight) || 0);
-    return parseFloat(grandTotal.toFixed(2));
+    return Math.max(0, parseFloat(grandTotal.toFixed(2)));
   };
 
-  /**
-   * Formats a raw numeric currency value to Indian Rupee (INR) notation with standard thousand separators.
-   * 
-   * @param {number} num - Raw floating point or integer sum.
-   * @returns {string} Elegantly formatted currency line.
-   */
+  // Indian standard currency formatting
   const formatCurrency = (num) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
@@ -49,85 +52,123 @@ export default function PurchaseDataGrid({ purchases = [], vendorLookup = {} }) 
     }).format(num);
   };
 
-  if (!purchases || purchases.length === 0) {
-    return (
-      <div className="bg-white border border-slate-200 rounded-sm p-8 text-center text-xs text-slate-400 select-none shadow-xs font-medium" id="purchases-empty-state">
-        No active purchase records found under this status tab.
-      </div>
-    );
-  }
+  // Toggles alphabetical or chronological sort states
+  const toggleSort = () => {
+    setSortDir((p) => (p === "default" ? "asc" : p === "asc" ? "desc" : "default"));
+  };
+
+  // Sorting operation mimicking EntityList.jsx
+  const sortedPurchases = sortDir === "default"
+    ? purchases
+    : [...purchases].sort((a, b) => {
+        const vendorA = vendorLookup[a.vendorId] || "";
+        const vendorB = vendorLookup[b.vendorId] || "";
+        return (sortDir === "asc" ? 1 : -1) * vendorA.localeCompare(vendorB);
+      });
+
+  const isCompressed = !!selectedPurchaseId;
+  const gridLayoutClass = isCompressed
+    ? "grid-cols-[1.2fr_0.8fr]" // Compressed View displaying only Vendor name and Grand Total
+    : "grid-cols-[1.1fr_2fr_1.5fr_1.4fr]"; // Full View displaying Date, Vendor name, Invoice number, Total Amount
 
   return (
-    <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs" id="purchases-ledgers-table-wrapper">
-      <div className="overflow-x-auto w-full">
-        {/* Strict fixed-table layout preventing header/row misalignment on high-density displays */}
-        <table className="w-full text-left border-collapse table-fixed text-[12px] text-slate-700 bg-white" id="purchases-data-grid">
-          <thead>
-            <tr className="bg-slate-100 border-b border-slate-200 uppercase text-[10px] text-slate-500 select-none h-6 font-semibold tracking-wider font-mono">
-              <th className="py-0.5 px-2 w-[100px]" id="th-purchase-date">Purchase Date</th>
-              <th className="py-0.5 px-2" id="th-vendor-name">Vendor Name</th>
-              <th className="py-0.5 px-2 w-[140px]" id="th-invoice-number">Invoice Number</th>
-              <th className="py-0.5 px-2 w-[70px] text-center" id="th-l-value">L-Value</th>
-              <th className="py-0.5 px-2 w-[120px] text-right" id="th-total-amount">Total Amount</th>
-              <th className="py-0.5 px-2 w-[90px] text-center" id="th-status">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {purchases.map((p) => {
-              const vendorName = vendorLookup[p.vendorId] || "Unknown Supplier";
-              const computedTotal = calculateTotalAmount(p);
-              const invoiceNo = p.invoiceNumber || "—";
-              const lValueText = p.lValue ?? "—";
-              const isFinalized = p.status === "finalized";
+    <div className="flex-1 flex flex-col overflow-hidden h-full mt-1 bg-white border border-slate-200 rounded-sm shadow-xs" id="purchases-directory-container">
+      {/* Dense Grid Header matching EntityList.jsx */}
+      <div 
+        className={`grid gap-1 px-1.5 py-0.5 border-b border-slate-300 text-[9px] uppercase tracking-wider font-semibold text-slate-500 select-none shrink-0 bg-slate-100 ${gridLayoutClass}`}
+        id="purchase-grid-header-row"
+      >
+        {!isCompressed && <span>Date</span>}
+        
+        <button
+          type="button"
+          onClick={toggleSort}
+          className="flex items-center gap-1 hover:text-slate-800 transition-colors cursor-pointer text-slate-500 text-left font-semibold outline-none border-none p-0 bg-transparent self-center text-[9px] uppercase tracking-wider font-sans"
+          id="vendor-header-sort-btn"
+        >
+          <span>Vendor Name</span>
+          {sortDir === "default" && <span className="opacity-40 font-bold">&#8645;</span>}
+          {sortDir === "asc" && <span className="text-indigo-600 font-bold">&#8593;</span>}
+          {sortDir === "desc" && <span className="text-indigo-600 font-bold">&#8595;</span>}
+        </button>
 
-              return (
-                <tr
-                  key={p.id}
-                  className="hover:bg-slate-50 border-b border-slate-100/80 transition-colors h-6 font-medium text-slate-700 select-none cursor-pointer"
-                  id={`purchase-row-${p.id}`}
-                >
+        {!isCompressed && <span>Invoice Number</span>}
+        
+        <span className={isCompressed ? "text-right" : "text-right"}>Total Amount</span>
+      </div>
+
+      {/* Row Scrolling Body Section */}
+      <div className="flex-grow overflow-x-hidden overflow-y-auto" id="purchase-list-scrollable-area">
+        {isLoading ? (
+          <div className="flex flex-col select-none divide-y divide-slate-100" id="purchase-list-skeleton-loader">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className="h-6 flex items-center px-1.5 bg-slate-50/50 animate-pulse border-b border-slate-100">
+                <div className={`flex-grow grid gap-1 items-center ${gridLayoutClass}`}>
+                  {!isCompressed && <div className="h-2 bg-slate-200 rounded-xs w-2/3" />}
+                  <div className="h-2 bg-slate-200 rounded-xs w-4/5" />
+                  {!isCompressed && <div className="h-2 bg-slate-200 rounded-xs w-3/4" />}
+                  <div className="h-2 bg-slate-200 rounded-xs w-1/2 justify-self-end text-right" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : sortedPurchases.length === 0 ? (
+          <div className="h-32 flex flex-col items-center justify-center text-slate-500 font-medium select-none text-[10px]" id="empty-purchase-state">
+            <span>No purchase records found</span>
+            <span className="text-[9px] text-slate-400 font-medium mt-0.5 font-mono">Scoped ledger partition empty</span>
+          </div>
+        ) : (
+          sortedPurchases.map((p) => {
+            const vendorName = vendorLookup[p.vendorId] || "Unknown Vendor";
+            const computedTotal = calculateTotalAmount(p);
+            const isSelected = selectedPurchaseId === p.id;
+
+            return (
+              <div
+                key={p.id}
+                onClick={() => onSelectPurchase(p.id)}
+                className={`group h-6 border-b border-slate-200/60 flex items-center px-1.5 cursor-pointer text-[10px] select-none transition-all relative ${
+                  isSelected
+                    ? "bg-indigo-50/95 text-slate-900 border-l-2 border-l-indigo-600"
+                    : "text-slate-700 hover:bg-slate-100/90"
+                }`}
+                id={`purchase-row-${p.id}`}
+              >
+                <div className={`flex-1 min-w-0 grid gap-1 items-center h-full ${gridLayoutClass}`}>
                   {/* Date Column */}
-                  <td className="py-0.5 px-2 text-slate-500 font-mono truncate">{p.purchaseDate || "—"}</td>
+                  {!isCompressed && (
+                    <span className="font-mono text-slate-500 truncate text-[10px]" title={p.purchaseDate}>
+                      {p.purchaseDate || "—"}
+                    </span>
+                  )}
 
                   {/* Vendor Name Column */}
-                  <td className="py-0.5 px-2 text-slate-900 font-semibold truncate" title={vendorName}>
+                  <span className="font-semibold text-slate-900 truncate text-[11px]" title={vendorName}>
                     {vendorName}
-                  </td>
+                  </span>
 
                   {/* Invoice Number Column */}
-                  <td className="py-0.5 px-2 text-slate-600 font-mono truncate" title={invoiceNo}>
-                    {invoiceNo}
-                  </td>
-
-                  {/* L-Value Column */}
-                  <td className="py-0.5 px-2 text-slate-600 text-center font-mono">
-                    <span className="bg-slate-50 border border-slate-200/80 px-1 rounded-sm text-[10px]">
-                      {lValueText}
+                  {!isCompressed && (
+                    <span className="font-mono text-slate-500 truncate text-[10px]" title={p.invoiceNumber}>
+                      {p.invoiceNumber || "—"}
                     </span>
-                  </td>
+                  )}
 
-                  {/* Total Amount Column (Gross subtotal after item-to-header discounts + commercial 18% tax + freight) */}
-                  <td className="py-0.5 px-2 text-slate-900 text-right font-bold font-mono">
+                  {/* Total Amount Column */}
+                  <span className="font-mono font-bold text-slate-900 text-right text-[11px]">
                     {formatCurrency(computedTotal)}
-                  </td>
+                  </span>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
 
-                  {/* Status Badges Channel */}
-                  <td className="py-0.5 px-2 text-center">
-                    {isFinalized ? (
-                      <span className="inline-flex px-1.5 py-0.5 rounded-full text-[9px] font-bold font-mono border uppercase tracking-wider bg-emerald-50 text-emerald-700 border-emerald-200/80">
-                        Finalized
-                      </span>
-                    ) : (
-                      <span className="inline-flex px-1.5 py-0.5 rounded-full text-[9px] font-bold font-mono border uppercase tracking-wider bg-orange-50 text-orange-700 border-orange-200/80">
-                        Draft
-                      </span>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      {/* Analytics Footer matching EntityList.jsx */}
+      <div className="text-[9px] uppercase tracking-wider font-semibold text-slate-500 border-t border-slate-200 pt-1 px-1 flex justify-between shrink-0 select-none bg-slate-100/55" id="purchases-footer-analytics">
+        <span>Active Grid Lines: {sortedPurchases.length}</span>
+        <span className="font-mono text-[8px] text-slate-500">scoped_purchases_db</span>
       </div>
     </div>
   );
