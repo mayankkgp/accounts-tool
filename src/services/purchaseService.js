@@ -198,30 +198,31 @@ export function calculatePurchaseTaxesSync(lineItems, vendorId, overallDiscount 
 
   const isIntrastate = (vendor && (vendor.gst || "").slice(0, 2) === "06") || hasHaryanaAddress;
 
-  // Pre-calculate subtotal before any overall dynamic discount
-  const preProcessed = (lineItems || []).map((item) => {
+  // Let's compute totalSubtotal of all items first
+  const totalSubtotal = (lineItems || []).reduce((sum, item) => {
     const rawTotal = (Number(item.rate) || 0) * (Number(item.quantity) || 0);
-    const lineTotal = Math.max(0, rawTotal - (Number(item.itemDiscount) || 0));
-    return {
-      ...item,
-      lineBaseTotal: lineTotal
-    };
-  });
-
-  const baseSubtotal = preProcessed.reduce((sum, item) => sum + item.lineBaseTotal, 0);
+    const itemLineTotal = Math.max(0, rawTotal - (Number(item.itemDiscount) || 0));
+    return sum + itemLineTotal;
+  }, 0);
 
   let totalTaxableValue = 0;
   let totalCgst = 0;
   let totalSgst = 0;
   let totalIgst = 0;
 
-  const processedItems = preProcessed.map((item) => {
-    // Proportional discount distribution
+  const processedItems = (lineItems || []).map((item) => {
+    const rawTotal = (Number(item.rate) || 0) * (Number(item.quantity) || 0);
+    const itemLineTotal = Math.max(0, rawTotal - (Number(item.itemDiscount) || 0));
+
+    // Calculate proratedDiscount for each item based on that item's contribution to totalSubtotal
     let proratedDiscount = 0;
-    if (baseSubtotal > 0 && overallDiscount > 0) {
-      proratedDiscount = parseFloat(((overallDiscount * item.lineBaseTotal) / baseSubtotal).toFixed(4));
+    if (totalSubtotal > 0 && overallDiscount > 0) {
+      proratedDiscount = parseFloat(((itemLineTotal / totalSubtotal) * overallDiscount).toFixed(4));
     }
-    const newTaxableValue = Math.max(0, parseFloat((item.lineBaseTotal - proratedDiscount).toFixed(4)));
+
+    // Subtract this prorated discount from the item's base taxable value before applying tax calculations
+    const baseTaxableValue = itemLineTotal;
+    const newTaxableValue = Math.max(0, parseFloat((baseTaxableValue - proratedDiscount).toFixed(4)));
     totalTaxableValue += newTaxableValue;
 
     const cgstRate = isIntrastate ? 0.09 : 0;
@@ -257,7 +258,7 @@ export function calculatePurchaseTaxesSync(lineItems, vendorId, overallDiscount 
   return {
     items: processedItems,
     subtotal: parseFloat(totalTaxableValue.toFixed(2)),
-    baseSubtotal,
+    baseSubtotal: parseFloat(totalSubtotal.toFixed(2)),
     isIntrastate,
     cgst,
     sgst,

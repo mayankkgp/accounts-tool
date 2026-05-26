@@ -230,7 +230,7 @@ export default function PurchaseDetailPane({
                             <div className="flex flex-col min-w-0">
                               <span className="text-xs text-slate-900 font-bold truncate leading-none">{it.itemName}</span>
                               {it.description && (
-                                <span className="text-[9px] text-slate-500 truncate mt-0.5 leading-none" title={it.description}>
+                                <span className="text-[10px] text-slate-500 truncate mt-0.5 leading-none" title={it.description}>
                                   {it.description}
                                 </span>
                               )}
@@ -258,22 +258,22 @@ export default function PurchaseDetailPane({
                             <>
                               <td className="py-0.5 px-1 text-center font-sans text-xs">
                                 <div className="flex flex-col items-center leading-none">
-                                  <span className="text-[10px] text-slate-400">9%</span>
                                   <span className="text-slate-700 text-xs font-semibold">₹{Number(it.cgstAmount || 0).toFixed(2)}</span>
+                                  <span className="text-[10px] text-slate-400">9%</span>
                                 </div>
                               </td>
                               <td className="py-0.5 px-1 text-center font-sans text-xs">
                                 <div className="flex flex-col items-center leading-none">
-                                  <span className="text-[10px] text-slate-400">9%</span>
                                   <span className="text-slate-700 text-xs font-semibold">₹{Number(it.sgstAmount || 0).toFixed(2)}</span>
+                                  <span className="text-[10px] text-slate-400">9%</span>
                                 </div>
                               </td>
                             </>
                           ) : (
                             <td className="py-0.5 px-1 text-center font-sans text-xs">
                               <div className="flex flex-col items-center leading-none">
-                                <span className="text-[10px] text-slate-400">18%</span>
                                 <span className="text-slate-700 text-xs font-semibold">₹{Number(it.igstAmount || 0).toFixed(2)}</span>
+                                <span className="text-[10px] text-slate-400">18%</span>
                               </div>
                             </td>
                           )}
