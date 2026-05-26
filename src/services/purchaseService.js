@@ -183,13 +183,27 @@ export async function extractInvoiceAI(file) {
  */
 export async function calculateTaxes(lineItems, vendorId) {
   await simulateNetwork("small");
+  return calculatePurchaseTaxesSync(lineItems, vendorId);
+}
 
+/**
+ * Synchronous companion to calculateTaxes for immediate UI consumption without layout shimmers.
+ * Compare the vendor's state against "Haryana" or GST state code "06".
+ * Intra-state (Haryana): 9% CGST and 9% SGST.
+ * Inter-state (Not Haryana): 18% IGST.
+ */
+export function calculatePurchaseTaxesSync(lineItems, vendorId) {
   const entities = JSON.parse(localStorage.getItem("fabrito_entities") || "[]");
   const vendor = entities.find((e) => e.id === vendorId);
 
-  // Default Fabrito warehouse state region is '24' (Gujarat). 
-  // Relational tax compliance directs either CGST/SGST (intra-state) or IGST (inter-state routing).
-  const isIntrastate = vendor && (vendor.gst || "").slice(0, 2) === "24";
+  const addresses = JSON.parse(localStorage.getItem("fabrito_addresses") || "[]");
+  const vendorAddresses = addresses.filter((addr) => addr.entityId === vendorId);
+  const hasHaryanaAddress = vendorAddresses.some((addr) => {
+    const stateStr = (addr.state || "").trim().toUpperCase();
+    return stateStr === "HARYANA" || stateStr === "HR";
+  });
+
+  const isIntrastate = (vendor && (vendor.gst || "").slice(0, 2) === "06") || hasHaryanaAddress;
 
   let totalTaxableValue = 0;
 
@@ -197,25 +211,31 @@ export async function calculateTaxes(lineItems, vendorId) {
     const rawTotal = (Number(item.rate) || 0) * (Number(item.quantity) || 0);
     const lineTotal = Math.max(0, rawTotal - (Number(item.itemDiscount) || 0));
     totalTaxableValue += lineTotal;
+
+    const rowTaxRate = 0.18;
+    const rowTaxAmt = parseFloat((lineTotal * rowTaxRate).toFixed(2));
+
     return {
       ...item,
-      lineTotal
+      lineTotal, // Total Before Tax
+      taxRate: rowTaxRate,
+      taxAmount: rowTaxAmt,
+      cgstAmount: isIntrastate ? parseFloat((lineTotal * 0.09).toFixed(2)) : 0,
+      sgstAmount: isIntrastate ? parseFloat((lineTotal * 0.09).toFixed(2)) : 0,
+      igstAmount: !isIntrastate ? parseFloat((lineTotal * 0.18).toFixed(2)) : 0,
+      totalAfterTax: parseFloat((lineTotal + rowTaxAmt).toFixed(2))
     };
   });
 
-  // Flat structured tax percentage mapping of 18% generic yarn/textiles standard HSN rules
-  const taxRate = 0.18;
   let cgst = 0;
   let sgst = 0;
   let igst = 0;
 
   if (isIntrastate) {
-    // If supplier is within Gujarat state grid, split the tax equally into State and Center vaults
-    cgst = parseFloat((totalTaxableValue * (taxRate / 2)).toFixed(2));
-    sgst = parseFloat((totalTaxableValue * (taxRate / 2)).toFixed(2));
+    cgst = parseFloat((totalTaxableValue * 0.09).toFixed(2));
+    sgst = parseFloat((totalTaxableValue * 0.09).toFixed(2));
   } else {
-    // If supplier is external, route full tax directly to the IGST inter-state ledger channel
-    igst = parseFloat((totalTaxableValue * taxRate).toFixed(2));
+    igst = parseFloat((totalTaxableValue * 0.18).toFixed(2));
   }
 
   const totalTax = parseFloat((cgst + sgst + igst).toFixed(2));
@@ -223,6 +243,7 @@ export async function calculateTaxes(lineItems, vendorId) {
   return {
     items: processedItems,
     subtotal: totalTaxableValue,
+    isIntrastate,
     cgst,
     sgst,
     igst,
