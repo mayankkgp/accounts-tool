@@ -162,7 +162,7 @@ export default function PurchasesLayout() {
   return (
     <div
       className={`flex-1 h-full grid ${
-        isPaneSelected ? "grid-cols-[210px_1fr] gap-2" : "grid-cols-[1fr_0px]"
+        isPaneSelected ? "grid-cols-[210px_1fr] gap-0" : "grid-cols-[1fr_0px]"
       } transition-all duration-300 ease-in-out overflow-hidden`}
       id="purchases-layout-grid"
     >
@@ -197,7 +197,7 @@ export default function PurchasesLayout() {
 
       <div
         className={`bg-white flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${
-          isPaneSelected ? "p-2 border-l border-slate-200 opacity-100" : "p-0 border-0 opacity-0 pointer-events-none"
+          isPaneSelected ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         id="purchases-details-pane"
       >

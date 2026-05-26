@@ -157,7 +157,7 @@ export default function PurchaseDataGrid({
                 }}
                 className={`group h-6 border-b border-slate-200/60 flex items-center px-1.5 cursor-pointer text-[10px] select-none transition-all relative ${
                   isSelected
-                    ? "bg-blue-50/95 text-slate-900 border-l-2 border-l-blue-600"
+                    ? "bg-blue-50/95 text-slate-900 shadow-[inset_2px_0_0_0_rgb(99,102,241)]"
                     : "text-slate-700 hover:bg-slate-100/90"
                 }`}
                 id={`purchase-row-${p.id}`}
