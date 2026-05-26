@@ -169,6 +169,7 @@ export default function PurchaseListToolbar({
               vendorLookup={vendorLookup}
               isOpen={isPopoverOpen}
               onClose={() => setIsPopoverOpen(false)}
+              isCompressed={isCompressed}
             />
           </div>
 

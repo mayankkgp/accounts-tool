@@ -12,6 +12,7 @@ export default function PurchaseFilterPopover({
   vendorLookup = {},
   isOpen,
   onClose,
+  isCompressed = false,
 }) {
   const popoverRef = useRef(null);
   const [vendorSearch, setVendorSearch] = useState("");
@@ -71,7 +72,7 @@ export default function PurchaseFilterPopover({
   return (
     <div
       ref={popoverRef}
-      className="absolute right-0 top-7 z-50 w-72 bg-white border border-slate-200 shadow-lg rounded-sm p-2 flex flex-col gap-2 font-sans text-slate-800 animate-none select-none"
+      className={`absolute ${isCompressed ? "left-0" : "right-0"} top-7 z-50 w-72 bg-white border border-slate-200 shadow-lg rounded-sm p-2 flex flex-col gap-2 font-sans text-slate-800 animate-none select-none`}
       id="purchases-filter-popover"
     >
       {/* Popover Header */}

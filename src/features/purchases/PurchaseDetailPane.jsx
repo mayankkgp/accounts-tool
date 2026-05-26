@@ -249,7 +249,11 @@ export default function PurchaseDetailPane({
                             {it.uom || "—"}
                           </td>
                           <td className="py-0.5 px-1 text-center text-slate-500 text-xs">
-                            {it.itemDiscount ? `₹${it.itemDiscount}` : "—"}
+                            {((Number(it.itemDiscount) || 0) + (Number(it.proratedDiscount) || 0)) > 0 ? (
+                              `₹${((Number(it.itemDiscount) || 0) + (Number(it.proratedDiscount) || 0)).toFixed(2)}`
+                            ) : (
+                              "—"
+                            )}
                           </td>
                           <td className="py-0.5 px-1 text-center text-slate-700 font-semibold text-xs">
                             {Number(it.lineTotal || 0).toFixed(2)}

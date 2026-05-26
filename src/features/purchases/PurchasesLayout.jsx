@@ -166,8 +166,8 @@ export default function PurchasesLayout() {
       } transition-all duration-300 ease-in-out overflow-hidden`}
       id="purchases-layout-grid"
     >
-      <div className="bg-slate-50 border-r border-slate-200 flex flex-col p-2 overflow-hidden justify-between animate-none" id="purchases-sidebar-pane">
-        <div className="flex-1 flex flex-col overflow-hidden h-full" id="purchase-list-container">
+      <div className="bg-slate-50 border-r border-slate-200 flex flex-col p-2 justify-between animate-none z-10" id="purchases-sidebar-pane">
+        <div className="flex-1 flex flex-col min-h-0 h-full" id="purchase-list-container">
           <PurchaseListToolbar
             activeTab={activeTab}
             setActiveTab={(tab) => {

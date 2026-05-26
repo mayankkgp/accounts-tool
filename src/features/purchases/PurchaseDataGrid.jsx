@@ -116,7 +116,7 @@ export default function PurchaseDataGrid({
           className="flex items-center gap-0.5 hover:text-slate-800 transition-colors cursor-pointer text-slate-500 justify-self-end font-semibold outline-none border-none p-0 bg-transparent self-center text-[9px] uppercase tracking-wider font-sans text-right"
           id="amount-header-sort-btn"
         >
-          <span>Total Amount</span>
+          <span>{isCompressed ? "Amount" : "Total Amount"}</span>
           {renderSortIndicator("totalAmount")}
         </button>
       </div>
@@ -155,38 +155,57 @@ export default function PurchaseDataGrid({
                     setActivePurchaseId(p.id);
                   }
                 }}
-                className={`group h-6 border-b border-slate-200/60 flex items-center px-1.5 cursor-pointer text-[10px] select-none transition-all relative ${
+                className={`group ${isCompressed ? "py-1.5 min-h-[40px]" : "h-6"} border-b border-slate-200/60 flex items-center px-1.5 cursor-pointer text-[10px] select-none transition-all relative ${
                   isSelected
                     ? "bg-blue-50/95 text-slate-900 shadow-[inset_2px_0_0_0_rgb(99,102,241)]"
                     : "text-slate-700 hover:bg-slate-100/90"
                 }`}
                 id={`purchase-row-${p.id}`}
               >
-                <div className={`flex-1 min-w-0 grid gap-1 items-center h-full ${gridLayoutClass}`}>
-                  {/* Date Column */}
-                  {!isCompressed && (
+                {isCompressed ? (
+                  <div className="flex flex-col w-full gap-0.5">
+                    {/* Top Line */}
+                    <div className="flex justify-between items-start w-full">
+                      <span className="font-bold text-slate-900 truncate text-[11px] pr-2" title={vendorName}>
+                        {vendorName}
+                      </span>
+                      <span className="font-mono font-bold text-slate-900 text-right text-[11px] shrink-0">
+                        {formatCurrency(computedTotal)}
+                      </span>
+                    </div>
+                    {/* Bottom Line */}
+                    <div className="flex justify-between items-center w-full">
+                      <span className="font-mono text-[10px] text-slate-500 font-medium truncate" title={p.invoiceNumber}>
+                        {p.invoiceNumber || "—"}
+                      </span>
+                      <span className="font-mono text-[10px] text-slate-500 font-medium truncate shrink-0" title={p.purchaseDate}>
+                        {p.purchaseDate || "—"}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={`flex-1 min-w-0 grid gap-1 items-center h-full ${gridLayoutClass}`}>
+                    {/* Date Column */}
                     <span className="font-mono text-slate-500 truncate text-[10px]" title={p.purchaseDate}>
                       {p.purchaseDate || "—"}
                     </span>
-                  )}
 
-                  {/* Vendor Name Column */}
-                  <span className="font-semibold text-slate-900 truncate text-[11px]" title={vendorName}>
-                    {vendorName}
-                  </span>
+                    {/* Vendor Name Column */}
+                    <span className="font-semibold text-slate-900 truncate text-[11px]" title={vendorName}>
+                      {vendorName}
+                    </span>
 
-                  {/* Invoice Number Column */}
-                  {!isCompressed && (
+                    {/* Invoice Number Column */}
                     <span className="font-mono text-slate-500 truncate text-[10px]" title={p.invoiceNumber}>
                       {p.invoiceNumber || "—"}
                     </span>
-                  )}
 
-                  {/* Total Amount Column */}
-                  <span className="font-mono font-bold text-slate-900 text-right text-[11px]">
-                    {formatCurrency(computedTotal)}
-                  </span>
-                </div>
+                    {/* Total Amount Column */}
+                    <span className="font-mono font-bold text-slate-900 text-right text-[11px]">
+                      {formatCurrency(computedTotal)}
+                    </span>
+                  </div>
+                )}
               </div>
             );
           })
