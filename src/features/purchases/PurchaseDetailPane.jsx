@@ -169,13 +169,18 @@ export default function PurchaseDetailPane({
           <div className="flex-1 flex flex-col gap-2 px-3 pb-2.5 pt-1.5 overflow-hidden" id="detail-pane-content">
             {/* Context subheader (L-Value, Relocated PO No, and TRANS_REF) */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-1.5 px-0.5 shrink-0" id="detail-subheader-meta">
-              <div className="flex items-center gap-3 text-xs text-slate-600 font-sans">
+              <div className="flex items-center gap-4 text-xs font-sans">
                 {purchase.lValue !== undefined && purchase.lValue !== "" && (
-                  <span>L-Value: <span className="font-semibold text-slate-800 font-mono text-xs">{purchase.lValue}</span></span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[10px] uppercase tracking-wide text-slate-500 font-medium font-sans">L-Value:</span>
+                    <span className="text-xs text-slate-900 font-mono font-semibold">{purchase.lValue}</span>
+                  </div>
                 )}
-                {purchase.lValue !== undefined && purchase.lValue !== "" && purchase.poNumber && <span className="text-slate-300">|</span>}
                 {purchase.poNumber && (
-                  <span>Ref PO No: <span className="font-semibold text-slate-800 font-mono text-xs">{purchase.poNumber}</span></span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[10px] uppercase tracking-wide text-slate-500 font-medium font-sans">Ref PO No:</span>
+                    <span className="text-xs text-slate-900 font-mono font-semibold">{purchase.poNumber}</span>
+                  </div>
                 )}
               </div>
               <span className="text-[9px] font-mono text-slate-400">
@@ -193,59 +198,59 @@ export default function PurchaseDetailPane({
               </div>
               
               <div className="flex-1 overflow-auto border border-slate-200/80 rounded-sm bg-white" id="detail-grid-viewport">
-                <table className="w-full border-collapse text-left text-slate-705 text-[10px]" id="detail-grid-table">
-                  <thead className="bg-slate-150 text-[8px] uppercase tracking-wider text-slate-500 font-bold h-6 sticky top-0 border-b border-slate-250 select-none z-10 font-sans">
+                <table className="w-full border-collapse text-left text-slate-705 text-xs" id="detail-grid-table">
+                  <thead className="bg-slate-150 text-[10px] uppercase tracking-wider text-slate-500 font-bold h-6 sticky top-0 border-b border-slate-250 select-none z-10 font-sans">
                     <tr>
-                      <th className="py-0.5 px-1 font-semibold text-left min-w-[70px]">Item Name</th>
-                      <th className="py-0.5 px-1 font-semibold text-center w-10">HSN</th>
-                      <th className="py-0.5 px-0.5 font-semibold text-right w-12">Rate</th>
-                      <th className="py-0.5 px-0.5 font-semibold text-right w-10">Qty</th>
-                      <th className="py-0.5 px-1 font-semibold text-center w-8">UOM</th>
-                      <th className="py-0.5 px-0.5 font-semibold text-right w-12">Disc</th>
-                      <th className="py-0.5 px-0.5 font-semibold text-right w-14">Before Tax</th>
-                      <th className="py-0.5 px-1 font-semibold text-center w-14">Tax Rate</th>
-                      <th className="py-0.5 px-0.5 font-semibold text-right w-12">Tax Amt</th>
-                      <th className="py-0.5 px-1 font-semibold text-right w-16">After Tax</th>
+                      <th className="py-0.5 px-1 font-semibold text-left w-[23%] truncate">Item Name</th>
+                      <th className="py-0.5 px-1 font-semibold text-center w-[8%]">HSN</th>
+                      <th className="py-0.5 px-1 font-semibold text-right w-[9%]">Rate</th>
+                      <th className="py-0.5 px-1 font-semibold text-right w-[7%]">Qty</th>
+                      <th className="py-0.5 px-1 font-semibold text-center w-[7%]">UOM</th>
+                      <th className="py-0.5 px-1 font-semibold text-right w-[8%]">Disc</th>
+                      <th className="py-0.5 px-1 font-semibold text-right w-[11%]">Before Tax</th>
+                      <th className="py-0.5 px-1 font-semibold text-center w-[11%]">Tax Rate</th>
+                      <th className="py-0.5 px-1 font-semibold text-right w-[6%]">Tax Amt</th>
+                      <th className="py-0.5 px-1 font-semibold text-right w-[10%]">After Tax</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-150 font-mono text-[9px]">
+                  <tbody className="divide-y divide-slate-200 font-mono text-xs">
                     {!taxDetail || taxDetail.items?.length === 0 ? (
                       <tr>
-                        <td colSpan="11" className="py-4 text-center text-[9px] text-slate-400 font-sans">
+                        <td colSpan="10" className="py-4 text-center text-xs text-slate-400 font-sans">
                           No items attached to this invoice.
                         </td>
                       </tr>
                     ) : (
                       taxDetail.items.map((it, index) => (
-                        <tr key={it.rowId || index} className="h-6 hover:bg-slate-50/50 transition-colors">
-                          <td className="py-0.5 px-1 font-sans font-medium text-slate-900 truncate max-w-[70px]" title={it.itemName}>
+                        <tr key={it.rowId || index} className="h-6 hover:bg-slate-50/50 transition-colors border-b border-slate-200">
+                          <td className="py-0.5 px-1 font-sans font-medium text-slate-900 truncate max-w-[120px]" title={it.itemName}>
                             {it.itemName}
                           </td>
-                          <td className="py-0.5 px-1 text-center text-slate-500 text-[8px]">
+                          <td className="py-0.5 px-1 text-center text-slate-500 text-xs">
                             {it.hsnCode || "—"}
                           </td>
-                          <td className="py-0.5 px-0.5 text-right text-slate-600">
+                          <td className="py-0.5 px-1 text-right text-slate-600 text-xs">
                             {Number(it.rate || 0).toFixed(2)}
                           </td>
-                          <td className="py-0.5 px-0.5 text-right text-slate-900 font-semibold">
+                          <td className="py-0.5 px-1 text-right text-slate-900 font-semibold text-xs">
                             {it.quantity || 0}
                           </td>
-                          <td className="py-0.5 px-1 text-center text-slate-500 font-sans text-[8px]">
+                          <td className="py-0.5 px-1 text-center text-slate-500 font-sans text-xs">
                             {it.uom || "—"}
                           </td>
-                          <td className="py-0.5 px-0.5 text-right text-slate-500 text-[8px]">
+                          <td className="py-0.5 px-1 text-right text-slate-500 text-xs">
                             {it.itemDiscount ? `₹${it.itemDiscount}` : "—"}
                           </td>
-                          <td className="py-0.5 px-0.5 text-right text-slate-700 font-semibold">
+                          <td className="py-0.5 px-1 text-right text-slate-700 font-semibold text-xs">
                             {Number(it.lineTotal || 0).toFixed(2)}
                           </td>
-                          <td className="py-0.5 px-1 text-center text-[8px] text-slate-500 font-sans leading-none">
+                          <td className="py-0.5 px-1 text-center text-slate-500 font-sans text-xs">
                             {taxRateLabel}
                           </td>
-                          <td className="py-0.5 px-0.5 text-right text-slate-600">
+                          <td className="py-0.5 px-1 text-right text-slate-600 text-xs">
                             {Number(it.taxAmount || 0).toFixed(2)}
                           </td>
-                          <td className="py-0.5 px-1 text-right text-slate-900 font-bold">
+                          <td className="py-0.5 px-1 text-right text-slate-900 font-bold text-xs">
                             {Number(it.totalAfterTax || 0).toFixed(2)}
                           </td>
                         </tr>
