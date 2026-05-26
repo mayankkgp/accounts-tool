@@ -8,8 +8,8 @@ import React from "react";
 export default function PurchaseDataGrid({
   purchases = [],
   isLoading = false,
-  selectedPurchaseId = null,
-  onSelectPurchase,
+  activePurchaseId = null,
+  setActivePurchaseId,
   vendorLookup = {},
   sortConfig = { column: "purchaseDate", direction: "desc" },
   setSortConfig,
@@ -64,7 +64,7 @@ export default function PurchaseDataGrid({
     );
   };
 
-  const isCompressed = !!selectedPurchaseId;
+  const isCompressed = !!activePurchaseId;
   const gridLayoutClass = isCompressed
     ? "grid-cols-[1.2fr_0.8fr]" // Compressed View displaying only Vendor name and Grand Total
     : "grid-cols-[1.1fr_2fr_1.5fr_1.4fr]"; // Full View displaying Date, Vendor name, Invoice number, Total Amount
@@ -145,15 +145,19 @@ export default function PurchaseDataGrid({
           purchases.map((p) => {
             const vendorName = vendorLookup[p.vendorId] || "Unknown Vendor";
             const computedTotal = calculateTotalAmount(p);
-            const isSelected = selectedPurchaseId === p.id;
+            const isSelected = activePurchaseId === p.id;
 
             return (
               <div
                 key={p.id}
-                onClick={() => onSelectPurchase(p.id)}
+                onClick={() => {
+                  if (setActivePurchaseId) {
+                    setActivePurchaseId(p.id);
+                  }
+                }}
                 className={`group h-6 border-b border-slate-200/60 flex items-center px-1.5 cursor-pointer text-[10px] select-none transition-all relative ${
                   isSelected
-                    ? "bg-indigo-50/95 text-slate-900 border-l-2 border-l-indigo-600"
+                    ? "bg-blue-50/95 text-slate-900 border-l-2 border-l-blue-600"
                     : "text-slate-700 hover:bg-slate-100/90"
                 }`}
                 id={`purchase-row-${p.id}`}

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import PurchaseListToolbar from "./PurchaseListToolbar";
 import PurchaseDataGrid from "./PurchaseDataGrid";
+import PurchaseDetailPane from "./PurchaseDetailPane";
 import { fetchPurchases } from "../../services/purchaseService";
 import { getVendorLookupMap } from "../../services/entityService";
+import useDebounce from "../../hooks/useDebounce";
 
 // Helper parsers for robust date boundary checks
 const parseDateDDMMYYYY = (dateStr) => {
@@ -48,11 +50,11 @@ const calculateTotalAmount = (pur) => {
  * Primary workspace component of the Purchases module.
  */
 export default function PurchasesLayout() {
-  const [selectedPurchaseId, setSelectedPurchaseId] = useState(null);
+  const [activePurchaseId, setActivePurchaseId] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [activeTab, setActiveTab] = useState("finalized"); // "finalized" or "draft"
   const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const debouncedQuery = useDebounce(searchQuery, 300);
   const [purchases, setPurchases] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [vendorLookup, setVendorLookup] = useState({});
@@ -72,14 +74,6 @@ export default function PurchasesLayout() {
     column: "purchaseDate", // Default sort
     direction: "desc", // Newest first
   });
-
-  // Debouncing logic for keyword query tracking
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedQuery(searchQuery);
-    }, 300);
-    return () => clearTimeout(handler);
-  }, [searchQuery]);
 
   // Generate lookup mapping from entityService on component load and triggers
   useEffect(() => {
@@ -163,12 +157,12 @@ export default function PurchasesLayout() {
     }
   });
 
-  const isPaneSelected = !!selectedPurchaseId;
+  const isPaneSelected = !!activePurchaseId;
 
   return (
     <div
       className={`flex-1 h-full grid ${
-        isPaneSelected ? "grid-cols-[210px_1fr]" : "grid-cols-[1fr_0px]"
+        isPaneSelected ? "grid-cols-[210px_1fr] gap-2" : "grid-cols-[1fr_0px]"
       } transition-all duration-300 ease-in-out overflow-hidden`}
       id="purchases-layout-grid"
     >
@@ -178,7 +172,7 @@ export default function PurchasesLayout() {
             activeTab={activeTab}
             setActiveTab={(tab) => {
               setActiveTab(tab);
-              setSelectedPurchaseId(null); // Clear selected item on tab change
+              setActivePurchaseId(null); // Clear selected item on tab change
             }}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -192,8 +186,8 @@ export default function PurchasesLayout() {
           <PurchaseDataGrid
             purchases={sortedPurchases}
             isLoading={isLoading}
-            selectedPurchaseId={selectedPurchaseId}
-            onSelectPurchase={setSelectedPurchaseId}
+            activePurchaseId={activePurchaseId}
+            setActivePurchaseId={setActivePurchaseId}
             vendorLookup={vendorLookup}
             sortConfig={sortConfig}
             setSortConfig={setSortConfig}
@@ -207,15 +201,11 @@ export default function PurchasesLayout() {
         }`}
         id="purchases-details-pane"
       >
-        <div className="p-3 text-xs text-slate-500 font-medium">
-          Detailed view selected for Purchase Reference: <span className="font-mono text-slate-900 bg-slate-100 px-1 rounded-sm">{selectedPurchaseId}</span>
-          <button
-            onClick={() => setSelectedPurchaseId(null)}
-            className="block mt-3 h-6 px-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-bold uppercase rounded-sm border border-indigo-700/50 cursor-pointer shadow-sm ml-0"
-          >
-            Close Detail Pane
-          </button>
-        </div>
+        <PurchaseDetailPane
+          activePurchaseId={activePurchaseId}
+          onClose={() => setActivePurchaseId(null)}
+          vendorLookup={vendorLookup}
+        />
       </div>
     </div>
   );

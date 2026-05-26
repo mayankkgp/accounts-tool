@@ -308,3 +308,20 @@ export async function finalizePurchase(purchasePayload) {
   localStorage.setItem("fabrito_purchases", JSON.stringify(purchases));
   return finalRecord;
 }
+
+/**
+ * 6. The Single Detail Fetcher (GET /purchases/:id)
+ * Retrieves a single complete purchase record by its ID with high performance simulation.
+ * Uses 'medium' (600ms) simulated network latency.
+ *
+ * @param {string} id - The unique purchase record ID.
+ * @returns {Promise<Object|null>} Resolves with the purchase record or null if not found.
+ */
+export async function fetchPurchaseById(id) {
+  const purchases = JSON.parse(localStorage.getItem("fabrito_purchases") || "[]");
+  const purchase = purchases.find((p) => p.id === id) || null;
+
+  await simulateNetwork("medium");
+  return purchase;
+}
+
