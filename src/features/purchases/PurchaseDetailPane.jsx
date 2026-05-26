@@ -72,22 +72,19 @@ export default function PurchaseDetailPane({
   const vendorName = purchase ? vendorLookup[purchase.vendorId] || "Unknown Supplier" : "—";
 
   // Calculate taxes and totals from Tax Engine API (Sync implementation)
-  const taxDetail = purchase ? calculatePurchaseTaxesSync(purchase.items || [], purchase.vendorId) : null;
+  const taxDetail = purchase ? calculatePurchaseTaxesSync(purchase.items || [], purchase.vendorId, Number(purchase.overallDiscount) || 0) : null;
   const isIntrastate = taxDetail?.isIntrastate;
-  const taxRateLabel = isIntrastate ? "9% CGST/SGST" : "18% IGST";
 
   // Detailed totals
   const subtotal = taxDetail?.subtotal || 0;
-  const overallDiscount = Number(purchase?.overallDiscount) || 0;
-  const netTaxableValue = Math.max(0, subtotal - overallDiscount);
   const freight = Number(purchase?.freight) || 0;
 
   // Recalculate net dynamic tax values taking into account the overall discount
-  const netCgst = isIntrastate ? parseFloat((netTaxableValue * 0.09).toFixed(2)) : 0;
-  const netSgst = isIntrastate ? parseFloat((netTaxableValue * 0.09).toFixed(2)) : 0;
-  const netIgst = !isIntrastate ? parseFloat((netTaxableValue * 0.18).toFixed(2)) : 0;
-  const totalTax = parseFloat((netCgst + netSgst + netIgst).toFixed(2));
-  const grandTotal = netTaxableValue + totalTax + freight;
+  const netCgst = taxDetail?.cgst || 0;
+  const netSgst = taxDetail?.sgst || 0;
+  const netIgst = taxDetail?.igst || 0;
+  const totalTax = taxDetail?.totalTax || 0;
+  const grandTotal = subtotal + totalTax + freight;
 
   return (
     <div
@@ -126,7 +123,7 @@ export default function PurchaseDetailPane({
         /* 2. Empty / Missing Record State */
         <div className="flex-1 flex flex-col items-center justify-center p-6 text-slate-400 text-xs font-medium" id="detail-pane-missing-record">
           <span>Failed to fetch purchase details</span>
-          <span className="text-[10px] font-mono mt-1 text-slate-300">record_fetch_error</span>
+          <span className="text-[10px] font-mono mt-1 text-slate-350">record_fetch_error</span>
         </div>
       ) : (
         /* 3. Fully Active High-Density Content Area */
@@ -203,20 +200,26 @@ export default function PurchaseDetailPane({
                     <tr>
                       <th className="py-0.5 px-1 font-semibold text-left w-[23%] truncate">Item Name</th>
                       <th className="py-0.5 px-1 font-semibold text-center w-[8%]">HSN</th>
-                      <th className="py-0.5 px-1 font-semibold text-right w-[9%]">Rate</th>
-                      <th className="py-0.5 px-1 font-semibold text-right w-[7%]">Qty</th>
+                      <th className="py-0.5 px-1 font-semibold text-center w-[9%]">Rate</th>
+                      <th className="py-0.5 px-1 font-semibold text-center w-[7%]">Qty</th>
                       <th className="py-0.5 px-1 font-semibold text-center w-[7%]">UOM</th>
-                      <th className="py-0.5 px-1 font-semibold text-right w-[8%]">Disc</th>
-                      <th className="py-0.5 px-1 font-semibold text-right w-[11%]">Before Tax</th>
-                      <th className="py-0.5 px-1 font-semibold text-center w-[11%]">Tax Rate</th>
-                      <th className="py-0.5 px-1 font-semibold text-right w-[6%]">Tax Amt</th>
+                      <th className="py-0.5 px-1 font-semibold text-center w-[8%]">Disc</th>
+                      <th className="py-0.5 px-1 font-semibold text-center w-[11%]">Before Tax</th>
+                      {isIntrastate ? (
+                        <>
+                          <th className="py-0.5 px-1 font-semibold text-center w-[8.5%]">CGST</th>
+                          <th className="py-0.5 px-1 font-semibold text-center w-[8.5%]">SGST</th>
+                        </>
+                      ) : (
+                        <th className="py-0.5 px-1 font-semibold text-center w-[17%]">IGST</th>
+                      )}
                       <th className="py-0.5 px-1 font-semibold text-right w-[10%]">After Tax</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200 font-mono text-xs">
                     {!taxDetail || taxDetail.items?.length === 0 ? (
                       <tr>
-                        <td colSpan="10" className="py-4 text-center text-xs text-slate-400 font-sans">
+                        <td colSpan={isIntrastate ? 10 : 9} className="py-4 text-center text-xs text-slate-400 font-sans">
                           No items attached to this invoice.
                         </td>
                       </tr>
@@ -224,32 +227,56 @@ export default function PurchaseDetailPane({
                       taxDetail.items.map((it, index) => (
                         <tr key={it.rowId || index} className="h-6 hover:bg-slate-50/50 transition-colors border-b border-slate-200">
                           <td className="py-0.5 px-1 font-sans font-medium text-slate-900 truncate max-w-[120px]" title={it.itemName}>
-                            {it.itemName}
+                            <div className="flex flex-col min-w-0">
+                              <span className="text-xs text-slate-900 font-bold truncate leading-none">{it.itemName}</span>
+                              {it.description && (
+                                <span className="text-[9px] text-slate-500 truncate mt-0.5 leading-none" title={it.description}>
+                                  {it.description}
+                                </span>
+                              )}
+                            </div>
                           </td>
                           <td className="py-0.5 px-1 text-center text-slate-500 text-xs">
                             {it.hsnCode || "—"}
                           </td>
-                          <td className="py-0.5 px-1 text-right text-slate-600 text-xs">
+                          <td className="py-0.5 px-1 text-center text-slate-600 text-xs">
                             {Number(it.rate || 0).toFixed(2)}
                           </td>
-                          <td className="py-0.5 px-1 text-right text-slate-900 font-semibold text-xs">
+                          <td className="py-0.5 px-1 text-center text-slate-900 font-semibold text-xs">
                             {it.quantity || 0}
                           </td>
                           <td className="py-0.5 px-1 text-center text-slate-500 font-sans text-xs">
                             {it.uom || "—"}
                           </td>
-                          <td className="py-0.5 px-1 text-right text-slate-500 text-xs">
+                          <td className="py-0.5 px-1 text-center text-slate-500 text-xs">
                             {it.itemDiscount ? `₹${it.itemDiscount}` : "—"}
                           </td>
-                          <td className="py-0.5 px-1 text-right text-slate-700 font-semibold text-xs">
+                          <td className="py-0.5 px-1 text-center text-slate-700 font-semibold text-xs">
                             {Number(it.lineTotal || 0).toFixed(2)}
                           </td>
-                          <td className="py-0.5 px-1 text-center text-slate-500 font-sans text-xs">
-                            {taxRateLabel}
-                          </td>
-                          <td className="py-0.5 px-1 text-right text-slate-600 text-xs">
-                            {Number(it.taxAmount || 0).toFixed(2)}
-                          </td>
+                          {isIntrastate ? (
+                            <>
+                              <td className="py-0.5 px-1 text-center font-sans text-xs">
+                                <div className="flex flex-col items-center leading-none">
+                                  <span className="text-[10px] text-slate-400">9%</span>
+                                  <span className="text-slate-700 text-xs font-semibold">₹{Number(it.cgstAmount || 0).toFixed(2)}</span>
+                                </div>
+                              </td>
+                              <td className="py-0.5 px-1 text-center font-sans text-xs">
+                                <div className="flex flex-col items-center leading-none">
+                                  <span className="text-[10px] text-slate-400">9%</span>
+                                  <span className="text-slate-700 text-xs font-semibold">₹{Number(it.sgstAmount || 0).toFixed(2)}</span>
+                                </div>
+                              </td>
+                            </>
+                          ) : (
+                            <td className="py-0.5 px-1 text-center font-sans text-xs">
+                              <div className="flex flex-col items-center leading-none">
+                                <span className="text-[10px] text-slate-400">18%</span>
+                                <span className="text-slate-700 text-xs font-semibold">₹{Number(it.igstAmount || 0).toFixed(2)}</span>
+                              </div>
+                            </td>
+                          )}
                           <td className="py-0.5 px-1 text-right text-slate-900 font-bold text-xs">
                             {Number(it.totalAfterTax || 0).toFixed(2)}
                           </td>
@@ -268,13 +295,6 @@ export default function PurchaseDetailPane({
                 <span className="font-mono">{formatCurrency(subtotal)}</span>
               </div>
               
-              {overallDiscount > 0 && (
-                <div className="flex justify-between items-center text-emerald-600 font-semibold h-5">
-                  <span>Overall Discount:</span>
-                  <span className="font-mono">- {formatCurrency(overallDiscount)}</span>
-                </div>
-              )}
-
               <div className="flex justify-between items-center text-slate-500 font-medium h-5">
                 <span>Freight / Shipping:</span>
                 <span className="font-mono">{formatCurrency(freight)}</span>

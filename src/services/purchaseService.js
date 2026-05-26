@@ -27,16 +27,9 @@ const parseDateYYYYMMDD = (dateStr) => {
 
 // Reusable math engine mapping for amount filtering in backend scope
 const calculateTotalAmountInService = (pur) => {
-  const subtotal = (pur.items || []).reduce((sum, item) => {
-    const rawTotal = (Number(item.rate) || 0) * (Number(item.quantity) || 0);
-    const lineTotal = Math.max(0, rawTotal - (Number(item.itemDiscount) || 0));
-    return sum + lineTotal;
-  }, 0);
-
-  const netTaxableValue = Math.max(0, subtotal - (Number(pur.overallDiscount) || 0));
-  const tax = netTaxableValue * 0.18; // standard 18% standard GST rate
-  const grandTotal = netTaxableValue + tax + (Number(pur.freight) || 0);
-  return Math.max(0, parseFloat(grandTotal.toFixed(2)));
+  const taxDetail = calculatePurchaseTaxesSync(pur.items || [], pur.vendorId, Number(pur.overallDiscount) || 0);
+  const freight = Number(pur.freight) || 0;
+  return Math.max(0, parseFloat((taxDetail.grandTotal + freight).toFixed(2)));
 };
 
 /**
@@ -181,9 +174,9 @@ export async function extractInvoiceAI(file) {
  * @param {string} vendorId - Vendor reference to pull company physical tax registries for verification.
  * @returns {Promise<Object>} Object detailing gross totals, state breakdown (CGST/SGST vs IGST), and totals.
  */
-export async function calculateTaxes(lineItems, vendorId) {
+export async function calculateTaxes(lineItems, vendorId, overallDiscount = 0) {
   await simulateNetwork("small");
-  return calculatePurchaseTaxesSync(lineItems, vendorId);
+  return calculatePurchaseTaxesSync(lineItems, vendorId, overallDiscount);
 }
 
 /**
@@ -192,7 +185,7 @@ export async function calculateTaxes(lineItems, vendorId) {
  * Intra-state (Haryana): 9% CGST and 9% SGST.
  * Inter-state (Not Haryana): 18% IGST.
  */
-export function calculatePurchaseTaxesSync(lineItems, vendorId) {
+export function calculatePurchaseTaxesSync(lineItems, vendorId, overallDiscount = 0) {
   const entities = JSON.parse(localStorage.getItem("fabrito_entities") || "[]");
   const vendor = entities.find((e) => e.id === vendorId);
 
@@ -205,44 +198,66 @@ export function calculatePurchaseTaxesSync(lineItems, vendorId) {
 
   const isIntrastate = (vendor && (vendor.gst || "").slice(0, 2) === "06") || hasHaryanaAddress;
 
-  let totalTaxableValue = 0;
-
-  const processedItems = (lineItems || []).map((item) => {
+  // Pre-calculate subtotal before any overall dynamic discount
+  const preProcessed = (lineItems || []).map((item) => {
     const rawTotal = (Number(item.rate) || 0) * (Number(item.quantity) || 0);
     const lineTotal = Math.max(0, rawTotal - (Number(item.itemDiscount) || 0));
-    totalTaxableValue += lineTotal;
-
-    const rowTaxRate = 0.18;
-    const rowTaxAmt = parseFloat((lineTotal * rowTaxRate).toFixed(2));
-
     return {
       ...item,
-      lineTotal, // Total Before Tax
-      taxRate: rowTaxRate,
-      taxAmount: rowTaxAmt,
-      cgstAmount: isIntrastate ? parseFloat((lineTotal * 0.09).toFixed(2)) : 0,
-      sgstAmount: isIntrastate ? parseFloat((lineTotal * 0.09).toFixed(2)) : 0,
-      igstAmount: !isIntrastate ? parseFloat((lineTotal * 0.18).toFixed(2)) : 0,
-      totalAfterTax: parseFloat((lineTotal + rowTaxAmt).toFixed(2))
+      lineBaseTotal: lineTotal
     };
   });
 
-  let cgst = 0;
-  let sgst = 0;
-  let igst = 0;
+  const baseSubtotal = preProcessed.reduce((sum, item) => sum + item.lineBaseTotal, 0);
 
-  if (isIntrastate) {
-    cgst = parseFloat((totalTaxableValue * 0.09).toFixed(2));
-    sgst = parseFloat((totalTaxableValue * 0.09).toFixed(2));
-  } else {
-    igst = parseFloat((totalTaxableValue * 0.18).toFixed(2));
-  }
+  let totalTaxableValue = 0;
+  let totalCgst = 0;
+  let totalSgst = 0;
+  let totalIgst = 0;
 
+  const processedItems = preProcessed.map((item) => {
+    // Proportional discount distribution
+    let proratedDiscount = 0;
+    if (baseSubtotal > 0 && overallDiscount > 0) {
+      proratedDiscount = parseFloat(((overallDiscount * item.lineBaseTotal) / baseSubtotal).toFixed(4));
+    }
+    const newTaxableValue = Math.max(0, parseFloat((item.lineBaseTotal - proratedDiscount).toFixed(4)));
+    totalTaxableValue += newTaxableValue;
+
+    const cgstRate = isIntrastate ? 0.09 : 0;
+    const sgstRate = isIntrastate ? 0.09 : 0;
+    const igstRate = !isIntrastate ? 0.18 : 0;
+
+    const cgstAmount = parseFloat((newTaxableValue * cgstRate).toFixed(2));
+    const sgstAmount = parseFloat((newTaxableValue * sgstRate).toFixed(2));
+    const igstAmount = parseFloat((newTaxableValue * igstRate).toFixed(2));
+    const taxAmount = isIntrastate ? (cgstAmount + sgstAmount) : igstAmount;
+
+    totalCgst += cgstAmount;
+    totalSgst += sgstAmount;
+    totalIgst += igstAmount;
+
+    return {
+      ...item,
+      proratedDiscount: parseFloat(proratedDiscount.toFixed(2)),
+      lineTotal: parseFloat(newTaxableValue.toFixed(2)), // Net line-item total before tax after overall discount
+      taxAmount: parseFloat(taxAmount.toFixed(2)),
+      cgstAmount,
+      sgstAmount,
+      igstAmount,
+      totalAfterTax: parseFloat((newTaxableValue + taxAmount).toFixed(2))
+    };
+  });
+
+  const cgst = parseFloat(totalCgst.toFixed(2));
+  const sgst = parseFloat(totalSgst.toFixed(2));
+  const igst = parseFloat(totalIgst.toFixed(2));
   const totalTax = parseFloat((cgst + sgst + igst).toFixed(2));
 
   return {
     items: processedItems,
-    subtotal: totalTaxableValue,
+    subtotal: parseFloat(totalTaxableValue.toFixed(2)),
+    baseSubtotal,
     isIntrastate,
     cgst,
     sgst,
