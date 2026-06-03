@@ -6,10 +6,41 @@ import {
 import { simulateNetwork } from "../../utils/simulateNetwork";
 import { 
   calculatePurchaseTaxesSync, 
-  checkDuplicate, 
-  finalizePurchase,
+  checkDuplicatePurchase, 
+  savePurchase,
   extractInvoiceAI
 } from "../../services/purchaseService";
+
+const getDerivedFinancialYear = (dateStr) => {
+  if (!dateStr) return "2025-2026";
+  const parts = dateStr.trim().split(/[-/]/);
+  let year, month;
+  if (parts.length === 3) {
+    if (parts[0].length === 4) {
+      year = parseInt(parts[0], 10);
+      month = parseInt(parts[1], 10);
+    } else {
+      month = parseInt(parts[1], 10);
+      year = parseInt(parts[2], 10);
+    }
+  } else {
+    const d = new Date(dateStr);
+    if (!isNaN(d.getTime())) {
+      year = d.getFullYear();
+      month = d.getMonth() + 1;
+    } else {
+      return "2025-2026";
+    }
+  }
+
+  if (isNaN(year) || isNaN(month)) return "2025-2026";
+
+  if (month >= 4) {
+    return `${year}-${year + 1}`;
+  } else {
+    return `${year - 1}-${year}`;
+  }
+};
 
 /**
  * PurchaseCreateForm Component
@@ -21,7 +52,8 @@ export default function PurchaseCreateForm({
   onClose,
   editingPurchase = null,
   initialAiFile = null,
-  onSaveSuccess
+  onSaveSuccess,
+  onRefresh
 }) {
   const [isProcessingAi, setIsProcessingAi] = useState(false);
   const [aiStep, setAiStep] = useState(0);
@@ -39,7 +71,9 @@ export default function PurchaseCreateForm({
   const [overallDiscount, setOverallDiscount] = useState("");
   const [freight, setFreight] = useState("");
   const [poNumber, setPoNumber] = useState("");
-  const [financialYear, setFinancialYear] = useState("2025-2026");
+
+  // Derive Financial Year dynamically from Purchase Date
+  const financialYear = getDerivedFinancialYear(purchaseDate);
 
   // State elements for line items spreadsheet grid
   const [lineItems, setLineItems] = useState([
@@ -59,6 +93,14 @@ export default function PurchaseCreateForm({
   const [vendors, setVendors] = useState([]);
   const [isDuplicate, setIsDuplicate] = useState(false);
   const [isCheckingDuplicate, setIsCheckingDuplicate] = useState(false);
+  
+  // Validation Errors mapping for high precision layout highlights
+  const [validationErrors, setValidationErrors] = useState({
+    vendor: false,
+    invoiceNumber: false,
+    purchaseDate: false,
+    lineItems: {}
+  });
 
   // Status and dynamic math calculation loading triggers
   const [isCalculating, setIsCalculating] = useState(false);
@@ -104,7 +146,6 @@ export default function PurchaseCreateForm({
       setOverallDiscount(editingPurchase.overallDiscount || "");
       setFreight(editingPurchase.freight || "");
       setPoNumber(editingPurchase.poNumber || "");
-      setFinancialYear(editingPurchase.financialYear || "2025-2026");
       setLineItems(editingPurchase.items || []);
     } else if (initialAiFile) {
       // Launch AI Upload
@@ -123,7 +164,6 @@ export default function PurchaseCreateForm({
       setOverallDiscount("");
       setFreight("");
       setPoNumber("");
-      setFinancialYear("2025-2026");
       setLineItems([
         {
           rowId: "r_1",
@@ -175,7 +215,6 @@ export default function PurchaseCreateForm({
       setPoNumber(extracted.poNumber || "");
       setOverallDiscount(extracted.overallDiscount || "");
       setFreight(extracted.freight || "");
-      setFinancialYear(extracted.financialYear || "2025-2026");
       
       // Calculate realistic L-value based on sum total
       const extractedSubtotal = extracted.items.reduce((sum, item) => {
@@ -258,7 +297,7 @@ export default function PurchaseCreateForm({
 
     duplicateWatchdogRef.current = setTimeout(async () => {
       try {
-        const res = await checkDuplicate(vendorId, invoiceNumber);
+        const res = await checkDuplicatePurchase(vendorId, invoiceNumber);
         // Exclude checking against itself if editing the same record
         if (res.isDuplicate && editingPurchase && editingPurchase.invoiceNumber === invoiceNumber && editingPurchase.vendorId === vendorId) {
           setIsDuplicate(false);
@@ -322,37 +361,74 @@ export default function PurchaseCreateForm({
         return item;
       })
     );
+    setValidationErrors((prev) => {
+      if (prev.lineItems?.[rowId]?.[field]) {
+        return {
+          ...prev,
+          lineItems: {
+            ...prev.lineItems,
+            [rowId]: {
+              ...prev.lineItems[rowId],
+              [field]: false
+            }
+          }
+        };
+      }
+      return prev;
+    });
     triggerDebouncedCalculation();
   };
 
   // Save / Finalize Handler
   const handleSaveAction = async (statusToSet) => {
-    // 1. Mandatory validations
-    if (!vendorId) {
-      setInfoMessage({ type: "error", msg: "Vendor Selection is mandatory to save." });
-      return;
-    }
-    if (!invoiceNumber.trim()) {
-      setInfoMessage({ type: "error", msg: "Invoice Number is required." });
-      return;
-    }
-    if (!purchaseDate.trim()) {
-      setInfoMessage({ type: "error", msg: "Purchase Date is required." });
-      return;
-    }
+    // Reset validations first
+    setValidationErrors({
+      vendor: false,
+      invoiceNumber: false,
+      purchaseDate: false,
+      lineItems: {}
+    });
 
-    // 2. Extra validations for finalized records
+    // 1. Validation Rules by Action click intention
     if (statusToSet === "finalized") {
-      const hasIncomplete = lineItems.some(
-        (it) => !it.itemName.trim() || !it.quantity || !it.rate
-      );
-      if (hasIncomplete) {
+      const errors = {
+        vendor: !vendorId,
+        invoiceNumber: !invoiceNumber || !invoiceNumber.trim(),
+        purchaseDate: !purchaseDate || !purchaseDate.trim(),
+        lineItems: {}
+      };
+
+      let validLineItemCount = 0;
+      lineItems.forEach((it) => {
+        const isItemNameEmpty = !it.itemName || !it.itemName.trim();
+        const isRateInvalid = !it.rate || Number(it.rate) <= 0;
+        const isQtyInvalid = !it.quantity || Number(it.quantity) <= 0;
+
+        const hasError = isItemNameEmpty || isRateInvalid || isQtyInvalid;
+        
+        errors.lineItems[it.rowId] = {
+          itemName: isItemNameEmpty,
+          rate: isRateInvalid,
+          quantity: isQtyInvalid
+        };
+
+        if (!hasError) {
+          validLineItemCount++;
+        }
+      });
+
+      const isHeaderInvalid = errors.vendor || errors.invoiceNumber || errors.purchaseDate;
+      const isLineItemsInvalid = validLineItemCount === 0;
+
+      if (isHeaderInvalid || isLineItemsInvalid) {
+        setValidationErrors(errors);
         setInfoMessage({
           type: "error",
-          msg: "To Finalize, all line items must contain an Item Name, Rate, and Quantity."
+          msg: "Validation Failed: Please fill in all required fields (Vendor, Invoice, Date) and ensure at least one line item has a name, rate, and quantity."
         });
         return;
       }
+
       if (isDuplicate) {
         setInfoMessage({
           type: "error",
@@ -360,28 +436,44 @@ export default function PurchaseCreateForm({
         });
         return;
       }
+    } else if (statusToSet === "draft") {
+      // Draft rules: only Vendor selection is mandatory, others (including invoice and date) can be empty
+      const errors = {
+        vendor: !vendorId,
+        invoiceNumber: false,
+        purchaseDate: false,
+        lineItems: {}
+      };
+
+      if (errors.vendor) {
+        setValidationErrors(errors);
+        setInfoMessage({
+          type: "error",
+          msg: "Validation Failed: Vendor selection is mandatory to save a draft."
+        });
+        return;
+      }
     }
 
     setIsSaving(true);
-    setSaveStatusMsg(statusToSet === "finalized" ? "Committing Ledger Ledger entries & Stock..." : "Saving Draft Document...");
+    setSaveStatusMsg(statusToSet);
 
     try {
       // Prepare fully parsed payload structures
       const savePayload = {
         id: editingPurchase?.id || undefined,
         vendorId,
-        invoiceNumber: invoiceNumber.trim(),
-        purchaseDate: purchaseDate.trim(),
+        invoiceNumber: (invoiceNumber || "").trim(),
+        purchaseDate: (purchaseDate || "").trim(),
         financialYear,
-        poNumber: poNumber.trim(),
-        lValue: lValue.trim(),
+        poNumber: (poNumber || "").trim(),
+        lValue: (lValue || "").trim(),
         overallDiscount: overallDiscount === "" ? 0 : Number(overallDiscount),
         freight: freight === "" ? 0 : Number(freight),
-        status: statusToSet,
         items: lineItems.map((it) => ({
-          itemName: it.itemName.trim(),
-          description: it.description?.trim() || "",
-          hsnCode: it.hsnCode.trim(),
+          itemName: (it.itemName || "").trim(),
+          description: (it.description || "").trim(),
+          hsnCode: (it.hsnCode || "").trim(),
           rate: Number(it.rate) || 0,
           quantity: Number(it.quantity) || 0,
           uom: it.uom,
@@ -389,15 +481,15 @@ export default function PurchaseCreateForm({
         }))
       };
 
-      // Call standard finalizePurchase service with simulated large 1200ms delay
-      const savedRecord = await finalizePurchase(savePayload);
+      // Call savePurchase service instead of finalizePurchase
+      const savedRecord = await savePurchase(savePayload, statusToSet);
 
       // If finalized, push to mock stock inventory increases automatically
       if (statusToSet === "finalized") {
         try {
           const currentStock = JSON.parse(localStorage.getItem("fabrito_stock") || "{}");
           lineItems.forEach((it) => {
-            const key = it.itemName.trim().toLowerCase();
+            const key = (it.itemName || "").trim().toLowerCase();
             if (key) {
               const currentQty = currentStock[key] || 0;
               currentStock[key] = currentQty + (Number(it.quantity) || 0);
@@ -409,20 +501,20 @@ export default function PurchaseCreateForm({
         }
       }
 
-      setSaveStatusMsg("Saved successfully!");
       setInfoMessage({
         type: "success",
         msg: statusToSet === "finalized" 
-          ? "Ledger entry updated & stock levels propagated! Redirecting..." 
-          : "Draft saved successfully! You can resume verification later."
+          ? "Ledger entry finalized & stock levels propagated successfully!" 
+          : "Draft purchase saved successfully!"
       });
 
       // Close and trigger callback on UI layout
       setTimeout(() => {
         setIsSaving(false);
-        onSaveSuccess();
+        if (onSaveSuccess) onSaveSuccess();
+        if (onRefresh) onRefresh();
         onClose();
-      }, 1000);
+      }, 1200);
 
     } catch (err) {
       console.error("Save error:", err);
@@ -648,12 +740,10 @@ export default function PurchaseCreateForm({
 
             {/* Scrolling Form Fields and Data Grid */}
             <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-3 min-h-0" id="purchase-entry-form-scrollbox">
-              
               {/* SECTION A: Document Header details */}
               <div className="bg-slate-50 border border-slate-200/80 p-2 rounded-sm flex flex-col gap-2 shrink-0 select-none font-sans" id="purchase-form-header-box">
-                <div className="text-[9px] uppercase tracking-wider font-bold text-slate-400">Document Information Header</div>
                 
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2.5 items-end">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2.5 items-end">
                   {/* Vendor Dropdown Selector */}
                   <div className="flex flex-col gap-1 lg:col-span-2">
                     <span className="text-[9px] uppercase tracking-wide text-slate-500 font-bold">Vendor Entity *</span>
@@ -661,13 +751,19 @@ export default function PurchaseCreateForm({
                       value={vendorId}
                       onChange={(e) => {
                         setVendorId(e.target.value);
+                        setValidationErrors(prev => ({ ...prev, vendor: false }));
                         triggerDebouncedCalculation();
                       }}
-                      className="w-full h-6 text-xs px-1 hover:border-slate-400 outline-none border border-slate-300 rounded-sm bg-white font-sans font-medium"
+                      disabled={isSaving}
+                      className={`w-full h-6 text-xs px-1 hover:border-slate-400 outline-none border rounded-sm bg-white font-sans font-medium ${
+                        validationErrors.vendor 
+                          ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500" 
+                          : "border-slate-300 focus:border-indigo-500"
+                      }`}
                       id="input-form-vendor"
                     >
                       {vendors.length === 0 ? (
-                        <option value="">No vendors found</option>
+                        <option value=""></option>
                       ) : (
                         vendors.map((ven) => (
                           <option key={ven.id} value={ven.id}>
@@ -687,22 +783,25 @@ export default function PurchaseCreateForm({
                       onChange={(e) => {
                         setInvoiceNumber(e.target.value);
                         setIsDuplicate(false); // Reset duplicate warnings on change
+                        setValidationErrors(prev => ({ ...prev, invoiceNumber: false }));
                       }}
                       onBlur={triggerDuplicateCheck}
+                      disabled={isSaving}
                       className={`w-full h-6 text-xs font-mono px-1.5 outline-none border ${
                         isDuplicate 
-                          ? "border-rose-400 bg-rose-50/20 text-rose-900 focus:border-rose-500" 
+                          ? "border-red-500 bg-rose-50/10 text-rose-909 focus:border-red-500 focus:ring-1 focus:ring-red-500" 
+                          : validationErrors.invoiceNumber
+                          ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500"
                           : "border-slate-300 focus:border-indigo-500"
                       } rounded-sm`}
-                      placeholder="INV-XXXX"
                       id="input-form-invoice-no"
                       required
                     />
                     {isCheckingDuplicate && (
-                      <Loader2 size={10} className="animate-spin text-slate-400 absolute right-1.5 top-5.5" />
+                      <Loader2 size={10} className="animate-spin text-slate-400 absolute right-1.5 top-6" />
                     )}
                     {isDuplicate && (
-                      <span className="text-[8px] text-rose-600 font-bold mt-0.5 absolute top-6" id="warning-duplicate">
+                      <span className="text-[9px] text-red-600 font-bold mt-0.5 block" id="warning-duplicate">
                         Duplicate Invoice Combo!
                       </span>
                     )}
@@ -713,88 +812,84 @@ export default function PurchaseCreateForm({
                     <span className="text-[9px] uppercase tracking-wide text-slate-500 font-bold">Invoice Date *</span>
                     <input
                       type="text"
-                      placeholder="DD-MM-YYYY"
                       value={purchaseDate}
-                      onChange={(e) => setPurchaseDate(e.target.value)}
-                      className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-500 rounded-sm"
+                      onChange={(e) => {
+                        setPurchaseDate(e.target.value);
+                        setValidationErrors(prev => ({ ...prev, purchaseDate: false }));
+                      }}
+                      disabled={isSaving}
+                      className={`w-full h-6 text-xs font-mono px-1.5 outline-none border ${
+                        validationErrors.purchaseDate 
+                          ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500" 
+                          : "border-slate-300 focus:border-indigo-500"
+                      } rounded-sm`}
                       id="input-form-date"
+                      required
+                    />
+                  </div>
+
+                  {/* L-Value Input (Total Invoice value match verification) with HTML constraints min=90 max=100 */}
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[9px] uppercase tracking-wide text-slate-500 font-bold">L-VALUE</span>
+                    <input
+                      type="number"
+                      min="90"
+                      max="100"
+                      value={lValue}
+                      onChange={(e) => setLValue(e.target.value)}
+                      disabled={isSaving}
+                      className="w-full h-6 text-xs text-right font-mono px-1.5 border border-slate-300 focus:border-indigo-500 rounded-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
+                      id="input-form-lvalue"
                       required
                     />
                   </div>
 
                   {/* Ref PO order number */}
                   <div className="flex flex-col gap-1">
-                    <span className="text-[9px] uppercase tracking-wide text-slate-500 font-bold">Linked PO No (Opt.)</span>
+                    <span className="text-[9px] uppercase tracking-wide text-slate-500 font-bold">PO NO</span>
                     <input
                       type="text"
-                      placeholder="PO-XXXX"
                       value={poNumber}
                       onChange={(e) => setPoNumber(e.target.value)}
-                      className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-500 rounded-sm"
+                      disabled={isSaving}
+                      className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-505 rounded-sm"
                       id="input-form-po-number"
                     />
                   </div>
 
-                  {/* Overall Discount */}
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[9px] uppercase tracking-wide text-slate-500 font-bold">Overall Discount (₹)</span>
-                    <input
-                      type="number"
-                      placeholder="0.00"
-                      value={overallDiscount}
-                      onChange={(e) => {
-                        setOverallDiscount(e.target.value);
-                        triggerDebouncedCalculation();
-                      }}
-                      className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-500 rounded-sm text-right"
-                      id="input-form-overall-discount"
-                    />
-                  </div>
-
-                  {/* Freight Charges */}
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[9px] uppercase tracking-wide text-slate-500 font-bold">Freight / Freight (₹)</span>
-                    <input
-                      type="number"
-                      placeholder="0.00"
-                      value={freight}
-                      onChange={(e) => setFreight(e.target.value)}
-                      className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-500 rounded-sm text-right"
-                      id="input-form-freight"
-                    />
-                  </div>
+                   {/* Overall Discount */}
+                   <div className="flex flex-col gap-1">
+                     <span className="text-[9px] uppercase tracking-wide text-slate-500 font-bold">Overall Discount (₹)</span>
+                     <input
+                       type="number"
+                       value={overallDiscount}
+                       onChange={(e) => {
+                         setOverallDiscount(e.target.value);
+                         triggerDebouncedCalculation();
+                       }}
+                       disabled={isSaving}
+                       className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-500 rounded-sm text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
+                       id="input-form-overall-discount"
+                     />
+                   </div>
+ 
+                   {/* Freight Charges */}
+                   <div className="flex flex-col gap-1">
+                     <span className="text-[9px] uppercase tracking-wide text-slate-500 font-bold">Freight (₹)</span>
+                     <input
+                       type="number"
+                       value={freight}
+                       onChange={(e) => setFreight(e.target.value)}
+                       disabled={isSaving}
+                       className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-500 rounded-sm text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
+                       id="input-form-freight"
+                     />
+                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 border-t border-slate-205/60 pt-2 items-center">
-                  {/* Financial Year Selection dropdown */}
-                  <div className="flex items-center gap-1.5 font-sans">
-                    <span className="text-[9px] uppercase tracking-wide text-slate-400 font-bold">Financial Year:</span>
-                    <select
-                      value={financialYear}
-                      onChange={(e) => setFinancialYear(e.target.value)}
-                      className="h-5 text-[10px] px-1 border border-slate-300 rounded-sm bg-white font-mono"
-                      id="select-form-fy"
-                    >
-                      <option value="2025-2026">2025-2026</option>
-                      <option value="2026-2027">2026-2027</option>
-                    </select>
-                  </div>
+               </div>
 
-                  {/* L-Value Input (Total Invoice value match verification) */}
-                  <div className="flex items-center gap-1.5 font-sans justify-end md:col-start-4">
-                    <span className="text-[9px] uppercase tracking-wide text-slate-400 font-bold">Invoice L-Value target (₹):</span>
-                    <input
-                      type="number"
-                      placeholder="0.00"
-                      value={lValue}
-                      onChange={(e) => setLValue(e.target.value)}
-                      className="h-5 w-24 text-[10px] text-right font-mono px-1.5 border border-slate-300 rounded-sm"
-                      id="input-form-lvalue"
-                    />
-                  </div>
-                </div>
-
-              </div>
+               
 
               {/* SECTION B: Editable Spreadsheet Grid */}
               <div className="flex-1 flex flex-col min-h-[160px] border border-slate-200/80 rounded-sm bg-white overflow-hidden" id="purchase-form-spreadsheet-container">
@@ -815,7 +910,7 @@ export default function PurchaseCreateForm({
 
                 <div className="flex-1 overflow-auto bg-slate-205/10" id="form-spreadsheet-viewport">
                   <table className="w-full border-collapse text-left text-slate-700 text-xs" id="form-spreadsheet-table">
-                    <thead className="bg-[#1e293b] text-slate-300 text-[9px] uppercase tracking-wider font-bold h-6 sticky top-0 border-b border-slate-950 select-none z-10 font-sans">
+                    <thead className="bg-slate-150 text-[10px] uppercase tracking-wider text-slate-500 font-bold h-6 sticky top-0 border-b border-slate-250 select-none z-10 font-sans">
                       <tr>
                         <th className="py-0.5 px-1 text-center w-[3%]">#</th>
                         <th className="py-0.5 px-1 text-left w-[24%]">Item Name *</th>
@@ -836,12 +931,13 @@ export default function PurchaseCreateForm({
                         const calculatedRow = computedTaxes.items?.[idx] || {};
                         const rawTotal = (Number(it.rate) || 0) * (Number(it.quantity) || 0);
                         const baseTaxable = Math.max(0, rawTotal - (Number(it.itemDiscount) || 0));
+                        const rowErrors = validationErrors.lineItems?.[it.rowId] || {};
                         
                         return (
                           <tr key={it.rowId} className="h-6 hover:bg-slate-50/50 transition-colors border-b border-slate-200">
                             {/* Sequence */}
                             <td className="py-0.5 px-1 text-center text-[10px] font-sans font-bold text-slate-400">
-                              {idx + 1}
+                               {idx + 1}
                             </td>
 
                             {/* Item name input */}
@@ -850,8 +946,12 @@ export default function PurchaseCreateForm({
                                 type="text"
                                 value={it.itemName}
                                 onChange={(e) => handleRowFieldChange(it.rowId, "itemName", e.target.value)}
-                                className="w-full bg-transparent px-1 font-sans focus:bg-slate-50/80 hover:border-slate-300 focus:border-indigo-500 border border-transparent rounded-sm text-xs h-5 font-medium text-slate-900 leading-none outline-none truncate"
-                                placeholder="Yarn yarn name..."
+                                disabled={isSaving}
+                                className={`w-full bg-transparent px-1 font-sans focus:bg-slate-50/80 hover:border-slate-300 rounded-sm text-xs h-5 font-medium text-slate-900 leading-none outline-none truncate border ${
+                                  rowErrors.itemName 
+                                    ? "!border-red-500 bg-rose-50/10 focus:ring-1 focus:ring-red-500" 
+                                    : "border-transparent focus:border-indigo-505"
+                                }`}
                                 required
                               />
                             </td>
@@ -862,8 +962,8 @@ export default function PurchaseCreateForm({
                                 type="text"
                                 value={it.description || ""}
                                 onChange={(e) => handleRowFieldChange(it.rowId, "description", e.target.value)}
-                                className="w-full bg-transparent px-1 font-sans focus:bg-slate-50/80 hover:border-slate-300 focus:border-indigo-500 border border-transparent rounded-sm text-[10px] h-5 leading-none text-slate-500 outline-none truncate"
-                                placeholder="Mill invoice comments..."
+                                disabled={isSaving}
+                                className="w-full bg-transparent px-1 font-sans focus:bg-slate-50/80 hover:border-slate-300 border border-transparent rounded-sm text-[10px] h-5 leading-none text-slate-500 outline-none truncate"
                               />
                             </td>
 
@@ -873,8 +973,8 @@ export default function PurchaseCreateForm({
                                 type="text"
                                 value={it.hsnCode}
                                 onChange={(e) => handleRowFieldChange(it.rowId, "hsnCode", e.target.value)}
-                                className="w-full text-center bg-transparent px-1 font-mono focus:bg-slate-50/85 hover:border-slate-300 focus:border-indigo-500 border border-transparent rounded-sm text-xs h-5 text-slate-500 outline-none"
-                                placeholder="5205"
+                                disabled={isSaving}
+                                className="w-full text-center bg-transparent px-1 font-mono focus:bg-slate-50/85 hover:border-slate-300 border border-transparent rounded-sm text-xs h-5 text-slate-550 outline-none"
                               />
                             </td>
 
@@ -884,8 +984,12 @@ export default function PurchaseCreateForm({
                                 type="number"
                                 value={it.rate}
                                 onChange={(e) => handleRowFieldChange(it.rowId, "rate", e.target.value)}
-                                className="w-full text-center bg-transparent px-1 font-mono focus:bg-slate-50/80 hover:border-slate-300 focus:border-indigo-500 border border-transparent rounded-sm text-xs h-5 text-slate-900 font-medium outline-none text-right"
-                                placeholder="0.00"
+                                disabled={isSaving}
+                                className={`w-full text-center bg-transparent px-1 font-mono focus:bg-slate-50/80 hover:border-slate-300 rounded-sm text-xs h-5 text-slate-900 font-medium outline-none text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield] border ${
+                                  rowErrors.rate 
+                                    ? "!border-red-500 bg-rose-50/10 focus:ring-1 focus:ring-red-500" 
+                                    : "border-transparent focus:border-indigo-505"
+                                }`}
                                 required
                               />
                             </td>
@@ -896,8 +1000,12 @@ export default function PurchaseCreateForm({
                                 type="number"
                                 value={it.quantity}
                                 onChange={(e) => handleRowFieldChange(it.rowId, "quantity", e.target.value)}
-                                className="w-full text-center bg-transparent px-1 font-mono focus:bg-slate-50/80 hover:border-slate-300 focus:border-indigo-500 border border-transparent rounded-sm text-xs h-5 text-slate-900 font-bold outline-none text-right"
-                                placeholder="0"
+                                disabled={isSaving}
+                                className={`w-full text-center bg-transparent px-1 font-mono focus:bg-slate-50/80 hover:border-slate-300 rounded-sm text-xs h-5 text-slate-900 font-bold outline-none text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield] border ${
+                                  rowErrors.quantity 
+                                    ? "!border-red-500 bg-rose-50/10 focus:ring-1 focus:ring-red-500" 
+                                    : "border-transparent focus:border-indigo-505"
+                                }`}
                                 required
                               />
                             </td>
@@ -907,6 +1015,7 @@ export default function PurchaseCreateForm({
                               <select
                                 value={it.uom}
                                 onChange={(e) => handleRowFieldChange(it.rowId, "uom", e.target.value)}
+                                disabled={isSaving}
                                 className="h-5 text-[10px] px-1 font-sans font-medium focus:bg-slate-50/80 hover:border-slate-300 border border-transparent rounded-sm outline-none bg-white text-slate-600"
                               >
                                 <option value="kg">kg</option>
@@ -920,8 +1029,7 @@ export default function PurchaseCreateForm({
                                 type="number"
                                 value={it.itemDiscount}
                                 onChange={(e) => handleRowFieldChange(it.rowId, "itemDiscount", e.target.value)}
-                                className="w-full text-center bg-transparent px-1 font-mono focus:bg-slate-50/80 hover:border-slate-300 focus:border-indigo-500 border border-transparent rounded-sm text-xs h-5 text-rose-600 outline-none text-right"
-                                placeholder="0.00"
+                                className="w-full text-center bg-transparent px-1 font-mono focus:bg-slate-50/80 hover:border-slate-300 focus:border-indigo-505 border border-transparent rounded-sm text-xs h-5 text-rose-600 outline-none text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
                               />
                             </td>
 
@@ -999,20 +1107,8 @@ export default function PurchaseCreateForm({
               </div>
 
               {/* SECTION C: Totals Footer */}
-              <div className="bg-slate-100 border border-slate-200 p-2 text-[10px] rounded-sm shrink-0 flex flex-col md:flex-row gap-4 md:items-center md:justify-between select-none font-sans" id="purchase-form-footer-box">
+              <div className="bg-slate-100 border border-slate-200 p-2 text-[10px] rounded-sm shrink-0 flex flex-col md:flex-row gap-4 md:items-center md:justify-end select-none font-sans" id="purchase-form-footer-box">
                 
-                {/* Dynamic State info note */}
-                <div className="flex flex-col gap-0.5 max-w-sm text-slate-500 font-medium">
-                  <div className="text-[9px] uppercase tracking-wide text-slate-400 font-bold">Tax Jurisdiction Verification</div>
-                  <div className="flex items-center gap-1 mt-0.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
-                    <span>
-                      Supplier home GST code: <span className="font-mono text-slate-800 font-bold">{vendors.find(v => v.id === vendorId)?.gst?.slice(0, 2) || "—"}</span>. 
-                      Routing: <span className="font-semibold text-slate-800">{computedTaxes.isIntrastate ? "Haryana Intra-state (CGST 9% + SGST 9%)" : "Out-of-state Interstate (IGST 18%)"}</span>
-                    </span>
-                  </div>
-                </div>
-
                 {/* Main dynamic numeric columns */}
                 <div className="flex-1 flex gap-4 md:justify-end flex-wrap">
                   <div className="flex flex-col items-center px-2 py-0.5 border-r border-slate-200 bg-white shadow-xs rounded-[2px]">
@@ -1076,11 +1172,11 @@ export default function PurchaseCreateForm({
                 <button
                   type="button"
                   onClick={() => handleSaveAction("draft")}
-                  disabled={isSaving || isCheckingDuplicate}
+                  disabled={isSaving || isCheckingDuplicate || isDuplicate}
                   className="h-6 bg-amber-600 hover:bg-amber-500 text-white rounded-sm px-3 text-[10px] uppercase font-bold tracking-wider cursor-pointer border border-amber-700/50 shadow-sm transition-all disabled:opacity-40 flex items-center gap-1"
                   id="btn-form-save-draft"
                 >
-                  {isSaving && saveStatusMsg.includes("Draft") ? (
+                  {isSaving && saveStatusMsg === "draft" ? (
                     <>
                       <Loader2 size={10} className="animate-spin text-white shrink-0" />
                       <span>Saving Draft...</span>
@@ -1100,7 +1196,7 @@ export default function PurchaseCreateForm({
                   className="h-6 bg-indigo-600 hover:bg-indigo-500 text-white rounded-sm px-3 text-[10px] uppercase font-bold tracking-wider cursor-pointer border border-indigo-700/50 shadow-sm transition-all disabled:opacity-40 flex items-center gap-1"
                   id="btn-form-finalize"
                 >
-                  {isSaving && saveStatusMsg.includes("Ledger") ? (
+                  {isSaving && saveStatusMsg === "finalized" ? (
                     <>
                       <Loader2 size={10} className="animate-spin text-white shrink-0" />
                       <span>Finalizing...</span>

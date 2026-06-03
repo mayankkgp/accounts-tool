@@ -297,6 +297,27 @@ export async function checkDuplicate(vendorId, invoiceNumber) {
 }
 
 /**
+ * 4b. The Duplicate Watchdog - checkDuplicatePurchase
+ * Validates whether a newly added supplier invoice was already logged to prevent double ledger booking.
+ */
+export async function checkDuplicatePurchase(vendorId, invoiceNumber) {
+  await simulateNetwork("small");
+
+  if (!vendorId || !invoiceNumber) {
+    return { isDuplicate: false };
+  }
+
+  const purchases = JSON.parse(localStorage.getItem("fabrito_purchases") || "[]");
+  const isDuplicate = purchases.some((pur) => 
+    pur.status === "finalized" &&
+    pur.vendorId === vendorId &&
+    (pur.invoiceNumber || "").trim().toLowerCase() === invoiceNumber.trim().toLowerCase()
+  );
+
+  return { isDuplicate };
+}
+
+/**
  * 5. The Save & Finalize Action (POST /purchases)
  * Writes, commits, or archives verified purchase records inside the 'fabrito_purchases' LocalStorage cluster.
  * Runs 'large' (1200ms) delayed persistence to emulate background indexing, accounting ledger balances, and log-commit.
@@ -344,6 +365,67 @@ export async function finalizePurchase(purchasePayload) {
 
   localStorage.setItem("fabrito_purchases", JSON.stringify(purchases));
   return finalRecord;
+}
+
+/**
+ * 5b. The Save Purchase Action (savePurchase)
+ * Handles both "Save as Draft" and "Finalize" flows based on the status argument.
+ * Calculates all math attributes synchronously through the math engine and registers to localStorage.
+ */
+export async function savePurchase(data, status) {
+  await simulateNetwork("large");
+
+  const purchases = JSON.parse(localStorage.getItem("fabrito_purchases") || "[]");
+  const now = new Date();
+
+  // Validate vendor is present
+  if (!data.vendorId) {
+    throw new Error("Relational Integrity Error: Vendor selection is mandatory.");
+  }
+
+  // Calculate taxes, line totals, and grand total synchronously
+  const computed = calculatePurchaseTaxesSync(data.items || [], data.vendorId, Number(data.overallDiscount) || 0);
+  const freightVal = Number(data.freight) || 0;
+  const totalAmount = Math.max(0, parseFloat((computed.grandTotal + freightVal).toFixed(2)));
+
+  const record = {
+    ...data,
+    status,
+    subtotal: parseFloat(computed.subtotal.toFixed(2)),
+    taxAmount: parseFloat(computed.totalTax.toFixed(2)),
+    totalAmount,
+    cgst: computed.cgst,
+    sgst: computed.sgst,
+    igst: computed.igst,
+    items: computed.items // Includes net lineTotal and proratedDiscount calculations!
+  };
+
+  if (data.id) {
+    const idx = purchases.findIndex((p) => p.id === data.id);
+    if (idx !== -1) {
+      const existing = purchases[idx];
+      const updatedRecord = {
+        ...existing,
+        ...record,
+        updatedAt: now.toISOString()
+      };
+      purchases[idx] = updatedRecord;
+      localStorage.setItem("fabrito_purchases", JSON.stringify(purchases));
+      return updatedRecord;
+    }
+  }
+
+  // Assign a completely fresh unique identifier
+  const prefix = status === "draft" ? "draft_" : "pur_";
+  const uniqueId = prefix + Math.random().toString(36).substr(2, 9);
+  const newRecord = {
+    ...record,
+    id: uniqueId,
+    createdAt: now.toISOString()
+  };
+  purchases.push(newRecord);
+  localStorage.setItem("fabrito_purchases", JSON.stringify(purchases));
+  return newRecord;
 }
 
 /**
