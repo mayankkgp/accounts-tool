@@ -11,6 +11,7 @@ export default function PurchaseDetailPane({
   activePurchaseId,
   onClose,
   vendorLookup = {},
+  onEditDraft,
 }) {
   const [purchase, setPurchase] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -133,9 +134,11 @@ export default function PurchaseDetailPane({
             <div className="flex flex-col gap-0.5 min-w-0 flex-1">
               <div className="flex items-center gap-1.5 flex-wrap">
                 {/* Purchase Status Badge */}
-                <span className="text-[8px] font-bold uppercase tracking-wider px-1 py-0.25 bg-slate-100 text-slate-700 border border-slate-250 rounded-[2px] shrink-0 font-sans">
-                  {purchase.status === "draft" ? "Draft" : "Finalized"}
-                </span>
+                {purchase.status === "draft" && (
+                  <span className="text-[8px] font-bold uppercase tracking-wider px-1 py-0.25 bg-slate-100 text-slate-700 border border-slate-250 rounded-[2px] shrink-0 font-sans">
+                    Draft
+                  </span>
+                )}
                 <h2 className="text-[13px] font-bold text-slate-900 leading-none truncate max-w-[210px]" title={vendorName}>
                   {vendorName}
                 </h2>
@@ -148,8 +151,18 @@ export default function PurchaseDetailPane({
               </div>
             </div>
 
-            {/* Close Button Only */}
+            {/* Close and Resume Button */}
             <div className="flex items-center gap-1.5 shrink-0 ml-2">
+              {purchase.status === "draft" && onEditDraft && (
+                <button
+                  onClick={() => onEditDraft(purchase)}
+                  className="h-6 px-2 bg-amber-605 hover:bg-amber-500 text-white border border-amber-700/30 rounded-sm text-[9px] uppercase font-extrabold tracking-wider transition-all cursor-pointer flex items-center justify-center shrink-0"
+                  id="resume-edit-draft-btn"
+                  type="button"
+                >
+                  Resume Verification
+                </button>
+              )}
               <button
                 onClick={onClose}
                 className="h-6 w-6 rounded-sm flex items-center justify-center text-slate-500 hover:text-slate-850 hover:bg-slate-100 border border-slate-200 transition-all cursor-pointer p-0 shrink-0"
@@ -163,7 +176,7 @@ export default function PurchaseDetailPane({
           </div>
 
           {/* Body content with side padding */}
-          <div className="flex-1 flex flex-col gap-2 px-3 pb-2.5 pt-1.5 overflow-hidden" id="detail-pane-content">
+          <div className="flex-1 flex flex-col gap-2 px-3 pb-2.5 pt-1.5 overflow-hidden min-h-0" id="detail-pane-content">
             {/* Context subheader (L-Value, Relocated PO No, and TRANS_REF) */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-1.5 px-0.5 shrink-0" id="detail-subheader-meta">
               <div className="flex items-center gap-4 text-xs font-sans">
@@ -186,7 +199,7 @@ export default function PurchaseDetailPane({
             </div>
 
             {/* Line Items Inventory Table Section */}
-            <div className="flex-1 flex flex-col overflow-hidden min-h-[110px]" id="detail-line-items-wrapper">
+            <div className="flex-1 flex flex-col overflow-hidden min-h-[110px] min-h-0" id="detail-line-items-wrapper">
               <div className="flex items-center justify-between mb-1 shrink-0">
                 <span className="text-[9px] uppercase tracking-wide font-bold text-slate-400 font-mono">Invoice Line Items</span>
                 <span className="text-[9px] font-mono text-slate-400">
@@ -194,7 +207,7 @@ export default function PurchaseDetailPane({
                 </span>
               </div>
               
-              <div className="flex-1 overflow-auto border border-slate-200/80 rounded-sm bg-white" id="detail-grid-viewport">
+              <div className="flex-1 overflow-auto min-h-0 border border-slate-200/80 rounded-sm bg-white" id="detail-grid-viewport">
                 <table className="w-full border-collapse text-left text-slate-705 text-xs" id="detail-grid-table">
                   <thead className="bg-slate-150 text-[10px] uppercase tracking-wider text-slate-500 font-bold h-6 sticky top-0 border-b border-slate-250 select-none z-10 font-sans">
                     <tr>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PurchaseListToolbar from "./PurchaseListToolbar";
 import PurchaseDataGrid from "./PurchaseDataGrid";
 import PurchaseDetailPane from "./PurchaseDetailPane";
+import PurchaseCreateForm from "./PurchaseCreateForm";
 import { fetchPurchases } from "../../services/purchaseService";
 import { getVendorLookupMap } from "../../services/entityService";
 import useDebounce from "../../hooks/useDebounce";
@@ -58,6 +59,11 @@ export default function PurchasesLayout() {
   const [purchases, setPurchases] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [vendorLookup, setVendorLookup] = useState({});
+
+  // Operational states for the new create/edit form
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [editingPurchase, setEditingPurchase] = useState(null);
+  const [initialAiFile, setInitialAiFile] = useState(null);
 
   // Core advanced filters state integration
   const [filters, setFilters] = useState({
@@ -166,7 +172,7 @@ export default function PurchasesLayout() {
       } transition-all duration-300 ease-in-out overflow-hidden`}
       id="purchases-layout-grid"
     >
-      <div className="bg-slate-50 border-r border-slate-200 flex flex-col p-2 justify-between animate-none z-10" id="purchases-sidebar-pane">
+      <div className="bg-slate-50 border-r border-slate-200 flex flex-col p-2 justify-between animate-none z-10 min-h-0" id="purchases-sidebar-pane">
         <div className="flex-1 flex flex-col min-h-0 h-full" id="purchase-list-container">
           <PurchaseListToolbar
             activeTab={activeTab}
@@ -179,7 +185,16 @@ export default function PurchasesLayout() {
             filters={filters}
             setFilters={setFilters}
             vendorLookup={vendorLookup}
-            onAddNew={() => {}} // Visual placeholder
+            onAddNew={(mode, file) => {
+              setEditingPurchase(null);
+              if (mode === "manual") {
+                setInitialAiFile(null);
+                setIsCreateOpen(true);
+              } else if (mode === "ai" && file) {
+                setInitialAiFile(file);
+                setIsCreateOpen(true);
+              }
+            }}
             isCompressed={isPaneSelected}
           />
 
@@ -196,17 +211,41 @@ export default function PurchasesLayout() {
       </div>
 
       <div
-        className={`bg-white flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`bg-white overflow-hidden min-h-0 h-full relative transition-all duration-300 ease-in-out ${
           isPaneSelected ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         id="purchases-details-pane"
       >
-        <PurchaseDetailPane
-          activePurchaseId={activePurchaseId}
-          onClose={() => setActivePurchaseId(null)}
-          vendorLookup={vendorLookup}
-        />
+        <div className="absolute inset-0">
+          <PurchaseDetailPane
+            activePurchaseId={activePurchaseId}
+            onClose={() => setActivePurchaseId(null)}
+            vendorLookup={vendorLookup}
+            onEditDraft={(draft) => {
+              setEditingPurchase(draft);
+              setInitialAiFile(null);
+              setIsCreateOpen(true);
+            }}
+          />
+        </div>
       </div>
+
+      {isCreateOpen && (
+        <PurchaseCreateForm
+          isOpen={isCreateOpen}
+          onClose={() => {
+            setIsCreateOpen(false);
+            setEditingPurchase(null);
+            setInitialAiFile(null);
+          }}
+          editingPurchase={editingPurchase}
+          initialAiFile={initialAiFile}
+          onSaveSuccess={() => {
+            setRefreshTrigger((prev) => prev + 1);
+            setActivePurchaseId(null);
+          }}
+        />
+      )}
     </div>
   );
 }

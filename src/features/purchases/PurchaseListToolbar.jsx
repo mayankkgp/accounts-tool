@@ -19,6 +19,7 @@ export default function PurchaseListToolbar({
   vendorLookup = {},
 }) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState(false);
 
   const tabs = [
     { value: "finalized", label: "Finalized" },
@@ -174,19 +175,61 @@ export default function PurchaseListToolbar({
           </div>
 
           {/* Add Manual/AI Purchase Operations */}
-          <button
-            onClick={onAddNew}
-            title="Add Purchase"
-            className={`h-6 ${
-              isCompressed ? "w-6" : "px-2"
-            } shrink-0 bg-indigo-600 hover:bg-indigo-500 text-white rounded-sm flex items-center justify-center gap-1 border border-indigo-700/50 shadow-sm cursor-pointer transition-all`}
-            id="btn-add-purchase"
-          >
-            <Plus size={11} className="stroke-[2.5]" />
-            {!isCompressed && (
-              <span className="text-[9px] font-bold uppercase tracking-wider">Add Purchase</span>
+          <div className="relative">
+            <button
+              onClick={() => setIsAddOpen((prev) => !prev)}
+              title="Add Purchase"
+              type="button"
+              className={`h-6 ${
+                isCompressed ? "w-6" : "px-2"
+              } shrink-0 bg-indigo-600 hover:bg-indigo-500 text-white rounded-sm flex items-center justify-center gap-1 border border-indigo-700/50 shadow-sm cursor-pointer transition-all`}
+              id="btn-add-purchase"
+            >
+              <Plus size={11} className="stroke-[2.5]" />
+              {!isCompressed && (
+                <span className="text-[9px] font-bold uppercase tracking-wider">Add Purchase</span>
+              )}
+            </button>
+
+            {isAddOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setIsAddOpen(false)} />
+                <div className="absolute right-0 top-7 z-50 w-44 bg-white border border-slate-200 shadow-lg rounded-sm py-1 font-sans text-slate-805 animate-none select-none text-[11px]" id="add-purchase-dropdown">
+                  <button
+                    onClick={() => {
+                      onAddNew("manual");
+                      setIsAddOpen(false);
+                    }}
+                    type="button"
+                    className="w-full text-left px-2.5 py-1.5 hover:bg-slate-50 cursor-pointer text-slate-700 hover:text-slate-900 border-none bg-transparent flex items-center gap-1.5 font-sans font-medium"
+                    id="dropdown-option-manual"
+                  >
+                    <Plus size={12} className="text-slate-500 stroke-[2.5]" />
+                    <span>Enter Manually</span>
+                  </button>
+                  <label
+                    className="w-full text-left px-2.5 py-1.5 hover:bg-slate-50 cursor-pointer text-slate-700 hover:text-slate-900 border-none bg-transparent flex items-center gap-1.5 font-sans font-medium"
+                    id="dropdown-option-ai"
+                  >
+                    <SlidersHorizontal size={12} className="text-slate-500 stroke-[2]" />
+                    <span>Upload AI Invoice</span>
+                    <input
+                      type="file"
+                      accept=".pdf,.png,.jpg,.jpeg,.tiff"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          onAddNew("ai", file);
+                        }
+                        setIsAddOpen(false);
+                      }}
+                    />
+                  </label>
+                </div>
+              </>
             )}
-          </button>
+          </div>
         </div>
       </div>
 
