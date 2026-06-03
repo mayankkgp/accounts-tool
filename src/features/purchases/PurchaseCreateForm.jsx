@@ -3,6 +3,7 @@ import {
   X, Save, Check, Loader2, Trash2, Plus, FileText, 
   AlertTriangle, GripVertical, CheckCircle2, RefreshCw 
 } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import { simulateNetwork } from "../../utils/simulateNetwork";
 import { 
   calculatePurchaseTaxesSync, 
@@ -567,14 +568,22 @@ export default function PurchaseCreateForm({
       <div className="bg-slate-100 flex flex-col w-full h-full border border-slate-300 shadow-2xl overflow-hidden rounded-[4px] relative" id="purchase-form-body-outer">
         
         {/* Banner Alert Toast Overlay */}
-        {infoMessage && (
-          <div className={`absolute top-10 right-4 z-40 p-2 rounded-sm text-xs shadow-md border animate-bounce flex items-center gap-2 font-sans font-medium ${
-            infoMessage.type === "error" ? "bg-rose-50 border-rose-200 text-rose-800" : "bg-emerald-50 border-emerald-200 text-emerald-800"
-          }`}>
-            <AlertTriangle size={14} className={infoMessage.type === "error" ? "text-rose-600" : "text-emerald-600"} />
-            <span>{infoMessage.msg}</span>
-          </div>
-        )}
+        <AnimatePresence>
+          {infoMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: -16, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className={`fixed top-4 right-4 z-50 p-2.5 rounded-sm text-xs shadow-md border flex items-center gap-2 font-sans font-medium max-w-[340px] pointer-events-auto select-none ${
+                infoMessage.type === "error" ? "bg-rose-50 border-rose-200 text-rose-800" : "bg-emerald-50 border-emerald-200 text-emerald-800"
+              }`}
+            >
+              <AlertTriangle size={14} className={infoMessage.type === "error" ? "text-rose-600" : "text-emerald-600"} />
+              <span className="leading-tight shrink-0 flex-1">{infoMessage.msg}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Global form header */}
         <div className="h-8 shrink-0 bg-slate-900 px-3 flex items-center justify-between font-sans border-b border-slate-950" id="purchase-form-header">
@@ -801,7 +810,7 @@ export default function PurchaseCreateForm({
                       <Loader2 size={10} className="animate-spin text-slate-400 absolute right-1.5 top-6" />
                     )}
                     {isDuplicate && (
-                      <span className="text-[9px] text-red-600 font-bold mt-0.5 block" id="warning-duplicate">
+                      <span className="absolute top-full left-0 z-20 text-[9px] text-red-600 font-bold bg-white border border-red-200 rounded-[2px] px-1 py-0.5 shadow-xs mt-0.5 whitespace-nowrap leading-none select-none animate-fade-in" id="warning-duplicate">
                         Duplicate Invoice Combo!
                       </span>
                     )}
