@@ -3,6 +3,7 @@ import PurchaseListToolbar from "./PurchaseListToolbar";
 import PurchaseDataGrid from "./PurchaseDataGrid";
 import PurchaseDetailPane from "./PurchaseDetailPane";
 import PurchaseCreateForm from "./PurchaseCreateForm";
+import PurchaseAIVerification from "./PurchaseAIVerification";
 import { fetchPurchases } from "../../services/purchaseService";
 import { getVendorLookupMap } from "../../services/entityService";
 import useDebounce from "../../hooks/useDebounce";
@@ -64,6 +65,10 @@ export default function PurchasesLayout() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingPurchase, setEditingPurchase] = useState(null);
   const [initialAiFile, setInitialAiFile] = useState(null);
+
+  // States for Phase 7 AI bot validation workspace
+  const [isAiOpen, setIsAiOpen] = useState(false);
+  const [aiFile, setAiFile] = useState(null);
 
   // Core advanced filters state integration
   const [filters, setFilters] = useState({
@@ -191,8 +196,8 @@ export default function PurchasesLayout() {
                 setInitialAiFile(null);
                 setIsCreateOpen(true);
               } else if (mode === "ai" && file) {
-                setInitialAiFile(file);
-                setIsCreateOpen(true);
+                setAiFile(file);
+                setIsAiOpen(true);
               }
             }}
             isCompressed={isPaneSelected}
@@ -241,6 +246,23 @@ export default function PurchasesLayout() {
           editingPurchase={editingPurchase}
           initialAiFile={initialAiFile}
           onSaveSuccess={() => {
+            setRefreshTrigger((prev) => prev + 1);
+            setActivePurchaseId(null);
+          }}
+        />
+      )}
+
+      {isAiOpen && (
+        <PurchaseAIVerification
+          isOpen={isAiOpen}
+          file={aiFile}
+          onClose={() => {
+            setIsAiOpen(false);
+            setAiFile(null);
+          }}
+          onSaveSuccess={() => {
+            setIsAiOpen(false);
+            setAiFile(null);
             setRefreshTrigger((prev) => prev + 1);
             setActivePurchaseId(null);
           }}
