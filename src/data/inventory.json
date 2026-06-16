@@ -1,0 +1,692 @@
+[
+  {
+    "itemId": "INV-1001",
+    "itemName": "Cotton Yarn 40s - Batch A",
+    "availableQty": 200,
+    "hsnCode": "520512",
+    "invoiceID": "PI_Trident_441.pdf",
+    "invoiceDate": "2026-06-10",
+    "supplier": "Trident Group",
+    "location": "Apex Whouse A"
+  },
+  {
+    "itemId": "INV-1002",
+    "itemName": "Cotton Yarn 40s - Batch B",
+    "availableQty": 300,
+    "hsnCode": "520512",
+    "invoiceID": "PI_Trident_441.pdf",
+    "invoiceDate": "2026-06-10",
+    "supplier": "Trident Group",
+    "location": "Apex Whouse A"
+  },
+  {
+    "itemId": "INV-1003",
+    "itemName": "Polyester Blend 30s",
+    "availableQty": 300,
+    "hsnCode": "550921",
+    "invoiceID": "PI_Trident_441.pdf",
+    "invoiceDate": "2026-06-10",
+    "supplier": "Trident Group",
+    "location": "Apex Whouse A"
+  },
+  {
+    "itemId": "INV-1004",
+    "itemName": "Dyed Poplin Pink",
+    "availableQty": 600,
+    "hsnCode": "520832",
+    "invoiceID": "PI_Dyeing_09.pdf",
+    "invoiceDate": "2026-06-12",
+    "supplier": "Loom & Co Dyeing Unit",
+    "location": "Dyeing Hub Unit 3"
+  },
+  {
+    "itemId": "INV-1005",
+    "itemName": "Dyed Poplin Blue",
+    "availableQty": 600,
+    "hsnCode": "520832",
+    "invoiceID": "PI_Dyeing_09.pdf",
+    "invoiceDate": "2026-06-12",
+    "supplier": "Loom & Co Dyeing Unit",
+    "location": "Dyeing Hub Unit 3"
+  },
+  {
+    "itemId": "INV-1006",
+    "itemName": "Readymade Shirts M",
+    "availableQty": 500,
+    "hsnCode": "620520",
+    "invoiceID": "PI_Stitching_55.pdf",
+    "invoiceDate": "2026-06-14",
+    "supplier": "Vogue Garments",
+    "location": "Vogue Factory"
+  },
+  {
+    "itemId": "INV-1007",
+    "itemName": "Readymade Shirts L",
+    "availableQty": 500,
+    "hsnCode": "620520",
+    "invoiceID": "PI_Stitching_55.pdf",
+    "invoiceDate": "2026-06-14",
+    "supplier": "Vogue Garments",
+    "location": "Vogue Factory"
+  },
+  {
+    "itemId": "INV-1008",
+    "itemName": "Readymade Trousers",
+    "availableQty": 500,
+    "hsnCode": "620342",
+    "invoiceID": "PI_Stitching_55.pdf",
+    "invoiceDate": "2026-06-14",
+    "supplier": "Vogue Garments",
+    "location": "Vogue Factory"
+  },
+  {
+    "itemId": "INV-1009",
+    "itemName": "Defective Returns Box",
+    "availableQty": 100,
+    "hsnCode": "630900",
+    "invoiceID": "PI_Stitching_55.pdf",
+    "invoiceDate": "2026-06-14",
+    "supplier": "Vogue Garments",
+    "location": "Vogue Factory"
+  },
+  {
+    "itemId": "INV-1010",
+    "itemName": "Raw Silk Premium",
+    "availableQty": 100,
+    "hsnCode": "500720",
+    "invoiceID": "PI_Mysore_11.pdf",
+    "invoiceDate": "2026-06-12",
+    "supplier": "Mysore Silk Board Vendor",
+    "location": "Mysore Mill"
+  },
+  {
+    "itemId": "INV-1011",
+    "itemName": "Raw Silk Standard",
+    "availableQty": 100,
+    "hsnCode": "500720",
+    "invoiceID": "PI_Mysore_11.pdf",
+    "invoiceDate": "2026-06-12",
+    "supplier": "Mysore Silk Board Vendor",
+    "location": "Mysore Mill"
+  },
+  {
+    "itemId": "INV-1012",
+    "itemName": "Lycra Core Greige 1",
+    "availableQty": 200,
+    "hsnCode": "520912",
+    "invoiceID": "PI_Vardhman_01.pdf",
+    "invoiceDate": "2026-06-13",
+    "supplier": "Vardhman Textiles",
+    "location": "Vardhman Baddi"
+  },
+  {
+    "itemId": "INV-1013",
+    "itemName": "Lycra Core Greige 2",
+    "availableQty": 200,
+    "hsnCode": "520912",
+    "invoiceID": "PI_Vardhman_01.pdf",
+    "invoiceDate": "2026-06-13",
+    "supplier": "Vardhman Textiles",
+    "location": "Vardhman Baddi"
+  },
+  {
+    "itemId": "INV-1014",
+    "itemName": "Dyed Cotton Dark",
+    "availableQty": 500,
+    "hsnCode": "520832",
+    "invoiceID": "PI_Dyeing_102.pdf",
+    "invoiceDate": "2026-06-11",
+    "supplier": "RS Weavers",
+    "location": "RS Weavers Facility"
+  },
+  {
+    "itemId": "INV-1015",
+    "itemName": "Dyed Cotton Light",
+    "availableQty": 500,
+    "hsnCode": "520832",
+    "invoiceID": "PI_Dyeing_102.pdf",
+    "invoiceDate": "2026-06-11",
+    "supplier": "RS Weavers",
+    "location": "RS Weavers Facility"
+  },
+  {
+    "itemId": "INV-1016",
+    "itemName": "Printed Rayon Sample",
+    "availableQty": 500,
+    "hsnCode": "551614",
+    "invoiceID": "PI_Dyeing_102.pdf",
+    "invoiceDate": "2026-06-11",
+    "supplier": "RS Weavers",
+    "location": "RS Weavers Facility"
+  },
+  {
+    "itemId": "INV-1017",
+    "itemName": "Denim 10oz Greige A",
+    "availableQty": 250,
+    "hsnCode": "520942",
+    "invoiceID": "PI_Arvind_01.pdf",
+    "invoiceDate": "2026-06-10",
+    "supplier": "Arvind Mills",
+    "location": "Arvind Mills"
+  },
+  {
+    "itemId": "INV-1018",
+    "itemName": "Denim 10oz Greige B",
+    "availableQty": 250,
+    "hsnCode": "520942",
+    "invoiceID": "PI_Arvind_01.pdf",
+    "invoiceDate": "2026-06-10",
+    "supplier": "Arvind Mills",
+    "location": "Arvind Mills"
+  },
+  {
+    "itemId": "INV-1019",
+    "itemName": "Twill Fabric 1",
+    "availableQty": 100,
+    "hsnCode": "520833",
+    "invoiceID": "PI_Arvind_01.pdf",
+    "invoiceDate": "2026-06-10",
+    "supplier": "Arvind Mills",
+    "location": "Arvind Mills"
+  },
+  {
+    "itemId": "INV-1020",
+    "itemName": "Twill Fabric 2",
+    "availableQty": 100,
+    "hsnCode": "520833",
+    "invoiceID": "PI_Arvind_01.pdf",
+    "invoiceDate": "2026-06-10",
+    "supplier": "Arvind Mills",
+    "location": "Arvind Mills"
+  },
+  {
+    "itemId": "INV-1021",
+    "itemName": "Viscose Yarn Lot 1",
+    "availableQty": 150,
+    "hsnCode": "551011",
+    "invoiceID": "PI_Spin_1.pdf",
+    "invoiceDate": "2026-06-08",
+    "supplier": "Metro Spinners",
+    "location": "Metro Godown"
+  },
+  {
+    "itemId": "INV-1022",
+    "itemName": "Viscose Yarn Lot 2",
+    "availableQty": 150,
+    "hsnCode": "551011",
+    "invoiceID": "PI_Spin_1.pdf",
+    "invoiceDate": "2026-06-08",
+    "supplier": "Metro Spinners",
+    "location": "Metro Godown"
+  },
+  {
+    "itemId": "INV-1023",
+    "itemName": "Shirting Greige Prime A",
+    "availableQty": 250,
+    "hsnCode": "520811",
+    "invoiceID": "PI_Weave_A.pdf",
+    "invoiceDate": "2026-06-09",
+    "supplier": "Prime Weavers",
+    "location": "Prime Unit 1"
+  },
+  {
+    "itemId": "INV-1024",
+    "itemName": "Shirting Greige Prime B",
+    "availableQty": 250,
+    "hsnCode": "520811",
+    "invoiceID": "PI_Weave_A.pdf",
+    "invoiceDate": "2026-06-09",
+    "supplier": "Prime Weavers",
+    "location": "Prime Unit 1"
+  },
+  {
+    "itemId": "INV-1025",
+    "itemName": "Suiting Fabric Premium",
+    "availableQty": 600,
+    "hsnCode": "540752",
+    "invoiceID": "PI_Weave_A.pdf",
+    "invoiceDate": "2026-06-09",
+    "supplier": "Prime Weavers",
+    "location": "Prime Unit 1"
+  },
+  {
+    "itemId": "INV-1026",
+    "itemName": "Silk Fabric Raw 1",
+    "availableQty": 100,
+    "hsnCode": "500720",
+    "invoiceID": "PI_Surat_1.pdf",
+    "invoiceDate": "2026-06-08",
+    "supplier": "Surat Silk Mills",
+    "location": "Surat Textile Hub"
+  },
+  {
+    "itemId": "INV-1027",
+    "itemName": "Silk Fabric Raw 2",
+    "availableQty": 100,
+    "hsnCode": "500720",
+    "invoiceID": "PI_Surat_1.pdf",
+    "invoiceDate": "2026-06-08",
+    "supplier": "Surat Silk Mills",
+    "location": "Surat Textile Hub"
+  },
+  {
+    "itemId": "INV-1028",
+    "itemName": "Chiffon Greige A",
+    "availableQty": 75,
+    "hsnCode": "540710",
+    "invoiceID": "PI_Surat_1.pdf",
+    "invoiceDate": "2026-06-08",
+    "supplier": "Surat Silk Mills",
+    "location": "Surat Textile Hub"
+  },
+  {
+    "itemId": "INV-1029",
+    "itemName": "Chiffon Greige B",
+    "availableQty": 75,
+    "hsnCode": "540710",
+    "invoiceID": "PI_Surat_1.pdf",
+    "invoiceDate": "2026-06-08",
+    "supplier": "Surat Silk Mills",
+    "location": "Surat Textile Hub"
+  },
+  {
+    "itemId": "INV-1030",
+    "itemName": "Spun Yarn 20s - R1",
+    "availableQty": 1000,
+    "hsnCode": "550921",
+    "invoiceID": "PI_Reliance_771.pdf",
+    "invoiceDate": "2026-06-10",
+    "supplier": "Reliance Ind",
+    "location": "Global Mill 2"
+  },
+  {
+    "itemId": "INV-1031",
+    "itemName": "Spun Yarn 20s - R2",
+    "availableQty": 1000,
+    "hsnCode": "550921",
+    "invoiceID": "PI_Reliance_771.pdf",
+    "invoiceDate": "2026-06-10",
+    "supplier": "Reliance Ind",
+    "location": "Global Mill 2"
+  },
+  {
+    "itemId": "INV-1032",
+    "itemName": "Tees Medium",
+    "availableQty": 250,
+    "hsnCode": "610910",
+    "invoiceID": "PI_Garment_A.pdf",
+    "invoiceDate": "2026-06-09",
+    "supplier": "Urban Factory",
+    "location": "Urban Outfitters Store 1"
+  },
+  {
+    "itemId": "INV-1033",
+    "itemName": "Tees Large",
+    "availableQty": 250,
+    "hsnCode": "610910",
+    "invoiceID": "PI_Garment_A.pdf",
+    "invoiceDate": "2026-06-09",
+    "supplier": "Urban Factory",
+    "location": "Urban Outfitters Store 1"
+  },
+  {
+    "itemId": "INV-1034",
+    "itemName": "Polos Medium",
+    "availableQty": 300,
+    "hsnCode": "610510",
+    "invoiceID": "PI_Garment_A.pdf",
+    "invoiceDate": "2026-06-09",
+    "supplier": "Urban Factory",
+    "location": "Urban Outfitters Store 1"
+  },
+  {
+    "itemId": "INV-1035",
+    "itemName": "Lyocell Standard",
+    "availableQty": 250,
+    "hsnCode": "551612",
+    "invoiceID": "PI_Lyo_1.pdf",
+    "invoiceDate": "2026-06-07",
+    "supplier": "Nova Mills",
+    "location": "Nova Warehouse"
+  },
+  {
+    "itemId": "INV-1036",
+    "itemName": "Lyocell Premium",
+    "availableQty": 250,
+    "hsnCode": "551612",
+    "invoiceID": "PI_Lyo_1.pdf",
+    "invoiceDate": "2026-06-07",
+    "supplier": "Nova Mills",
+    "location": "Nova Warehouse"
+  },
+  {
+    "itemId": "INV-1037",
+    "itemName": "Poly Yarn Spool A",
+    "availableQty": 500,
+    "hsnCode": "550921",
+    "invoiceID": "PI_Poly_1.pdf",
+    "invoiceDate": "2026-06-06",
+    "supplier": "Silver Threads Vendor",
+    "location": "Silver Threads Unit"
+  },
+  {
+    "itemId": "INV-1038",
+    "itemName": "Poly Yarn Spool B",
+    "availableQty": 500,
+    "hsnCode": "550921",
+    "invoiceID": "PI_Poly_1.pdf",
+    "invoiceDate": "2026-06-06",
+    "supplier": "Silver Threads Vendor",
+    "location": "Silver Threads Unit"
+  },
+  {
+    "itemId": "INV-1039",
+    "itemName": "Cotton Yarn Spool A",
+    "availableQty": 250,
+    "hsnCode": "520512",
+    "invoiceID": "PI_Poly_1.pdf",
+    "invoiceDate": "2026-06-06",
+    "supplier": "Silver Threads Vendor",
+    "location": "Silver Threads Unit"
+  },
+  {
+    "itemId": "INV-1040",
+    "itemName": "Cotton Yarn Spool B",
+    "availableQty": 250,
+    "hsnCode": "520512",
+    "invoiceID": "PI_Poly_1.pdf",
+    "invoiceDate": "2026-06-06",
+    "supplier": "Silver Threads Vendor",
+    "location": "Silver Threads Unit"
+  },
+  {
+    "itemId": "INV-1041",
+    "itemName": "Linen Fabric Raw",
+    "availableQty": 250,
+    "hsnCode": "530919",
+    "invoiceID": "PI_Linen_1.pdf",
+    "invoiceDate": "2026-06-03",
+    "supplier": "Crimson Mills",
+    "location": "Crimson Unit 2"
+  },
+  {
+    "itemId": "INV-1042",
+    "itemName": "Linen Fabric Bleached",
+    "availableQty": 250,
+    "hsnCode": "530919",
+    "invoiceID": "PI_Linen_1.pdf",
+    "invoiceDate": "2026-06-03",
+    "supplier": "Crimson Mills",
+    "location": "Crimson Unit 2"
+  },
+  {
+    "itemId": "INV-1043",
+    "itemName": "12oz Denim Greige Roll 1",
+    "availableQty": 400,
+    "hsnCode": "520942",
+    "invoiceID": "PI_Arvind_110.pdf",
+    "invoiceDate": "2026-06-08",
+    "supplier": "Arvind Mills",
+    "location": "Arvind Mills"
+  },
+  {
+    "itemId": "INV-1044",
+    "itemName": "12oz Denim Greige Roll 2",
+    "availableQty": 400,
+    "hsnCode": "520942",
+    "invoiceID": "PI_Arvind_110.pdf",
+    "invoiceDate": "2026-06-08",
+    "supplier": "Arvind Mills",
+    "location": "Arvind Mills"
+  },
+  {
+    "itemId": "INV-1045",
+    "itemName": "Pure Silk Roll A",
+    "availableQty": 100,
+    "hsnCode": "500720",
+    "invoiceID": "PI_Silk_1.pdf",
+    "invoiceDate": "2026-06-06",
+    "supplier": "Heritage Weavers",
+    "location": "Heritage Silks Warehouse"
+  },
+  {
+    "itemId": "INV-1046",
+    "itemName": "Pure Silk Roll B",
+    "availableQty": 100,
+    "hsnCode": "500720",
+    "invoiceID": "PI_Silk_1.pdf",
+    "invoiceDate": "2026-06-06",
+    "supplier": "Heritage Weavers",
+    "location": "Heritage Silks Warehouse"
+  },
+  {
+    "itemId": "INV-1047",
+    "itemName": "Organza Greige",
+    "availableQty": 150,
+    "hsnCode": "540720",
+    "invoiceID": "PI_Silk_1.pdf",
+    "invoiceDate": "2026-06-06",
+    "supplier": "Heritage Weavers",
+    "location": "Heritage Silks Warehouse"
+  },
+  {
+    "itemId": "INV-1048",
+    "itemName": "Cotton 30s C1",
+    "availableQty": 500,
+    "hsnCode": "520512",
+    "invoiceID": "PI_Cot_E1.pdf",
+    "invoiceDate": "2026-06-05",
+    "supplier": "Elite Spinners",
+    "location": "Elite Traders Hub"
+  },
+  {
+    "itemId": "INV-1049",
+    "itemName": "Cotton 30s C2",
+    "availableQty": 500,
+    "hsnCode": "520512",
+    "invoiceID": "PI_Cot_E1.pdf",
+    "invoiceDate": "2026-06-05",
+    "supplier": "Elite Spinners",
+    "location": "Elite Traders Hub"
+  },
+  {
+    "itemId": "INV-1050",
+    "itemName": "Poly 20s P1",
+    "availableQty": 250,
+    "hsnCode": "550921",
+    "invoiceID": "PI_Cot_E1.pdf",
+    "invoiceDate": "2026-06-05",
+    "supplier": "Elite Spinners",
+    "location": "Elite Traders Hub"
+  },
+  {
+    "itemId": "INV-1051",
+    "itemName": "Poly 20s P2",
+    "availableQty": 250,
+    "hsnCode": "550921",
+    "invoiceID": "PI_Cot_E1.pdf",
+    "invoiceDate": "2026-06-05",
+    "supplier": "Elite Spinners",
+    "location": "Elite Traders Hub"
+  },
+  {
+    "itemId": "INV-1052",
+    "itemName": "Muslin Greige Roll 1",
+    "availableQty": 200,
+    "hsnCode": "520811",
+    "invoiceID": "PI_Muslin.pdf",
+    "invoiceDate": "2026-06-03",
+    "supplier": "Oasis Weavers",
+    "location": "Oasis Unit 1"
+  },
+  {
+    "itemId": "INV-1052",
+    "itemName": "Muslin Greige Roll 2",
+    "availableQty": 200,
+    "hsnCode": "520811",
+    "invoiceID": "PI_Muslin.pdf",
+    "invoiceDate": "2026-06-03",
+    "supplier": "Oasis Weavers",
+    "location": "Oasis Unit 1"
+  },
+  {
+    "itemId": "INV-1054",
+    "itemName": "Polyester Fabric A1",
+    "availableQty": 1000,
+    "hsnCode": "540752",
+    "invoiceID": "PI_Poly_A.pdf",
+    "invoiceDate": "2026-05-28",
+    "supplier": "Aurora Synthetics",
+    "location": "Aurora Mill"
+  },
+  {
+    "itemId": "INV-1055",
+    "itemName": "Polyester Fabric A2",
+    "availableQty": 1000,
+    "hsnCode": "540752",
+    "invoiceID": "PI_Poly_A.pdf",
+    "invoiceDate": "2026-05-28",
+    "supplier": "Aurora Synthetics",
+    "location": "Aurora Mill"
+  },
+  {
+    "itemId": "INV-1056",
+    "itemName": "Modal Yarn 30s",
+    "availableQty": 500,
+    "hsnCode": "551011",
+    "invoiceID": "PI_Extra_101.pdf",
+    "invoiceDate": "2026-05-25",
+    "supplier": "Birla Cellulose",
+    "location": "Warehouse C"
+  },
+  {
+    "itemId": "INV-1057",
+    "itemName": "Modal Yarn 40s",
+    "availableQty": 500,
+    "hsnCode": "551011",
+    "invoiceID": "PI_Extra_101.pdf",
+    "invoiceDate": "2026-05-25",
+    "supplier": "Birla Cellulose",
+    "location": "Warehouse C"
+  },
+  {
+    "itemId": "INV-1058",
+    "itemName": "Viscose Suiting Fabric",
+    "availableQty": 1000,
+    "hsnCode": "551614",
+    "invoiceID": "PI_Extra_102.pdf",
+    "invoiceDate": "2026-05-22",
+    "supplier": "Raymonds",
+    "location": "Central Hub"
+  },
+  {
+    "itemId": "INV-1059",
+    "itemName": "Viscose Shirting Blend",
+    "availableQty": 500,
+    "hsnCode": "551614",
+    "invoiceID": "PI_Extra_102.pdf",
+    "invoiceDate": "2026-05-22",
+    "supplier": "Raymonds",
+    "location": "Central Hub"
+  },
+  {
+    "itemId": "INV-1060",
+    "itemName": "Viscose Fusing Material",
+    "availableQty": 200,
+    "hsnCode": "551614",
+    "invoiceID": "PI_Extra_102.pdf",
+    "invoiceDate": "2026-05-22",
+    "supplier": "Raymonds",
+    "location": "Central Hub"
+  },
+  {
+    "itemId": "INV-1061",
+    "itemName": "Spandex Roll X1",
+    "availableQty": 100,
+    "hsnCode": "540244",
+    "invoiceID": "PI_Extra_103.pdf",
+    "invoiceDate": "2026-05-15",
+    "supplier": "Invista",
+    "location": "Surat Hub"
+  },
+  {
+    "itemId": "INV-1062",
+    "itemName": "Spandex Roll X2",
+    "availableQty": 100,
+    "hsnCode": "540244",
+    "invoiceID": "PI_Extra_103.pdf",
+    "invoiceDate": "2026-05-15",
+    "supplier": "Invista",
+    "location": "Surat Hub"
+  },
+  {
+    "itemId": "INV-1063",
+    "itemName": "Spandex Roll X3",
+    "availableQty": 100,
+    "hsnCode": "540244",
+    "invoiceID": "PI_Extra_103.pdf",
+    "invoiceDate": "2026-05-15",
+    "supplier": "Invista",
+    "location": "Surat Hub"
+  },
+  {
+    "itemId": "INV-1064",
+    "itemName": "Spandex Roll X4",
+    "availableQty": 100,
+    "hsnCode": "540244",
+    "invoiceID": "PI_Extra_103.pdf",
+    "invoiceDate": "2026-05-15",
+    "supplier": "Invista",
+    "location": "Surat Hub"
+  },
+  {
+    "itemId": "INV-1065",
+    "itemName": "Cotton Thread Box",
+    "availableQty": 50,
+    "hsnCode": "520411",
+    "invoiceID": "PI_Extra_104.pdf",
+    "invoiceDate": "2026-05-10",
+    "supplier": "Coats Threads",
+    "location": "Accessories Godown"
+  },
+  {
+    "itemId": "INV-1066",
+    "itemName": "Poly Thread Box",
+    "availableQty": 50,
+    "hsnCode": "540110",
+    "invoiceID": "PI_Extra_104.pdf",
+    "invoiceDate": "2026-05-10",
+    "supplier": "Coats Threads",
+    "location": "Accessories Godown"
+  },
+  {
+    "itemId": "INV-1067",
+    "itemName": "Packing Cartons Large",
+    "availableQty": 500,
+    "hsnCode": "481910",
+    "invoiceID": "PI_Extra_105.pdf",
+    "invoiceDate": "2026-05-05",
+    "supplier": "Packwell India",
+    "location": "Logistics Hub"
+  },
+  {
+    "itemId": "INV-1068",
+    "itemName": "LDPE Polybags",
+    "availableQty": 10000,
+    "hsnCode": "392321",
+    "invoiceID": "PI_Extra_105.pdf",
+    "invoiceDate": "2026-05-05",
+    "supplier": "Packwell India",
+    "location": "Logistics Hub"
+  },
+  {
+    "itemId": "INV-1069",
+    "itemName": "BOPP Adhesive Tapes",
+    "availableQty": 200,
+    "hsnCode": "391910",
+    "invoiceID": "PI_Extra_105.pdf",
+    "invoiceDate": "2026-05-05",
+    "supplier": "Packwell India",
+    "location": "Logistics Hub"
+  }
+]

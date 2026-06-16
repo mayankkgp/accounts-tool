@@ -12,6 +12,7 @@ export default function App() {
   useInitializeData();
 
   const [activeModule, setActiveModule] = useState("Entities");
+  const [userRole, setUserRole] = useState("SM"); // "SM" or "Finance"
 
   // Render the appropriate layout for the active module
   const renderModuleContent = () => {
@@ -21,7 +22,7 @@ export default function App() {
       case "Purchases":
         return <PurchasesLayout />;
       case "Sales":
-        return <SalesLayout />;
+        return <SalesLayout userRole={userRole} />;
       case "Inventory":
         return <InventoryLayout />;
       case "Ledger":
@@ -32,7 +33,12 @@ export default function App() {
   };
 
   return (
-    <AppWrapper activeModule={activeModule} setActiveModule={setActiveModule}>
+    <AppWrapper 
+      activeModule={activeModule} 
+      setActiveModule={setActiveModule}
+      userRole={userRole}
+      setUserRole={setUserRole}
+    >
       {renderModuleContent()}
     </AppWrapper>
   );

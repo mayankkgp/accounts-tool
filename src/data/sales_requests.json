@@ -1,0 +1,645 @@
+[
+  {
+    "id": "REQ-1001",
+    "smName": "Rahul Sharma",
+    "customer": "Apex Textiles",
+    "submittedDate": "2026-06-15",
+    "status": "Invoice Pending",
+    "unstructuredData": {
+      "lineItems": "- 500 kgs cotton yarn 40s @ 250 rs/kg\n- poly blend 30s 300kg at 180\n- 150 kg greige standard @ 120/kg",
+      "greigeDetails": "100% cotton 60x60 greige, 150 kg, lying at Apex Whouse A",
+      "comments": "client needs this dispatched by tonight, pls do it fast"
+    },
+    "logistics": {
+      "billTo": "Apex Textiles - HO",
+      "shipTo": "Apex Mill - Surat",
+      "freight": "To Pay",
+      "transporterName": "VRL Logistics",
+      "paymentTerms": "30 Days Credit"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Apex_992.pdf", "url": "/mock-files/po_992.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Apex_June15.pdf", "url": "/mock-files/pl_june15.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Trident_441.pdf", "url": "/mock-files/pi_441.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Vardhman_882.pdf", "url": "/mock-files/pi_882.pdf", "type": "application/pdf", "lValue": 98 }
+      ]
+    }
+  },
+  {
+    "id": "REQ-1002",
+    "smName": "Karan Verma",
+    "customer": "Loom & Co.",
+    "submittedDate": "2026-06-15",
+    "status": "Invoice Pending",
+    "unstructuredData": {
+      "lineItems": "1) dyed poplin 1200m - rs 65/m. 2) plain sheeting 800m - rs 55. 3) sample printed fabric 100 mtrs @ 120. 4) extra cuts 50m @ 40.",
+      "greigeDetails": "Poplin greige 1200m at Dyeing Hub Unit 3",
+      "comments": "added extra cuts at discounted rate"
+    },
+    "logistics": {
+      "billTo": "Loom & Co. Pvt Ltd",
+      "shipTo": "Loom & Co. Warehouse 2",
+      "freight": "Prepaid",
+      "transporterName": "TCI Express",
+      "paymentTerms": "Advance"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Loom_102.pdf", "url": "/mock-files/po_102.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Loom_01.pdf", "url": "/mock-files/pl_01.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Dyeing_09.pdf", "url": "/mock-files/pi_09.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Printing_11.pdf", "url": "/mock-files/pi_11.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Trans_99.pdf", "url": "/mock-files/pi_trans_99.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    }
+  },
+  {
+    "id": "REQ-1003",
+    "smName": "Suresh Nair",
+    "customer": "Vogue Fashions",
+    "submittedDate": "2026-06-16",
+    "status": "Invoice Pending",
+    "unstructuredData": {
+      "lineItems": "item a: 1000 pcs readymade shirts @ 450. item b: 500 pcs trousers @ 600. item c: 200 pcs jackets @ 850. item d: 100 pcs defective return @ 0. item e: 50 cartons packing @ 100.",
+      "greigeDetails": "N/A - RMG items, lying at Vogue factory direct",
+      "comments": "defective returns are FOC as per email agreement"
+    },
+    "logistics": {
+      "billTo": "Vogue Fashions HQ",
+      "shipTo": "Vogue Retail Dist",
+      "freight": "To Pay",
+      "transporterName": "Delhivery",
+      "paymentTerms": "45 Days"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Vogue_009.pdf", "url": "/mock-files/po_009.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Vogue_List.pdf", "url": "/mock-files/pl_vogue.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Stitching_55.pdf", "url": "/mock-files/pi_55.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Fabric_66.pdf", "url": "/mock-files/pi_66.pdf", "type": "application/pdf", "lValue": 95 },
+        { "filename": "PI_Trims_77.pdf", "url": "/mock-files/pi_77.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Pack_88.pdf", "url": "/mock-files/pi_88.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    }
+  },
+  {
+    "id": "REQ-1004",
+    "smName": "Priya Patel",
+    "customer": "Sutra Silks",
+    "submittedDate": "2026-06-16",
+    "status": "Invoice Pending",
+    "unstructuredData": {
+      "lineItems": "silk blend 500m @ 300\nraw silk 200m @ 500\ncrepe 300m @ 250",
+      "greigeDetails": "Raw silk greige 200m at Mysore Silk Board vendor",
+      "comments": "handle with care, premium material"
+    },
+    "logistics": {
+      "billTo": "Sutra Silks",
+      "shipTo": "Sutra Boutique - Blr",
+      "freight": "Prepaid",
+      "transporterName": "Spoton",
+      "paymentTerms": "Immediate"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Sutra_44.pdf", "url": "/mock-files/po_sutra.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Sutra_44.pdf", "url": "/mock-files/pl_sutra.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Mysore_11.pdf", "url": "/mock-files/pi_mysore.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Dye_22.pdf", "url": "/mock-files/pi_dye.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Ship_33.pdf", "url": "/mock-files/pi_ship.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    }
+  },
+  {
+    "id": "REQ-1005",
+    "smName": "Amit Singh",
+    "customer": "Nexus Garments",
+    "submittedDate": "2026-06-16",
+    "status": "Invoice Pending",
+    "unstructuredData": {
+      "lineItems": "poly cotton 1000m (₹90), spun poly 800m (₹85), lycra core 400m (₹140), rib fabric 200m (₹160)",
+      "greigeDetails": "Lycra core greige 400m at Vardhman Baddi",
+      "comments": "all okay"
+    },
+    "logistics": {
+      "billTo": "Nexus Garments Ltd",
+      "shipTo": "Nexus Unit 4",
+      "freight": "To Pay",
+      "transporterName": "VRL Logistics",
+      "paymentTerms": "15 Days"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Nexus_001.pdf", "url": "/mock-files/po_nexus.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Nexus_001.pdf", "url": "/mock-files/pl_nexus.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Vardhman_01.pdf", "url": "/mock-files/pi_v_01.pdf", "type": "application/pdf", "lValue": 98 },
+        { "filename": "PI_Knit_02.pdf", "url": "/mock-files/pi_k_02.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    }
+  },
+  {
+    "id": "REQ-1006",
+    "smName": "Neha Gupta",
+    "customer": "FabTex Industries",
+    "submittedDate": "2026-06-14",
+    "status": "Needs Correction",
+    "unstructuredData": {
+      "lineItems": "1000 mtrs dyed cotton @ 85. 500 meters printed rayon @110, 200m plain viscose rs 90, sample 50m free, 100m extra viscose @ 80",
+      "greigeDetails": "plain rayon greige - 500 mtrs - RS weavers",
+      "comments": "gave 50m sample free for future bulk order approval"
+    },
+    "logistics": {
+      "billTo": "FabTex Mumbai",
+      "shipTo": "FabTex Processing Unit",
+      "freight": "Prepaid",
+      "transporterName": "Safexpress",
+      "paymentTerms": "Advance payment received"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_FabTex_011.pdf", "url": "/mock-files/po_011.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_FabTex_011.pdf", "url": "/mock-files/pl_011.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Dyeing_102.pdf", "url": "/mock-files/pi_102.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Weaving_334.pdf", "url": "/mock-files/pi_334.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Transport_88.pdf", "url": "/mock-files/pi_88.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Extra_99.pdf", "url": "/mock-files/pi_99.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    },
+    "financeFeedback": "Missing vendor bill for the 500m Printed Rayon (Item 2). Please upload."
+  },
+  {
+    "id": "REQ-1007",
+    "smName": "Rahul Sharma",
+    "customer": "Zenith Apparels",
+    "submittedDate": "2026-06-13",
+    "status": "Needs Correction",
+    "unstructuredData": {
+      "lineItems": "denim 10oz 500m @ 200\ntwill 200m @ 150\npocketing fabric 50m @ 45",
+      "greigeDetails": "denim greige 500m at Arvind Mills",
+      "comments": "urgent"
+    },
+    "logistics": {
+      "billTo": "Zenith Apparels - Delhi",
+      "shipTo": "Zenith Apparels - Noida",
+      "freight": "To Pay",
+      "transporterName": "Delhivery",
+      "paymentTerms": "30 Days"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Zenith_99.pdf", "url": "/mock-files/po_zenith_99.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Zenith_99.pdf", "url": "/mock-files/pl_zenith_99.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Arvind_01.pdf", "url": "/mock-files/pi_arvind_01.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Arvind_02.pdf", "url": "/mock-files/pi_arvind_02.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    },
+    "financeFeedback": "L-values for Arvind invoices do not match the PO totals. Please verify."
+  },
+  {
+    "id": "REQ-1008",
+    "smName": "Karan Verma",
+    "customer": "Metro Fabrics",
+    "submittedDate": "2026-06-12",
+    "status": "Needs Correction",
+    "unstructuredData": {
+      "lineItems": "- 300kgs viscose yarn @ 210\n- 150kgs poly yarn @ 150\n- 50kgs blended @ 180\n- 10kgs sample @ 0",
+      "greigeDetails": "N/A",
+      "comments": "sample is foc"
+    },
+    "logistics": {
+      "billTo": "Metro Fabrics Ltd",
+      "shipTo": "Metro Godown",
+      "freight": "Prepaid",
+      "transporterName": "Gati",
+      "paymentTerms": "15 Days"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Metro_1.pdf", "url": "/mock-files/po_m_1.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Metro_1.pdf", "url": "/mock-files/pl_m_1.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Spin_1.pdf", "url": "/mock-files/pi_s_1.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Spin_2.pdf", "url": "/mock-files/pi_s_2.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Spin_3.pdf", "url": "/mock-files/pi_s_3.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    },
+    "financeFeedback": "Freight charges are prepaid but missing transport invoice. Provide Gati bill."
+  },
+  {
+    "id": "REQ-1009",
+    "smName": "Amit Singh",
+    "customer": "Prime Weavers",
+    "submittedDate": "2026-06-11",
+    "status": "Needs Correction",
+    "unstructuredData": {
+      "lineItems": "1. 500m shirting @ 100\n2. 600m suiting @ 200\n3. 100m lining @ 50\n4. 50m fusing @ 30\n5. 20m canvas @ 40",
+      "greigeDetails": "500m shirting greige at Prime Unit 1",
+      "comments": "pls bill lining and fusing together"
+    },
+    "logistics": {
+      "billTo": "Prime Weavers",
+      "shipTo": "Prime Weavers",
+      "freight": "To Pay",
+      "transporterName": "VRL Logistics",
+      "paymentTerms": "Immediate"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Prime_11.pdf", "url": "/mock-files/po_p_11.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Prime_11.pdf", "url": "/mock-files/pl_p_11.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Weave_A.pdf", "url": "/mock-files/pi_w_a.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Weave_B.pdf", "url": "/mock-files/pi_w_b.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    },
+    "financeFeedback": "Item 5 canvas is not listed in the provided PO. Update PO or remove item."
+  },
+  {
+    "id": "REQ-1010",
+    "smName": "Priya Patel",
+    "customer": "Orchid Designs",
+    "submittedDate": "2026-06-11",
+    "status": "Needs Correction",
+    "unstructuredData": {
+      "lineItems": "silk 200m - 400 inr/m | chiffon 150m - 300 inr/m | georgette 100m - 350 inr/m",
+      "greigeDetails": "chiffon greige 150m at Surat Textile Hub",
+      "comments": "fragile"
+    },
+    "logistics": {
+      "billTo": "Orchid Designs",
+      "shipTo": "Orchid Designs",
+      "freight": "Prepaid",
+      "transporterName": "Blue Dart",
+      "paymentTerms": "Advance"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Orchid.pdf", "url": "/mock-files/po_o.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Orchid.pdf", "url": "/mock-files/pl_o.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Surat_1.pdf", "url": "/mock-files/pi_su_1.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Surat_2.pdf", "url": "/mock-files/pi_su_2.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Surat_3.pdf", "url": "/mock-files/pi_su_3.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Surat_4.pdf", "url": "/mock-files/pi_su_4.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    },
+    "financeFeedback": "PI_Surat_4 is blurry and unreadable. Upload a clear scan."
+  },
+  {
+    "id": "REQ-1011",
+    "smName": "Rahul Sharma",
+    "customer": "Global Threads",
+    "submittedDate": "2026-06-12",
+    "status": "Settlement Pending",
+    "unstructuredData": {
+      "lineItems": "Spun yarn 20s: 2000kg @200\ncombed 30s: 1500kg @ 230\ncarded 20s: 500kg @190\nwaste yarn: 100kg (rs 50)",
+      "greigeDetails": "carded cotton greige 550kgs at global mill 2",
+      "comments": "waiting for reliance to send the remaining bills, rest is mapped."
+    },
+    "logistics": {
+      "billTo": "Global Threads Corporate",
+      "shipTo": "Global Threads Warehouse B",
+      "freight": "To Pay",
+      "transporterName": "TCI Freight",
+      "paymentTerms": "60 Days PDC"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Global_900.pdf", "url": "/mock-files/po_900.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Global_900.pdf", "url": "/mock-files/pl_900.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Reliance_771.pdf", "url": "/mock-files/pi_771.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Reliance_772.pdf", "url": "/mock-files/pi_772.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Packaging_04.pdf", "url": "/mock-files/pi_04.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    }
+  },
+  {
+    "id": "REQ-1012",
+    "smName": "Amit Singh",
+    "customer": "Urban Outfitters",
+    "submittedDate": "2026-06-11",
+    "status": "Settlement Pending",
+    "unstructuredData": {
+      "lineItems": "1. 500pcs tees @ 200\n2. 300pcs polos @ 250\n3. 100pcs hoodies @ 500\n4. 50pcs caps @ 100\n5. 1000 polybags @ 5",
+      "greigeDetails": "N/A - RMG",
+      "comments": "partial dispatch done"
+    },
+    "logistics": {
+      "billTo": "Urban Outfitters India",
+      "shipTo": "Urban Outfitters Store 1",
+      "freight": "Prepaid",
+      "transporterName": "Safexpress",
+      "paymentTerms": "30 Days"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Urban_22.pdf", "url": "/mock-files/po_u_22.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Urban_22.pdf", "url": "/mock-files/pl_u_22.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Garment_A.pdf", "url": "/mock-files/pi_ga_a.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Garment_B.pdf", "url": "/mock-files/pi_ga_b.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    }
+  },
+  {
+    "id": "REQ-1013",
+    "smName": "Karan Verma",
+    "customer": "Nova Textiles",
+    "submittedDate": "2026-06-09",
+    "status": "Settlement Pending",
+    "unstructuredData": {
+      "lineItems": "lyocell 500m @ 180, modal 300m @ 150, cupro 200m @ 220",
+      "greigeDetails": "modal greige 300m at Nova Warehouse",
+      "comments": "missing jobwork bill for cupro, will upload later"
+    },
+    "logistics": {
+      "billTo": "Nova Textiles",
+      "shipTo": "Nova Textiles",
+      "freight": "To Pay",
+      "transporterName": "VRL Logistics",
+      "paymentTerms": "Immediate"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Nova_88.pdf", "url": "/mock-files/po_n_88.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Nova_88.pdf", "url": "/mock-files/pl_n_88.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Lyo_1.pdf", "url": "/mock-files/pi_l_1.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Lyo_2.pdf", "url": "/mock-files/pi_l_2.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Mod_1.pdf", "url": "/mock-files/pi_m_1.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Mod_2.pdf", "url": "/mock-files/pi_m_2.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    }
+  },
+  {
+    "id": "REQ-1014",
+    "smName": "Neha Gupta",
+    "customer": "Silver Threads",
+    "submittedDate": "2026-06-08",
+    "status": "Settlement Pending",
+    "unstructuredData": {
+      "lineItems": "1) 1000kg poly yarn @ 120\n2) 500kg cotton yarn @ 200\n3) 200kg melange @ 180\n4) 50kg slub @ 220",
+      "greigeDetails": "N/A",
+      "comments": "melange bill pending from supplier"
+    },
+    "logistics": {
+      "billTo": "Silver Threads",
+      "shipTo": "Silver Threads",
+      "freight": "To Pay",
+      "transporterName": "Gati",
+      "paymentTerms": "45 Days"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Silver_7.pdf", "url": "/mock-files/po_si_7.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Silver_7.pdf", "url": "/mock-files/pl_si_7.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Poly_1.pdf", "url": "/mock-files/pi_p_1.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Cotton_1.pdf", "url": "/mock-files/pi_c_1.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    }
+  },
+  {
+    "id": "REQ-1015",
+    "smName": "Priya Patel",
+    "customer": "Crimson Exports",
+    "submittedDate": "2026-06-05",
+    "status": "Settlement Pending",
+    "unstructuredData": {
+      "lineItems": "linen 500m @ 400 | cotton linen blend 300m @ 300 | pure cotton 200m @ 150 | lining 100m @ 50 | thread 50 box @ 100",
+      "greigeDetails": "linen greige 550m at Crimson Unit 2",
+      "comments": "thread bill is combined with another order"
+    },
+    "logistics": {
+      "billTo": "Crimson Exports",
+      "shipTo": "Crimson Exports",
+      "freight": "Prepaid",
+      "transporterName": "Spoton",
+      "paymentTerms": "Advance"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Crimson_3.pdf", "url": "/mock-files/po_cr_3.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Crimson_3.pdf", "url": "/mock-files/pl_cr_3.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Linen_1.pdf", "url": "/mock-files/pi_ln_1.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Blend_1.pdf", "url": "/mock-files/pi_bl_1.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Cot_1.pdf", "url": "/mock-files/pi_ct_1.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    }
+  },
+  {
+    "id": "REQ-1016",
+    "smName": "Amit Singh",
+    "customer": "Zenith Apparels",
+    "submittedDate": "2026-06-10",
+    "status": "Fulfilled",
+    "unstructuredData": {
+      "lineItems": "800m denim 12oz (180/m) | 400m twill (150/m) | 100m corduroy (220/m)",
+      "greigeDetails": "12oz denim greige, 800m, lying at Arvind Mills",
+      "comments": "all set"
+    },
+    "logistics": {
+      "billTo": "Zenith HO",
+      "shipTo": "Zenith Factory 1",
+      "freight": "Prepaid",
+      "transporterName": "Blue Dart",
+      "paymentTerms": "100% Advance"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Zenith_005.pdf", "url": "/mock-files/po_005.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Zenith_005.pdf", "url": "/mock-files/pl_005.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Arvind_110.pdf", "url": "/mock-files/pi_110.pdf", "type": "application/pdf", "lValue": 95 },
+        { "filename": "PI_Transport_111.pdf", "url": "/mock-files/pi_111.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Process_112.pdf", "url": "/mock-files/pi_112.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Pack_113.pdf", "url": "/mock-files/pi_113.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    }
+  },
+  {
+    "id": "REQ-1017",
+    "smName": "Rahul Sharma",
+    "customer": "Heritage Silks",
+    "submittedDate": "2026-06-08",
+    "status": "Fulfilled",
+    "unstructuredData": {
+      "lineItems": "- 200m pure silk @ 600\n- 150m organza @ 400\n- 100m tissue @ 350\n- 50m brocade @ 800",
+      "greigeDetails": "organza greige, 150m, Heritage Silks Warehouse",
+      "comments": "premium dispatch completed"
+    },
+    "logistics": {
+      "billTo": "Heritage Silks",
+      "shipTo": "Heritage Silks",
+      "freight": "Prepaid",
+      "transporterName": "Safexpress",
+      "paymentTerms": "Immediate"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Heritage_2.pdf", "url": "/mock-files/po_h_2.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Heritage_2.pdf", "url": "/mock-files/pl_h_2.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Silk_1.pdf", "url": "/mock-files/pi_sl_1.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Silk_2.pdf", "url": "/mock-files/pi_sl_2.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    }
+  },
+  {
+    "id": "REQ-1018",
+    "smName": "Karan Verma",
+    "customer": "Elite Traders",
+    "submittedDate": "2026-06-07",
+    "status": "Fulfilled",
+    "unstructuredData": {
+      "lineItems": "1. 1000kg cotton 30s @ 220\n2. 500kg poly 20s @ 150\n3. 300kg blend @ 180\n4. 100kg waste @ 40\n5. 50kg packing @ 20",
+      "greigeDetails": "N/A",
+      "comments": "all settled"
+    },
+    "logistics": {
+      "billTo": "Elite Traders",
+      "shipTo": "Elite Traders",
+      "freight": "To Pay",
+      "transporterName": "VRL Logistics",
+      "paymentTerms": "30 Days"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Elite_9.pdf", "url": "/mock-files/po_e_9.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Elite_9.pdf", "url": "/mock-files/pl_e_9.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Cot_E1.pdf", "url": "/mock-files/pi_ce_1.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Poly_E1.pdf", "url": "/mock-files/pi_pe_1.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Blend_E1.pdf", "url": "/mock-files/pi_be_1.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    }
+  },
+  {
+    "id": "REQ-1019",
+    "smName": "Neha Gupta",
+    "customer": "Oasis Fabrics",
+    "submittedDate": "2026-06-05",
+    "status": "Fulfilled",
+    "unstructuredData": {
+      "lineItems": "muslin 400m @ 250, cambric 300m @ 120, voile 200m @ 140",
+      "greigeDetails": "muslin greige, 400m, Oasis Unit 1",
+      "comments": "dispatched"
+    },
+    "logistics": {
+      "billTo": "Oasis Fabrics",
+      "shipTo": "Oasis Fabrics",
+      "freight": "Prepaid",
+      "transporterName": "Delhivery",
+      "paymentTerms": "15 Days"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Oasis_5.pdf", "url": "/mock-files/po_oa_5.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Oasis_5.pdf", "url": "/mock-files/pl_oa_5.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Muslin.pdf", "url": "/mock-files/pi_mu.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Cambric.pdf", "url": "/mock-files/pi_ca.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    }
+  },
+  {
+    "id": "REQ-1020",
+    "smName": "Priya Patel",
+    "customer": "Aurora Synthetics",
+    "submittedDate": "2026-06-01",
+    "status": "Fulfilled",
+    "unstructuredData": {
+      "lineItems": "1) 2000m polyester @ 60\n2) 1500m nylon @ 80\n3) 500m spandex @ 150\n4) 100m sample @ 0",
+      "greigeDetails": "nylon greige, 1500m, Aurora Mill",
+      "comments": "bulk order fulfilled"
+    },
+    "logistics": {
+      "billTo": "Aurora Synthetics",
+      "shipTo": "Aurora Synthetics",
+      "freight": "To Pay",
+      "transporterName": "TCI Freight",
+      "paymentTerms": "60 Days"
+    },
+    "proofs": {
+      "po": [
+        { "filename": "PO_Aurora_1.pdf", "url": "/mock-files/po_au_1.pdf", "type": "application/pdf" }
+      ],
+      "packingList": [
+        { "filename": "PL_Aurora_1.pdf", "url": "/mock-files/pl_au_1.pdf", "type": "application/pdf" }
+      ],
+      "purchaseInvoices": [
+        { "filename": "PI_Poly_A.pdf", "url": "/mock-files/pi_pa.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Nylon_A.pdf", "url": "/mock-files/pi_na.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Span_A.pdf", "url": "/mock-files/pi_sa.pdf", "type": "application/pdf", "lValue": 100 },
+        { "filename": "PI_Freight_A.pdf", "url": "/mock-files/pi_fa.pdf", "type": "application/pdf", "lValue": 100 }
+      ]
+    }
+  }
+]
