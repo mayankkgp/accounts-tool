@@ -172,14 +172,11 @@ export default function CostInwardingWorkspace({ req, onClose, onRefresh }) {
   if (!req || !activeInvoice) return null;
 
   return (
-    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-2 z-40 select-none" id="cost-inwarding-root">
-      <div className="bg-slate-100 flex flex-col w-full h-full border border-slate-300 shadow-2xl overflow-hidden rounded-[4px] relative" id="cost-inwarding-viewport">
-        {/* Main padded workspace container */}
-        <div className="flex-1 flex flex-col p-2 gap-2 min-h-0 relative select-none">
-          {/* 
-            Strict Directive 1: Global Workspace Header perfectly matching the Triage screen.
-            h-8 bg-white border border-slate-200 shadow-xs rounded-sm px-2.5 flex items-center justify-between shrink-0 select-none
-          */}
+    <div className="flex-1 flex flex-col min-h-0 bg-slate-100 relative font-sans text-xs select-none p-2 h-full gap-2" id="cost-inwarding-root">
+      {/* 
+        Strict Directive 1: Global Workspace Header perfectly matching the Triage screen.
+        h-8 bg-white border border-slate-200 shadow-xs rounded-sm px-2.5 flex items-center justify-between shrink-0 select-none
+      */}
           <div className="h-8 shrink-0 bg-white border border-slate-200 shadow-xs rounded-sm px-2.5 flex items-center justify-between text-slate-800 font-sans text-xs select-none" id="inwarding-master-header">
             {/* Left Side: Back Button + Request ID + Status Badge */}
             <div className="flex items-center gap-2">
@@ -231,7 +228,7 @@ export default function CostInwardingWorkspace({ req, onClose, onRefresh }) {
           </div>
 
           {/* Dynamic Split Screen Body */}
-          <div className="flex-1 flex overflow-hidden min-h-0" id="inwarding-workspace-pane-layout">
+          <div className="flex-1 flex overflow-hidden min-h-0 bg-white border border-slate-200 shadow-xs rounded-sm" id="inwarding-workspace-pane-layout">
             {/* Left Canvas (Document Viewer Sub-component occupies leftWidth %) */}
             {isLeftPaneOpen && (
               <>
@@ -371,9 +368,6 @@ export default function CostInwardingWorkspace({ req, onClose, onRefresh }) {
 
           </div>
         </div>
-
       </div>
-    </div>
-  </div>
   );
 }
