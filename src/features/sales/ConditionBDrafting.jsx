@@ -80,10 +80,7 @@ export default function ConditionBDrafting({
       <div className="flex-1 border border-slate-200/80 rounded-sm bg-white overflow-hidden flex flex-col min-h-[160px]" id="condition-b-table-scroller">
         <div className="h-6 bg-slate-900 px-3 flex items-center justify-between shrink-0 font-sans border-b border-slate-950">
           <div className="flex items-center gap-2">
-            <span className="text-[9px] uppercase tracking-wide font-bold text-slate-400">Manual Purchase Draft Grid</span>
-            <span className="text-[8px] font-mono font-bold text-indigo-400 bg-indigo-950/40 border border-indigo-900/50 px-1 py-0.2 rounded-xs">
-              {isHaryana ? `HARYANA HUB (INTRASTATE CGST+SGST) - GSTIN: ${gstin}` : `INTERSTATE (IGST) - GSTIN: ${gstin}`}
-            </span>
+            <span className="text-[9px] uppercase tracking-wide font-bold text-slate-400">Purchase Items Grid</span>
           </div>
           <span className="text-[9px] font-mono text-slate-400">{lineItems.length} records</span>
         </div>
@@ -180,7 +177,7 @@ export default function ConditionBDrafting({
                       </td>
                     ) : (
                       <>
-                        <td className="py-0.5 px-1 text-center text-slate-700 border-r border-slate-100">
+                        <td className="py-0.5 px-1 text-center text-slate-700">
                           <div className="flex flex-col leading-tight select-none font-sans">
                             <span className="font-semibold text-[10px]">9%</span>
                             <span className="text-[9px] text-slate-400 font-normal font-mono">(₹{(rowTax / 2).toFixed(1)})</span>

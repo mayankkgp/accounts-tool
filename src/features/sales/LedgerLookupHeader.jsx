@@ -1,5 +1,5 @@
 import React from "react";
-import { Search } from "lucide-react";
+import { Search, PanelLeftOpen } from "lucide-react";
 
 // Common list of fallback vendor options
 const defaultVendors = [
@@ -30,7 +30,9 @@ export default function LedgerLookupHeader({
   isLocked,
   onSearch,
   isSearching,
-  companies = []
+  companies = [],
+  isLeftPaneOpen = true,
+  onToggleLeftPane
 }) {
   const currentVendors = companies.length > 0 ? companies : defaultVendors;
 
@@ -46,20 +48,22 @@ export default function LedgerLookupHeader({
     <div className="bg-slate-50 border border-slate-200/80 rounded-sm p-2 flex flex-col gap-2 shrink-0 font-sans text-xs select-none shadow-xs" id="ledger-lookup-header-container">
       {/* 
         Strict Directive: Completely delete the "lookup triggers..." subheader text.
-        Always retains the isLocked badge cleanly if locked.
       */}
-      {isLocked && (
-        <div className="flex justify-end select-none">
-          <span className="text-[9px] px-1 bg-green-50 text-green-700 font-bold border border-green-200 rounded-[2px]" id="status-context-locked">
-            MATCHED LEDGER - CONTEXT LOCKED
-          </span>
-        </div>
-      )}
 
       {/* 
         Strict Directive: "Vendor Entity", "Invoice No", "Invoice Label" (Dropdown), and "L-Value" sitting inline.
       */}
       <div className="flex flex-col sm:flex-row gap-2 items-end">
+        {!isLeftPaneOpen && onToggleLeftPane && (
+          <button
+            type="button"
+            onClick={onToggleLeftPane}
+            className="h-6 w-6 flex items-center justify-center bg-white border border-slate-300 rounded-[1px] hover:bg-slate-50 text-slate-500 hover:text-indigo-600 cursor-pointer shadow-xs shrink-0"
+            title="Expand Document Panel"
+          >
+            <PanelLeftOpen size={13} className="stroke-[2.5]" />
+          </button>
+        )}
         {/* 1. Vendor Entity Dropdown Selector */}
         <div className="flex-1 min-w-[140px] flex flex-col gap-1 w-full sm:w-auto">
           <label className="text-[9px] uppercase font-bold text-slate-450 tracking-wider">Vendor Entity *</label>

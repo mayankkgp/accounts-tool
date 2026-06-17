@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { FileText, ZoomIn, ZoomOut, RotateCw, Download, ExternalLink } from "lucide-react";
+import { FileText, ZoomIn, ZoomOut, RotateCw, Download, ExternalLink, PanelLeftClose } from "lucide-react";
 import getTrueDocPath from "./getTrueDocPath";
 
 /**
  * Left-pane document viewer component for Cost Inwarding.
  * Shows horizontal tabs for matching invoices only.
  */
-export default function InwardingDocumentPane({ req, defaultActiveFile, activeIdx, setActiveIdx }) {
+export default function InwardingDocumentPane({ req, defaultActiveFile, activeIdx, setActiveIdx, onCollapse }) {
   const [tabs, setTabs] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
   const [zoom, setZoom] = useState(1);
@@ -130,11 +130,21 @@ export default function InwardingDocumentPane({ req, defaultActiveFile, activeId
               <ExternalLink size={12} />
             </a>
           )}
+          {onCollapse && (
+            <button
+              type="button"
+              onClick={onCollapse}
+              className="w-5 h-5 rounded-sm bg-white border border-slate-300 hover:bg-rose-50 text-slate-500 hover:text-rose-600 flex items-center justify-center shadow-xs cursor-pointer ml-1"
+              title="Collapse Document Panel"
+            >
+              <PanelLeftClose size={12} />
+            </button>
+          )}
         </div>
       </div>
 
       {/* 2. PDF iframe viewer container */}
-      <div className="flex-1 overflow-hidden relative flex items-center justify-center bg-slate-200/55 p-3 min-h-0" id="inwarding-pdf-viewport">
+      <div className="flex-1 overflow-hidden relative flex items-center justify-center bg-slate-200/55 p-0.5 min-h-0" id="inwarding-pdf-viewport">
         {activeTab ? (
           <div
             className="w-full h-full shadow-sm bg-white overflow-hidden origin-center"

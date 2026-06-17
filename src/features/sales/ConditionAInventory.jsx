@@ -18,7 +18,7 @@ export default function ConditionAInventory({
     <div className="flex-1 flex flex-col min-h-[160px] border border-slate-200/80 rounded-sm bg-white overflow-hidden shadow-xs" id="condition-a-table-container">
       <div className="h-6 bg-slate-900 px-3 flex items-center justify-between shrink-0 font-sans border-b border-slate-950">
         <span className="text-[9px] uppercase tracking-wide font-bold text-slate-400">
-          Matched Ledger Inventory Items (Read-Only)
+          Associated Inventory Items
         </span>
         <span className="text-[9px] font-mono text-emerald-400 font-bold bg-emerald-950 px-1.5 py-0.2 rounded-xs">
           {selectedRowIds.length} of {items.length} selected for staging
@@ -41,7 +41,7 @@ export default function ConditionAInventory({
               <th className="py-0.5 px-1 text-left w-[12%]">Item ID</th>
               <th className="py-0.5 px-1 text-left w-[42%]">Item Name</th>
               <th className="py-0.5 px-1 text-center w-[12%]">HSN Code</th>
-              <th className="py-0.5 px-1 text-right w-[14%]">Available Qty</th>
+              <th className="py-0.5 px-1 text-center w-[14%]">Avl Qty</th>
               <th className="py-0.5 px-1 text-left w-[14%] pr-2">Location</th>
             </tr>
           </thead>
