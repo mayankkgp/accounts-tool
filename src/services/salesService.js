@@ -4,19 +4,28 @@ const STORAGE_KEY = 'fabrito_sales_requests';
 
 /**
  * Service layered actions for Fabrito Sales & Cost Mapping Prototype.
- * All subsequent data fetching targets localStorage, wrapped in simulateNetwork delay.
+ * All subsequent data fetching targets localStorage, wrapped in simulateNetwork delay
+ * to accurately mock server-side/database fetch and persist latencies.
  */
 
 /**
- * Fetches filtered active sales requests.
- * Uses 500ms simulated delay.
+ * Fetches filtered active sales invoice requests from browser localStorage.
+ * Integrates search-query lookups and status filtrations.
+ * 
+ * @async
+ * @function fetchSalesRequests
+ * @param {object} [filters] - Query parameters for retrieving records.
+ * @param {string} [filters.query] - Case-insensitive string search over request ID, Customer Name, Sales Agent, and Specifications.
+ * @param {string} [filters.status] - Status code filter to screen specific workflow stages (e.g., "Invoice Pending").
+ * @returns {Promise<Array<object>>} Resolves to a list of matching sales request objects after a 500ms network emulation delay.
  */
 export async function fetchSalesRequests({ query = "", status = "" } = {}) {
+  // Uses a 500ms simulated delay to match production HTTP roundtrip delays.
   await simulateNetwork(500);
   const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   
   return data.filter((req) => {
-    // 1. Status Filter
+    // 1. Status Filter matching
     if (status && req.status !== status) {
       return false;
     }
@@ -38,24 +47,37 @@ export async function fetchSalesRequests({ query = "", status = "" } = {}) {
 }
 
 /**
- * Fetches a single Sales Request by ID
+ * Looks up a single sales invoice request transaction entity by its unique ID.
+ * 
+ * @async
+ * @function fetchSalesRequestById
+ * @param {string} id - The unique request ID (e.g. "REQ-1004").
+ * @returns {Promise<object|null>} Resolves to the request object if found, otherwise returns null, after a 500ms network delay.
  */
 export async function fetchSalesRequestById(id) {
+  // Uses a 500ms simulated delay to match production HTTP roundtrip delays.
   await simulateNetwork(500);
   const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   return data.find((req) => req.id === id) || null;
 }
 
 /**
- * Creates/Adds a new Sales Request
- * Uses 800ms simulated delay for relational mutations.
+ * Creates a brand new sales invoice request or updates an existing request item.
+ * Calculations for new IDs search for the maximum numeric ID currently in the
+ * array to produce a consistent sequential order.
+ * 
+ * @async
+ * @function saveSalesRequest
+ * @param {object} reqData - The payload representing the sales request properties to create or update.
+ * @returns {Promise<boolean>} Resolves to true on successful database storage in localStorage, after an 800ms network delay.
  */
 export async function saveSalesRequest(reqData) {
+  // Uses an 800ms simulated delay to emulate relational database mutations and locking procedures.
   await simulateNetwork(800);
   const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   
   if (reqData.id) {
-    // Edit existing
+    // Edit existing layout matching items
     const idx = data.findIndex((req) => req.id === reqData.id);
     if (idx !== -1) {
       data[idx] = { ...data[idx], ...reqData };
@@ -81,10 +103,16 @@ export async function saveSalesRequest(reqData) {
 }
 
 /**
- * Fetches all available Mock Inventory
- * Uses 500ms simulated delay.
+ * Fetches all mock stock items, supporting simple fuzzy matching on Supplier/Item parameters.
+ * 
+ * @async
+ * @function fetchInventory
+ * @param {object} [filters] - Query parameters.
+ * @param {string} [filters.query] - Search queries to match item name, item ID, supplier name, or HSN Code.
+ * @returns {Promise<Array<object>>} Resolves to search-filtered inventory entries after a 500ms network delay.
  */
 export async function fetchInventory({ query = "" } = {}) {
+  // Uses a 500ms simulated delay to match production HTTP roundtrip delays.
   await simulateNetwork(500);
   const data = JSON.parse(localStorage.getItem("fabrito_inventory") || "[]");
 
@@ -101,11 +129,17 @@ export async function fetchInventory({ query = "" } = {}) {
 }
 
 /**
- * Performs cost mapping queries against purchase ledger if exists.
- * Match criteria: Vendor Entity and Invoice Number combined.
- * Uses 500ms simulated delay.
+ * Performs cost mapping queries against the persistent purchase ledger records.
+ * Match criteria looks up matches combining Vendor Entity and Invoice Number.
+ * 
+ * @async
+ * @function queryPurchaseLedger
+ * @param {string|number} vendorId - The unique supplier/vendor identifier.
+ * @param {string} invoiceNo - Vendor invoice code to cross-reference (e.g. "INV-421").
+ * @returns {Promise<object|null>} Resolves to matching purchase record metadata if found, or null, after 500ms delay.
  */
 export async function queryPurchaseLedger(vendorId, invoiceNo) {
+  // Uses a 500ms simulated delay to match production HTTP roundtrip delays.
   await simulateNetwork(500);
   const purchases = JSON.parse(localStorage.getItem("fabrito_purchases") || "[]");
   
