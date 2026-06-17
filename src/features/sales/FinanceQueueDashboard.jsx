@@ -3,9 +3,11 @@ import { Search, Loader2, AlertCircle, FileText, Check, ArrowRight, CornerDownRi
 import Tabs from "../../components/ui/Tabs";
 import { fetchSalesRequests, saveSalesRequest } from "../../services/salesService";
 import SalesCard from "./SalesCard";
+import FinanceTriageWorkspace from "./FinanceTriageWorkspace";
 
 export default function FinanceQueueDashboard() {
   const [requests, setRequests] = useState([]);
+  const [triageRequest, setTriageRequest] = useState(null);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("Invoice Pending"); // Default tab
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,29 +36,8 @@ export default function FinanceQueueDashboard() {
   }, [activeTab, searchQuery]);
 
   // Handle Dynamic Finance Action triggers: Process Sales & Finalize Settlement
-  const handleProcessSales = async (req) => {
-    const confirmAction = window.confirm(
-      `Finance Action:\nWould you like to process Sales Invoice Request ${req.id} for Apex/Loom company?`
-    );
-    if (!confirmAction) return;
-
-    setProcessingId(req.id);
-    try {
-      // Simulate mapping and set request to "Fulfilled" or "Settlement Pending"
-      alert("Simulating Cost Inwarding & Sales Mapping (Phase 2)...\nThe system will now transition this request to 'Fulfilled' in localStorage.");
-      
-      const updated = {
-        ...req,
-        status: "Fulfilled",
-        financeFeedback: ""
-      };
-      await saveSalesRequest(updated);
-      loadRequests();
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setProcessingId(null);
-    }
+  const handleProcessSales = (req) => {
+    setTriageRequest(req);
   };
 
   const handleFinalizeSettlement = async (req) => {
@@ -81,6 +62,17 @@ export default function FinanceQueueDashboard() {
       setProcessingId(null);
     }
   };
+
+  // If a request is active in triage, render the workspace
+  if (triageRequest) {
+    return (
+      <FinanceTriageWorkspace
+        req={triageRequest}
+        onClose={() => setTriageRequest(null)}
+        onRefresh={loadRequests}
+      />
+    );
+  }
 
   return (
     <div className="flex-1 flex flex-col min-h-0 bg-slate-50 relative select-none font-sans" id="finance-dashboard-root">
