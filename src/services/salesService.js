@@ -1,5 +1,7 @@
 import { simulateNetwork } from "../utils/simulateNetwork";
 
+const STORAGE_KEY = 'fabrito_sales_requests';
+
 /**
  * Service layered actions for Fabrito Sales & Cost Mapping Prototype.
  * All subsequent data fetching targets localStorage, wrapped in simulateNetwork delay.
@@ -7,11 +9,11 @@ import { simulateNetwork } from "../utils/simulateNetwork";
 
 /**
  * Fetches filtered active sales requests.
- * Uses 'medium' (600ms) simulated delay.
+ * Uses 500ms simulated delay.
  */
 export async function fetchSalesRequests({ query = "", status = "" } = {}) {
-  await simulateNetwork("medium");
-  const data = JSON.parse(localStorage.getItem("fabrito_sales_requests") || "[]");
+  await simulateNetwork(500);
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   
   return data.filter((req) => {
     // 1. Status Filter
@@ -39,18 +41,18 @@ export async function fetchSalesRequests({ query = "", status = "" } = {}) {
  * Fetches a single Sales Request by ID
  */
 export async function fetchSalesRequestById(id) {
-  await simulateNetwork("small");
-  const data = JSON.parse(localStorage.getItem("fabrito_sales_requests") || "[]");
+  await simulateNetwork(500);
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   return data.find((req) => req.id === id) || null;
 }
 
 /**
  * Creates/Adds a new Sales Request
- * Uses 'large' (1200ms) simulated delay for relational mutations.
+ * Uses 800ms simulated delay for relational mutations.
  */
 export async function saveSalesRequest(reqData) {
-  await simulateNetwork("large");
-  const data = JSON.parse(localStorage.getItem("fabrito_sales_requests") || "[]");
+  await simulateNetwork(800);
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   
   if (reqData.id) {
     // Edit existing
@@ -59,8 +61,13 @@ export async function saveSalesRequest(reqData) {
       data[idx] = { ...data[idx], ...reqData };
     }
   } else {
-    // New entity
-    const newId = `REQ-${1000 + data.length + 1}`;
+    // New entity - calculate a truly unique ID by finding the maximum existing numeric ID
+    const numericIds = data.map(req => {
+      const match = req.id && req.id.match(/\d+/);
+      return match ? parseInt(match[0], 10) : 1000;
+    });
+    const maxId = numericIds.length > 0 ? Math.max(...numericIds) : 1000;
+    const newId = `REQ-${maxId + 1}`;
     const newRequest = {
       id: newId,
       submittedDate: new Date().toISOString().split("T")[0],
@@ -69,16 +76,16 @@ export async function saveSalesRequest(reqData) {
     data.unshift(newRequest);
   }
 
-  localStorage.setItem("fabrito_sales_requests", JSON.stringify(data));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   return true;
 }
 
 /**
  * Fetches all available Mock Inventory
- * Uses 'small' (200ms) simulated delay.
+ * Uses 500ms simulated delay.
  */
 export async function fetchInventory({ query = "" } = {}) {
-  await simulateNetwork("small");
+  await simulateNetwork(500);
   const data = JSON.parse(localStorage.getItem("fabrito_inventory") || "[]");
 
   if (query) {
@@ -96,9 +103,10 @@ export async function fetchInventory({ query = "" } = {}) {
 /**
  * Performs cost mapping queries against purchase ledger if exists.
  * Match criteria: Vendor Entity and Invoice Number combined.
+ * Uses 500ms simulated delay.
  */
 export async function queryPurchaseLedger(vendorId, invoiceNo) {
-  await simulateNetwork("small");
+  await simulateNetwork(500);
   const purchases = JSON.parse(localStorage.getItem("fabrito_purchases") || "[]");
   
   if (!vendorId || !invoiceNo) return null;
