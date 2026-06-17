@@ -16,10 +16,9 @@ export default function SalesUploadGrid({
   onLValueChange
 }) {
   const staticPurchaseInvoices = [
-    { id: "PI-8821", name: "Acme Corp", filename: "PI_Alpha.pdf" },
-    { id: "PI-9042", name: "Delta Weaving", filename: "PI_Beta.pdf" },
-    { id: "PI-1104", name: "Loom Crafts", filename: "PI_Gamma.pdf" },
-    { id: "PI-4552", name: "Apex Synthetics", filename: "PI_Delta.pdf" }
+    { id: "PI-761", name: "FABRITO / Arvind Textiles", filename: "761 Arvind Textile.pdf" },
+    { id: "PI-145", name: "DEEPSHIKHA FASHIONS / Fabrito", filename: "Bill No -145 Fabrito.pdf" },
+    { id: "PI-412", name: "Shree Textiles", filename: "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf" }
   ];
 
   const poInputRef = React.useRef(null);

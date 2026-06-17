@@ -19,14 +19,36 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Apex_992.pdf", "url": "/mock-files/po_992.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Apex_June15.pdf", "url": "/mock-files/pl_june15.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Trident_441.pdf", "url": "/mock-files/pi_441.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Vardhman_882.pdf", "url": "/mock-files/pi_882.pdf", "type": "application/pdf", "lValue": 98 }
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 98,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     }
   },
@@ -50,15 +72,44 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Loom_102.pdf", "url": "/mock-files/po_102.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Loom_01.pdf", "url": "/mock-files/pl_01.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Dyeing_09.pdf", "url": "/mock-files/pi_09.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Printing_11.pdf", "url": "/mock-files/pi_11.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Trans_99.pdf", "url": "/mock-files/pi_trans_99.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     }
   },
@@ -82,16 +133,52 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Vogue_009.pdf", "url": "/mock-files/po_009.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Vogue_List.pdf", "url": "/mock-files/pl_vogue.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Stitching_55.pdf", "url": "/mock-files/pi_55.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Fabric_66.pdf", "url": "/mock-files/pi_66.pdf", "type": "application/pdf", "lValue": 95 },
-        { "filename": "PI_Trims_77.pdf", "url": "/mock-files/pi_77.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Pack_88.pdf", "url": "/mock-files/pi_88.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 95,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     }
   },
@@ -115,15 +202,44 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Sutra_44.pdf", "url": "/mock-files/po_sutra.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Sutra_44.pdf", "url": "/mock-files/pl_sutra.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Mysore_11.pdf", "url": "/mock-files/pi_mysore.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Dye_22.pdf", "url": "/mock-files/pi_dye.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Ship_33.pdf", "url": "/mock-files/pi_ship.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     }
   },
@@ -147,14 +263,36 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Nexus_001.pdf", "url": "/mock-files/po_nexus.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Nexus_001.pdf", "url": "/mock-files/pl_nexus.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Vardhman_01.pdf", "url": "/mock-files/pi_v_01.pdf", "type": "application/pdf", "lValue": 98 },
-        { "filename": "PI_Knit_02.pdf", "url": "/mock-files/pi_k_02.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 98,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     }
   },
@@ -178,16 +316,52 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_FabTex_011.pdf", "url": "/mock-files/po_011.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_FabTex_011.pdf", "url": "/mock-files/pl_011.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Dyeing_102.pdf", "url": "/mock-files/pi_102.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Weaving_334.pdf", "url": "/mock-files/pi_334.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Transport_88.pdf", "url": "/mock-files/pi_88.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Extra_99.pdf", "url": "/mock-files/pi_99.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     },
     "financeFeedback": "Missing vendor bill for the 500m Printed Rayon (Item 2). Please upload."
@@ -212,14 +386,36 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Zenith_99.pdf", "url": "/mock-files/po_zenith_99.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Zenith_99.pdf", "url": "/mock-files/pl_zenith_99.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Arvind_01.pdf", "url": "/mock-files/pi_arvind_01.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Arvind_02.pdf", "url": "/mock-files/pi_arvind_02.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     },
     "financeFeedback": "L-values for Arvind invoices do not match the PO totals. Please verify."
@@ -244,15 +440,44 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Metro_1.pdf", "url": "/mock-files/po_m_1.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Metro_1.pdf", "url": "/mock-files/pl_m_1.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Spin_1.pdf", "url": "/mock-files/pi_s_1.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Spin_2.pdf", "url": "/mock-files/pi_s_2.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Spin_3.pdf", "url": "/mock-files/pi_s_3.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     },
     "financeFeedback": "Freight charges are prepaid but missing transport invoice. Provide Gati bill."
@@ -277,14 +502,36 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Prime_11.pdf", "url": "/mock-files/po_p_11.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Prime_11.pdf", "url": "/mock-files/pl_p_11.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Weave_A.pdf", "url": "/mock-files/pi_w_a.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Weave_B.pdf", "url": "/mock-files/pi_w_b.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     },
     "financeFeedback": "Item 5 canvas is not listed in the provided PO. Update PO or remove item."
@@ -309,16 +556,52 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Orchid.pdf", "url": "/mock-files/po_o.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Orchid.pdf", "url": "/mock-files/pl_o.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Surat_1.pdf", "url": "/mock-files/pi_su_1.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Surat_2.pdf", "url": "/mock-files/pi_su_2.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Surat_3.pdf", "url": "/mock-files/pi_su_3.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Surat_4.pdf", "url": "/mock-files/pi_su_4.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     },
     "financeFeedback": "PI_Surat_4 is blurry and unreadable. Upload a clear scan."
@@ -343,15 +626,44 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Global_900.pdf", "url": "/mock-files/po_900.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Global_900.pdf", "url": "/mock-files/pl_900.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Reliance_771.pdf", "url": "/mock-files/pi_771.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Reliance_772.pdf", "url": "/mock-files/pi_772.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Packaging_04.pdf", "url": "/mock-files/pi_04.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     }
   },
@@ -375,14 +687,36 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Urban_22.pdf", "url": "/mock-files/po_u_22.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Urban_22.pdf", "url": "/mock-files/pl_u_22.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Garment_A.pdf", "url": "/mock-files/pi_ga_a.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Garment_B.pdf", "url": "/mock-files/pi_ga_b.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     }
   },
@@ -406,16 +740,52 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Nova_88.pdf", "url": "/mock-files/po_n_88.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Nova_88.pdf", "url": "/mock-files/pl_n_88.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Lyo_1.pdf", "url": "/mock-files/pi_l_1.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Lyo_2.pdf", "url": "/mock-files/pi_l_2.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Mod_1.pdf", "url": "/mock-files/pi_m_1.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Mod_2.pdf", "url": "/mock-files/pi_m_2.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     }
   },
@@ -439,14 +809,36 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Silver_7.pdf", "url": "/mock-files/po_si_7.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Silver_7.pdf", "url": "/mock-files/pl_si_7.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Poly_1.pdf", "url": "/mock-files/pi_p_1.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Cotton_1.pdf", "url": "/mock-files/pi_c_1.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     }
   },
@@ -470,15 +862,44 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Crimson_3.pdf", "url": "/mock-files/po_cr_3.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Crimson_3.pdf", "url": "/mock-files/pl_cr_3.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Linen_1.pdf", "url": "/mock-files/pi_ln_1.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Blend_1.pdf", "url": "/mock-files/pi_bl_1.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Cot_1.pdf", "url": "/mock-files/pi_ct_1.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     }
   },
@@ -502,16 +923,52 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Zenith_005.pdf", "url": "/mock-files/po_005.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Zenith_005.pdf", "url": "/mock-files/pl_005.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Arvind_110.pdf", "url": "/mock-files/pi_110.pdf", "type": "application/pdf", "lValue": 95 },
-        { "filename": "PI_Transport_111.pdf", "url": "/mock-files/pi_111.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Process_112.pdf", "url": "/mock-files/pi_112.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Pack_113.pdf", "url": "/mock-files/pi_113.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 95,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     }
   },
@@ -535,14 +992,36 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Heritage_2.pdf", "url": "/mock-files/po_h_2.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Heritage_2.pdf", "url": "/mock-files/pl_h_2.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Silk_1.pdf", "url": "/mock-files/pi_sl_1.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Silk_2.pdf", "url": "/mock-files/pi_sl_2.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     }
   },
@@ -566,15 +1045,44 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Elite_9.pdf", "url": "/mock-files/po_e_9.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Elite_9.pdf", "url": "/mock-files/pl_e_9.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Cot_E1.pdf", "url": "/mock-files/pi_ce_1.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Poly_E1.pdf", "url": "/mock-files/pi_pe_1.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Blend_E1.pdf", "url": "/mock-files/pi_be_1.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     }
   },
@@ -598,14 +1106,36 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Oasis_5.pdf", "url": "/mock-files/po_oa_5.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Oasis_5.pdf", "url": "/mock-files/pl_oa_5.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Muslin.pdf", "url": "/mock-files/pi_mu.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Cambric.pdf", "url": "/mock-files/pi_ca.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     }
   },
@@ -629,16 +1159,52 @@
     },
     "proofs": {
       "po": [
-        { "filename": "PO_Aurora_1.pdf", "url": "/mock-files/po_au_1.pdf", "type": "application/pdf" }
+        {
+          "filename": "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "url": "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+          "type": "application/pdf"
+        }
       ],
       "packingList": [
-        { "filename": "PL_Aurora_1.pdf", "url": "/mock-files/pl_au_1.pdf", "type": "application/pdf" }
+        {
+          "filename": "HOPSCOTCH PACKING LIST - 6556.pdf",
+          "url": "/HOPSCOTCH PACKING LIST - 6556.pdf",
+          "type": "application/pdf"
+        }
       ],
       "purchaseInvoices": [
-        { "filename": "PI_Poly_A.pdf", "url": "/mock-files/pi_pa.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Nylon_A.pdf", "url": "/mock-files/pi_na.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Span_A.pdf", "url": "/mock-files/pi_sa.pdf", "type": "application/pdf", "lValue": 100 },
-        { "filename": "PI_Freight_A.pdf", "url": "/mock-files/pi_fa.pdf", "type": "application/pdf", "lValue": 100 }
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": true,
+          "isLedger": true
+        },
+        {
+          "filename": "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "url": "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "761 Arvind Textile.pdf",
+          "url": "/761 Arvind Textile.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        },
+        {
+          "filename": "Bill No -145 Fabrito.pdf",
+          "url": "/Bill No -145 Fabrito.pdf",
+          "type": "application/pdf",
+          "lValue": 100,
+          "isFromLedger": false,
+          "isLedger": false
+        }
       ]
     }
   }

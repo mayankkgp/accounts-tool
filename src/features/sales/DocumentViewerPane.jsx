@@ -1,6 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { ZoomIn, ZoomOut, RotateCw, ExternalLink, FileText, Download } from "lucide-react";
 
+function resolveDocumentUrl(file) {
+  if (!file) return "";
+  const url = file.url || "";
+  const name = file.filename || "";
+  
+  const realPdfs = ["GAR-PO", "HOPSCOTCH", "Arvind", "Bill No", "Dummy_Fabric"];
+  if (realPdfs.some(p => url.includes(p) || name.includes(p))) {
+    return url.startsWith("/") ? url : `/${url}`;
+  }
+  
+  if (file.docType === "Purchase Order") {
+    return "/GAR-PO-23-FY26-27-Rev#1 (1).pdf";
+  }
+  if (file.docType === "Packing List") {
+    return "/HOPSCOTCH PACKING LIST - 6556.pdf";
+  }
+  if (file.docType === "Vendor Bill") {
+    const idx = name.length % 3;
+    if (idx === 0) return "/761 Arvind Textile.pdf";
+    if (idx === 1) return "/Bill No -145 Fabrito.pdf";
+    return "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf";
+  }
+  
+  return url;
+}
+
 export default function DocumentViewerPane({ req }) {
   const [files, setFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -37,6 +63,8 @@ export default function DocumentViewerPane({ req }) {
   const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.15, 2.5));
   const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.15, 0.5));
   const handleRotate = () => setRotation(prev => (prev + 90) % 360);
+
+  const resolvedUrl = selectedFile ? resolveDocumentUrl(selectedFile) : "";
 
   return (
     <div className="flex-1 flex flex-col min-h-0 bg-slate-100 border border-slate-200 rounded-sm overflow-hidden" id="document-viewer-pane-root">
@@ -108,7 +136,7 @@ export default function DocumentViewerPane({ req }) {
           </button>
           {selectedFile && (
             <a
-              href={selectedFile.url || "#"}
+              href={resolvedUrl || "#"}
               download={selectedFile.filename}
               title="Download File"
               className="w-5 h-5 rounded-sm bg-white border border-slate-300 hover:bg-slate-200 text-slate-600 flex items-center justify-center shadow-xs cursor-pointer"
@@ -119,7 +147,7 @@ export default function DocumentViewerPane({ req }) {
           )}
           {selectedFile && (
             <a
-              href={selectedFile.url || "#"}
+              href={resolvedUrl || "#"}
               target="_blank"
               rel="noopener noreferrer"
               title="Pop-out (New Tab)"
@@ -136,16 +164,17 @@ export default function DocumentViewerPane({ req }) {
       <div className="flex-1 overflow-hidden relative flex items-center justify-center bg-slate-200/55 p-3 min-h-0" id="document-canvas-container">
         {selectedFile ? (
           <div
-            className="w-full h-full flex items-center justify-center transition-transform duration-150 ease-out"
+            className="w-full h-full shadow-sm bg-white overflow-hidden"
             style={{
               transform: `scale(${zoom}) rotate(${rotation}deg)`,
+              transition: 'transform 0.2s ease',
             }}
           >
             {/* Real iframe / PDF reader */}
             <iframe
-              src={selectedFile.url || "/mock-files/standard_doc.pdf"}
-              title="Document View"
-              className="w-full h-full border-none bg-white rounded-xs shadow-md select-none pointer-events-none"
+              src={resolvedUrl}
+              className="w-full h-full border-0"
+              title={selectedFile.filename}
               referrerPolicy="no-referrer"
             />
           </div>

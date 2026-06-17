@@ -96,10 +96,9 @@ export default function SalesRequestFormModal({ isOpen, onClose, editingRequest,
     setTimeout(() => {
       setPoList(prev => prev.map(item => {
         if (item.tempId === tempId) {
-          const randomId = Math.floor(100 + Math.random() * 900);
           return {
-            filename: `PO_${customer.replace(/\s+/g, "_")}_${randomId}.pdf`,
-            url: "/mock-files/standard_doc.pdf",
+            filename: "GAR-PO-23-FY26-27-Rev#1 (1).pdf",
+            url: "/GAR-PO-23-FY26-27-Rev#1 (1).pdf",
             type: "application/pdf",
             uploading: false
           };
@@ -117,10 +116,9 @@ export default function SalesRequestFormModal({ isOpen, onClose, editingRequest,
     setTimeout(() => {
       setPackingList(prev => prev.map(item => {
         if (item.tempId === tempId) {
-          const randomId = Math.floor(100 + Math.random() * 900);
           return {
-            filename: `PL_${customer.replace(/\s+/g, "_")}_June_${randomId}.pdf`,
-            url: "/mock-files/standard_doc.pdf",
+            filename: "HOPSCOTCH PACKING LIST - 6556.pdf",
+            url: "/HOPSCOTCH PACKING LIST - 6556.pdf",
             type: "application/pdf",
             uploading: false
           };
@@ -138,9 +136,33 @@ export default function SalesRequestFormModal({ isOpen, onClose, editingRequest,
     setTimeout(() => {
       setInvoiceList(prev => prev.map(item => {
         if (item.tempId === tempId) {
+          // Create an array containing the root paths of the three new dummy invoice PDFs
+          const dummyInvoices = [
+            "/761 Arvind Textile.pdf",
+            "/Bill No -145 Fabrito.pdf",
+            "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf"
+          ];
+          // Programmatically select a random index from this array
+          const randomIndex = Math.floor(Math.random() * dummyInvoices.length);
+          const chosenPath = dummyInvoices[randomIndex];
+          
+          let url = chosenPath;
+          let filename = selectedFilename || chosenPath.substring(1);
+
+          if (selectedFilename) {
+            if (selectedFilename === "761 Arvind Textile.pdf" || selectedFilename.includes("Arvind")) {
+              url = "/761 Arvind Textile.pdf";
+            } else if (selectedFilename === "Bill No -145 Fabrito.pdf" || selectedFilename.includes("145")) {
+              url = "/Bill No -145 Fabrito.pdf";
+            } else if (selectedFilename === "Dummy_Fabric_Invoice_Fabrito_Fixed.pdf" || selectedFilename.includes("Dummy_Fabric")) {
+              url = "/Dummy_Fabric_Invoice_Fabrito_Fixed.pdf";
+            }
+            filename = selectedFilename;
+          }
+
           return {
-            filename: selectedFilename,
-            url: "/mock-files/standard_doc.pdf",
+            filename: filename,
+            url: url,
             type: "application/pdf",
             lValue: 100,
             isFromLedger: item.isFromLedger,
