@@ -60,7 +60,7 @@ export default function SalesRequestFormModal({ isOpen, onClose, editingRequest,
             freight={state.freight}
             setFreight={state.setFreight}
             transporterName={state.transporterName}
-            setTransporterName={setTransporterName}
+            setTransporterName={state.setTransporterName}
             paymentTerms={state.paymentTerms}
             setPaymentTerms={state.setPaymentTerms}
             brand={state.brand}

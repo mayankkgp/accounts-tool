@@ -4,10 +4,12 @@ import Tabs from "../../components/ui/Tabs";
 import { fetchSalesRequests, saveSalesRequest } from "../../services/salesService";
 import SalesCard from "./SalesCard";
 import FinanceTriageWorkspace from "./FinanceTriageWorkspace";
+import FinanceMappingWorkspace from "./FinanceMappingWorkspace";
 
 export default function FinanceQueueDashboard() {
   const [requests, setRequests] = useState([]);
   const [triageRequest, setTriageRequest] = useState(null);
+  const [mappingRequest, setMappingRequest] = useState(null);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("Invoice Pending"); // Default tab
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,28 +42,20 @@ export default function FinanceQueueDashboard() {
     setTriageRequest(req);
   };
 
-  const handleFinalizeSettlement = async (req) => {
-    const confirmAction = window.confirm(
-      `Finance Action:\nWould you like to Finalize Settlement for ${req.id}? This will link and book unmapped ledger inventory details.`
-    );
-    if (!confirmAction) return;
-
-    setProcessingId(req.id);
-    try {
-      alert("Executing Settlement & Cost Mapping ledger bookings (Phase 2)...\nUpdating request status to 'Fulfilled' in localStorage.");
-      
-      const updated = {
-        ...req,
-        status: "Fulfilled"
-      };
-      await saveSalesRequest(updated);
-      loadRequests();
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setProcessingId(null);
-    }
+  const handleFinalizeSettlement = (req) => {
+    setMappingRequest(req);
   };
+
+  // If a request is active in mapping, render mapping workspace
+  if (mappingRequest) {
+    return (
+      <FinanceMappingWorkspace
+        req={mappingRequest}
+        onClose={() => setMappingRequest(null)}
+        onRefresh={loadRequests}
+      />
+    );
+  }
 
   // If a request is active in triage, render the workspace
   if (triageRequest) {
