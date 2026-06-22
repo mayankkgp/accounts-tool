@@ -1,5 +1,5 @@
 import React from "react";
-import { Link2, Trash2, AlertTriangle, ShieldCheck, HelpCircle, PanelLeftOpen } from "lucide-react";
+import { Link2, Trash2, AlertTriangle, ShieldCheck, HelpCircle, PanelLeftOpen, Copy, Plus } from "lucide-react";
 
 /**
  * MappingLedgerGrid Component (Phase 5 Right Mapping Grid)
@@ -21,10 +21,6 @@ export default function MappingLedgerGrid({
     setSalesItems(prev => prev.map(item => {
       if (item.id === id) {
         const next = { ...item, ...fields };
-        // Apply HSN locking check: if exactly 1 child is linked, auto-populate HSN to match child
-        if (next.linkedCosts.length === 1) {
-          next.hsnCode = next.linkedCosts[0].itemId;
-        }
         return next;
       }
       return item;
@@ -151,7 +147,7 @@ export default function MappingLedgerGrid({
 
       {/* 2. Parent-Child list */}
       <div className="flex flex-col gap-1.5 min-h-0" id="main-ledger-nested-loop">
-        {salesItems.map((parent) => {
+        {salesItems.map((parent, index) => {
           // Soft alert logic: Quantities match warning
           const totalLinkedQty = parent.linkedCosts.reduce((acc, c) => acc + (c.consumed || 0), 0);
           const needsWarning = !parent.isFoc && parent.linkedCosts.length === 1 && totalLinkedQty !== parent.quantity;
@@ -159,14 +155,24 @@ export default function MappingLedgerGrid({
           return (
             <div
               key={parent.id}
-              className={`flex flex-col border-b border-slate-200 pb-3 mb-1.5 last:border-b-0 last:pb-0 ${
-                parent.isFoc ? "opacity-75 bg-slate-50/40 px-1 py-1 rounded-xs" : ""
-              }`}
+              className="flex flex-col border-b border-slate-200 pb-3 mb-2 last:border-b-0 last:pb-0 relative group/parent"
             >
+              {/* Parent Delete Action */}
+              <button
+                type="button"
+                onClick={() => setSalesItems(prev => prev.filter(item => item.id !== parent.id))}
+                className="absolute top-0 right-1 p-0.5 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer rounded-xs"
+                title="Delete Sales Item"
+              >
+                <Trash2 size={12} strokeWidth={2.5} />
+              </button>
+
               {/* Row 1: Core Description */}
-              <div className="grid grid-cols-12 gap-1.5 items-center mb-2">
+              <div className="grid grid-cols-12 gap-1.5 items-center mb-2 pr-6">
                 <div className="col-span-8 flex flex-col gap-0.5">
-                  <label className="text-[9px] uppercase font-bold text-slate-400">Sales Item Description</label>
+                  <label className="text-[10px] uppercase font-extrabold text-slate-900 tracking-wider mb-0.5">
+                    Sales Item #{index + 1} Description
+                  </label>
                   <input
                     type="text"
                     value={parent.itemName}
@@ -175,13 +181,14 @@ export default function MappingLedgerGrid({
                   />
                 </div>
                 <div className="col-span-4 flex flex-col gap-0.5">
-                  <label className="text-[9px] uppercase font-bold text-slate-400">HSN Code</label>
+                  <label className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5">
+                    HSN Code
+                  </label>
                   <input
                     type="text"
                     value={parent.hsnCode}
-                    disabled={parent.linkedCosts.length === 1}
                     onChange={e => updateParentItem(parent.id, { hsnCode: e.target.value })}
-                    className="h-6 w-full border border-slate-300 px-1.5 focus:border-indigo-500 rounded-xs disabled:bg-slate-50/80 disabled:text-slate-500 font-mono text-[10px]"
+                    className="h-6 w-full border border-slate-300 px-1.5 focus:border-indigo-500 rounded-xs font-mono text-[10px]"
                     placeholder="Enter HSN"
                   />
                 </div>
@@ -190,7 +197,7 @@ export default function MappingLedgerGrid({
               {/* Row 2: Metrics Inputs */}
               <div className="grid grid-cols-5 gap-1.5 mb-2">
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[9px] uppercase text-slate-450 font-bold">Sales Qty *</span>
+                  <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5">Sales Qty *</span>
                   <div className="flex h-6 border border-slate-300 rounded-xs overflow-hidden focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500/50 bg-white">
                     <input
                       type="number"
@@ -210,7 +217,7 @@ export default function MappingLedgerGrid({
                   </div>
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[9px] uppercase text-slate-450 font-bold">Price (₹) *</span>
+                  <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5">Price (₹) *</span>
                   <input
                     type="number"
                     value={parent.rate}
@@ -219,7 +226,7 @@ export default function MappingLedgerGrid({
                   />
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[9px] uppercase text-slate-450 font-bold">IGST (%)</span>
+                  <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5">IGST (%)</span>
                   <input
                     type="number"
                     value={parent.igst}
@@ -228,7 +235,7 @@ export default function MappingLedgerGrid({
                   />
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[9px] uppercase text-slate-450 font-bold">Row total</span>
+                  <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5">Row total</span>
                   <span className="h-6 bg-slate-50 border border-slate-200 flex items-center justify-center font-mono font-bold text-slate-650 rounded-xs">
                     ₹{(parent.quantity * parent.rate).toLocaleString()}
                   </span>
@@ -246,18 +253,27 @@ export default function MappingLedgerGrid({
                 </div>
               </div>
 
-              {/* Row 3: Linked cost Child list (BORDERLESS SOFT LAYOUT) */}
+              {/* Row 3: Linked cost Child list (THREADED HIERARCHY STYLE) */}
               {!parent.isFoc && parent.linkedCosts.length > 0 && (
-                <div className="bg-slate-50/80 -mx-1 px-2 py-2 mt-2 flex flex-col gap-1.5 rounded-xs">
+                <div className="flex flex-col gap-2 ml-4 pl-4 border-l-2 border-indigo-100 mt-2">
                   <span className="text-[9px] uppercase font-bold text-indigo-600 tracking-wide">Linked Cost Sources:</span>
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-2">
                     {parent.linkedCosts.map((child) => (
-                      <div key={child.id} className="flex flex-col gap-1.5 pb-2 mb-2 border-b border-slate-200/60 last:border-b-0 last:pb-0 last:mb-0 relative">
+                      <div key={child.id} className="flex flex-col gap-1.5 relative group hover:bg-slate-50 -mx-2 px-2 py-1 rounded-xs transition-colors">
                         {/* Title Row with Explicit Tags and Data Columns (Rate, HSN) */}
                         <div className="flex items-center justify-between flex-wrap gap-1">
                           <div className="flex items-center gap-1.5 flex-wrap">
                             <Link2 size={11} className="text-indigo-500 shrink-0" />
                             <span className="font-extrabold text-slate-800 text-[11px]">{child.itemName}</span>
+                            <span className="font-mono text-[10px] text-slate-500 ml-2">HSN: {child.itemId || "N/A"}</span>
+                            <button
+                              type="button"
+                              onClick={() => navigator.clipboard.writeText(child.itemId || "")}
+                              className="text-slate-400 hover:text-indigo-600 cursor-pointer border-none bg-transparent ml-1"
+                              title="Copy HSN"
+                            >
+                              <Copy size={10} />
+                            </button>
                             
                             <span className={`px-1.5 py-0.2 rounded-xs text-[8px] font-extrabold tracking-wide uppercase font-sans ${
                               child.isPurchase
@@ -270,13 +286,10 @@ export default function MappingLedgerGrid({
                             <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-200/60 px-1 py-0.2 rounded-xs">
                               Rate: ₹{child.rate}/m
                             </span>
-                            <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-200/60 px-1 py-0.2 rounded-xs">
-                              HSN: {child.hsnCode || child.itemId || "520512"}
-                            </span>
 
                             {child.isPurchase && child.lValue !== 100 && (
                               <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-100 px-1 py-0.2 rounded-xs">
-                                L-Value: {child.lValue}%
+                                L-{child.lValue}
                               </span>
                             )}
                           </div>
@@ -306,7 +319,7 @@ export default function MappingLedgerGrid({
                           {/* Numeric Input Buckets: consumed, to inventory, to debit */}
                           <div className="grid grid-cols-3 gap-2">
                             <div className="flex flex-col gap-0.5">
-                              <span className="text-[9px] uppercase text-slate-455 font-bold">Consumed Qty</span>
+                              <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5">Consumed Qty (m)</span>
                               <input
                                 type="number"
                                 value={child.consumed || ""}
@@ -318,8 +331,8 @@ export default function MappingLedgerGrid({
                             {child.isPurchase ? (
                               <>
                                 <div className="flex flex-col gap-0.5 relative">
-                                  <span className="text-[9px] uppercase text-slate-455 font-bold flex items-center justify-between">
-                                    <span>To Inv</span>
+                                  <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5 flex items-center justify-between">
+                                    <span>To Inv (m)</span>
                                     {(child.toInventory || 0) > 0 && (
                                       <span className="text-[8px] text-indigo-500 font-bold leading-none animate-pulse">Conv. L100</span>
                                     )}
@@ -332,7 +345,7 @@ export default function MappingLedgerGrid({
                                   />
                                 </div>
                                 <div className="flex flex-col gap-0.5">
-                                  <span className="text-[9px] uppercase text-slate-455 font-bold">To Debit</span>
+                                  <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5">To Debit (m)</span>
                                   <input
                                     type="number"
                                     value={child.toDebit || ""}
@@ -365,7 +378,7 @@ export default function MappingLedgerGrid({
               )}
 
               {/* Card Footer Single-click CTAs */}
-              <div className="border-t border-slate-100 pt-2.5 flex items-center justify-between pointer-events-auto" id="parent-card-actions">
+              <div className="pt-1 flex items-center justify-between pointer-events-auto" id="parent-card-actions">
                 <span className="text-[9px] italic text-slate-400 font-medium select-none">
                   {parent.isFoc ? "Exempt due to FOC status." : `${parent.linkedCosts.length} cost link nodes aligned`}
                 </span>
@@ -392,18 +405,32 @@ export default function MappingLedgerGrid({
             </div>
           );
         })}
+        {/* Full-width Add Sales Item Button */}
+        <button
+          type="button"
+          onClick={() => {
+            setSalesItems(prev => [
+              ...prev,
+              { id: 'S' + Date.now(), itemName: '', quantity: 1, rate: 0, hsnCode: '', igst: 0, linkedCosts: [], isFoc: false, uom: 'm' }
+            ]);
+          }}
+          className="flex items-center justify-center gap-1.5 w-full h-8 border border-dashed border-slate-300 rounded-sm text-slate-500 font-bold uppercase text-[10px] tracking-wider hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/30 transition-colors cursor-pointer mt-2"
+        >
+          <Plus size={11} strokeWidth={2.5} />
+          Add Sales Item
+        </button>
       </div>
 
-      {/* 3. Unlinked Purchases section (SOFT BORDERLESS CARD DESIGN) */}
+      {/* 3. Unlinked Purchases section (FLATTENED DESIGN) */}
       {unlinkedPurchases.length > 0 && (
         <div className="border-t-2 border-slate-200 pt-3 mt-2 flex flex-col gap-2 shrink-0" id="unlinked-purchases-container">
           <div className="flex items-center justify-between border-b border-slate-200 pb-1 mr-1">
             <span className="text-[9px] uppercase font-bold text-slate-500 tracking-wide">Unlinked Staged Purchases</span>
-            <span className="text-[8px] font-mono text-slate-455 uppercase font-bold">{unlinkedPurchases.length} items to distribute</span>
+            <span className="text-[8px] font-mono text-slate-400 uppercase font-bold">{unlinkedPurchases.length} items to distribute</span>
           </div>
           <div className="flex flex-col gap-2">
             {unlinkedPurchases.map((u) => (
-              <div key={u.id} className="bg-slate-50 px-2 py-1.5 rounded-xs flex flex-col gap-1.5">
+              <div key={u.id} className="flex flex-col gap-1.5 border-b border-slate-100 pb-2 last:border-0 last:pb-0">
                 <div className="flex items-center justify-between text-[11px] font-bold text-slate-700 leading-tight flex-wrap gap-1">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="truncate text-slate-800">{u.itemName}</span>
@@ -414,8 +441,8 @@ export default function MappingLedgerGrid({
                       HSN: {u.hsnCode || "520212"}
                     </span>
                     {u.lValue !== 100 && (
-                      <span className="text-[9px] font-mono font-bold text-slate-450 bg-slate-100 px-1 rounded-sm">
-                        L-Value: {u.lValue}%
+                      <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-100 px-1 rounded-sm">
+                        L-{u.lValue}
                       </span>
                     )}
                   </div>
@@ -431,8 +458,8 @@ export default function MappingLedgerGrid({
 
                   <div className="grid grid-cols-2 gap-2">
                     <div className="flex flex-col gap-0.5 relative">
-                      <span className="text-[9px] uppercase text-slate-455 font-bold flex items-center justify-between">
-                        <span>To Inventory</span>
+                      <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5 flex items-center justify-between">
+                        <span>To Inventory (m)</span>
                         {(u.toInventory || 0) > 0 && (
                           <span className="text-[8px] text-indigo-500 font-bold leading-none animate-pulse">Conv. L100</span>
                         )}
@@ -441,16 +468,16 @@ export default function MappingLedgerGrid({
                         type="number"
                         value={u.toInventory || ""}
                         onChange={e => handleUpdateUnlinkedBucket(u.id, "toInventory", e.target.value)}
-                        className="h-6 w-full border border-slate-200 px-1 text-center font-mono rounded-xs bg-white"
+                        className="h-6 w-full border border-slate-200 px-1 text-center font-mono rounded-xs"
                       />
                     </div>
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-[9px] uppercase text-slate-455 font-bold">To Debit</span>
+                      <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5">To Debit (m)</span>
                       <input
                         type="number"
                         value={u.toDebit || ""}
                         onChange={e => handleUpdateUnlinkedBucket(u.id, "toDebit", e.target.value)}
-                        className="h-6 w-full border border-slate-200 px-1 text-center font-mono rounded-xs bg-white"
+                        className="h-6 w-full border border-slate-200 px-1 text-center font-mono rounded-xs"
                       />
                     </div>
                   </div>
