@@ -59,6 +59,7 @@ export default function PurchaseCreateForm({
   onRefresh,
   isEmbedded = false
 }) {
+  const isLocked = editingPurchase && (editingPurchase.status === "staged" || editingPurchase.status === "skipped");
   const [isProcessingAi, setIsProcessingAi] = useState(false);
   const [aiStep, setAiStep] = useState(0);
   const [aiProgress, setAiProgress] = useState(0);
@@ -573,11 +574,11 @@ export default function PurchaseCreateForm({
                     setValidationErrors(prev => ({ ...prev, vendor: false }));
                     triggerDebouncedCalculation();
                   }}
-                  disabled={isSaving}
-                  className={`w-full h-6 text-xs px-1 hover:border-slate-400 outline-none border rounded-sm bg-white font-sans font-medium ${
+                  disabled={isSaving || isLocked}
+                  className={`w-full h-6 text-xs px-1 hover:border-slate-400 outline-none border rounded-sm bg-white font-sans font-medium disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed ${
                     validationErrors.vendor 
                       ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-550" 
-                      : "border-slate-300 focus:border-indigo-500"
+                      : "border-slate-300 focus:border-indigo-505"
                   }`}
                   id="input-form-vendor"
                 >
@@ -605,13 +606,13 @@ export default function PurchaseCreateForm({
                     setValidationErrors(prev => ({ ...prev, invoiceNumber: false }));
                   }}
                   onBlur={triggerDuplicateCheck}
-                  disabled={isSaving}
-                  className={`w-full h-6 text-xs font-mono px-1.5 outline-none border ${
+                  disabled={isSaving || isLocked || isCheckingDuplicate}
+                  className={`w-full h-6 text-xs font-mono px-1.5 outline-none border disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed ${
                     isDuplicate 
                       ? "border-red-500 bg-rose-50/10 text-rose-909 focus:border-red-500 focus:ring-1 focus:ring-red-500" 
                       : validationErrors.invoiceNumber
                       ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500"
-                      : "border-slate-300 focus:border-indigo-500"
+                      : "border-slate-300 focus:border-indigo-505"
                   } rounded-sm`}
                   id="input-form-invoice-no"
                   required
@@ -636,11 +637,11 @@ export default function PurchaseCreateForm({
                     setPurchaseDate(e.target.value);
                     setValidationErrors(prev => ({ ...prev, purchaseDate: false }));
                   }}
-                  disabled={isSaving}
-                  className={`w-full h-6 text-xs font-mono px-1.5 outline-none border ${
+                  disabled={isSaving || isLocked}
+                  className={`w-full h-6 text-xs font-mono px-1.5 outline-none border disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed ${
                     validationErrors.purchaseDate 
                       ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500" 
-                      : "border-slate-300 focus:border-indigo-500"
+                      : "border-slate-300 focus:border-indigo-505"
                   } rounded-sm`}
                   id="input-form-date"
                   required
@@ -656,8 +657,8 @@ export default function PurchaseCreateForm({
                   max="100"
                   value={lValue}
                   onChange={(e) => setLValue(e.target.value)}
-                  disabled={isSaving}
-                  className="w-full h-6 text-xs text-right font-mono px-1.5 border border-slate-300 focus:border-indigo-505 rounded-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
+                  disabled={isSaving || isLocked}
+                  className="w-full h-6 text-xs text-right font-mono px-1.5 border border-slate-300 focus:border-indigo-505 rounded-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield] disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed"
                   id="input-form-lvalue"
                   required
                 />
@@ -670,8 +671,8 @@ export default function PurchaseCreateForm({
                   type="text"
                   value={poNumber}
                   onChange={(e) => setPoNumber(e.target.value)}
-                  disabled={isSaving}
-                  className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-505 rounded-sm"
+                  disabled={isSaving || isLocked}
+                  className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-505 rounded-sm disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed"
                   id="input-form-po-number"
                 />
               </div>
@@ -686,8 +687,8 @@ export default function PurchaseCreateForm({
                      setOverallDiscount(e.target.value);
                      triggerDebouncedCalculation();
                    }}
-                   disabled={isSaving}
-                   className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-500 rounded-sm text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
+                   disabled={isSaving || isLocked}
+                   className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-500 rounded-sm text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield] disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed"
                    id="input-form-overall-discount"
                  />
                </div>
@@ -699,8 +700,8 @@ export default function PurchaseCreateForm({
                    type="number"
                    value={freight}
                    onChange={(e) => setFreight(e.target.value)}
-                   disabled={isSaving}
-                   className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-500 rounded-sm text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
+                   disabled={isSaving || isLocked}
+                   className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-500 rounded-sm text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield] disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed"
                    id="input-form-freight"
                  />
                </div>
@@ -718,6 +719,7 @@ export default function PurchaseCreateForm({
             handleRowFieldChange={handleRowFieldChange}
             deleteLineRow={deleteLineRow}
             addLineRow={addLineRow}
+            isLocked={isLocked}
           />
         </div>
 
@@ -955,7 +957,6 @@ export default function PurchaseCreateForm({
             <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-3 min-h-0" id="purchase-entry-form-scrollbox">
               {/* SECTION A: Document Header details */}
               <div className="bg-slate-50 border border-slate-200/80 p-2 rounded-sm flex flex-col gap-2 shrink-0 select-none font-sans" id="purchase-form-header-box">
-                
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2.5 items-end">
                   {/* Vendor Dropdown Selector */}
                   <div className="flex flex-col gap-1 lg:col-span-2">
@@ -967,11 +968,11 @@ export default function PurchaseCreateForm({
                         setValidationErrors(prev => ({ ...prev, vendor: false }));
                         triggerDebouncedCalculation();
                       }}
-                      disabled={isSaving}
-                      className={`w-full h-6 text-xs px-1 hover:border-slate-400 outline-none border rounded-sm bg-white font-sans font-medium ${
+                      disabled={isSaving || isLocked}
+                      className={`w-full h-6 text-xs px-1 hover:border-slate-400 outline-none border rounded-sm bg-white font-sans font-medium disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed ${
                         validationErrors.vendor 
-                          ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500" 
-                          : "border-slate-300 focus:border-indigo-500"
+                          ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-550" 
+                          : "border-slate-300 focus:border-indigo-505"
                       }`}
                       id="input-form-vendor"
                     >
@@ -999,13 +1000,13 @@ export default function PurchaseCreateForm({
                         setValidationErrors(prev => ({ ...prev, invoiceNumber: false }));
                       }}
                       onBlur={triggerDuplicateCheck}
-                      disabled={isSaving}
-                      className={`w-full h-6 text-xs font-mono px-1.5 outline-none border ${
+                      disabled={isSaving || isLocked || isCheckingDuplicate}
+                      className={`w-full h-6 text-xs font-mono px-1.5 outline-none border disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed ${
                         isDuplicate 
                           ? "border-red-500 bg-rose-50/10 text-rose-909 focus:border-red-500 focus:ring-1 focus:ring-red-500" 
                           : validationErrors.invoiceNumber
                           ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500"
-                          : "border-slate-300 focus:border-indigo-500"
+                          : "border-slate-300 focus:border-indigo-505"
                       } rounded-sm`}
                       id="input-form-invoice-no"
                       required
@@ -1030,11 +1031,11 @@ export default function PurchaseCreateForm({
                         setPurchaseDate(e.target.value);
                         setValidationErrors(prev => ({ ...prev, purchaseDate: false }));
                       }}
-                      disabled={isSaving}
-                      className={`w-full h-6 text-xs font-mono px-1.5 outline-none border ${
+                      disabled={isSaving || isLocked}
+                      className={`w-full h-6 text-xs font-mono px-1.5 outline-none border disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed ${
                         validationErrors.purchaseDate 
                           ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500" 
-                          : "border-slate-300 focus:border-indigo-500"
+                          : "border-slate-300 focus:border-indigo-505"
                       } rounded-sm`}
                       id="input-form-date"
                       required
@@ -1050,8 +1051,8 @@ export default function PurchaseCreateForm({
                       max="100"
                       value={lValue}
                       onChange={(e) => setLValue(e.target.value)}
-                      disabled={isSaving}
-                      className="w-full h-6 text-xs text-right font-mono px-1.5 border border-slate-300 focus:border-indigo-500 rounded-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
+                      disabled={isSaving || isLocked}
+                      className="w-full h-6 text-xs text-right font-mono px-1.5 border border-slate-300 focus:border-indigo-505 rounded-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield] disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed"
                       id="input-form-lvalue"
                       required
                     />
@@ -1064,8 +1065,8 @@ export default function PurchaseCreateForm({
                       type="text"
                       value={poNumber}
                       onChange={(e) => setPoNumber(e.target.value)}
-                      disabled={isSaving}
-                      className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-505 rounded-sm"
+                      disabled={isSaving || isLocked}
+                      className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-505 rounded-sm disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed"
                       id="input-form-po-number"
                     />
                   </div>
@@ -1080,12 +1081,12 @@ export default function PurchaseCreateForm({
                          setOverallDiscount(e.target.value);
                          triggerDebouncedCalculation();
                        }}
-                       disabled={isSaving}
-                       className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-500 rounded-sm text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
+                       disabled={isSaving || isLocked}
+                       className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-500 rounded-sm text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield] disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed"
                        id="input-form-overall-discount"
                      />
                    </div>
- 
+  
                    {/* Freight Charges */}
                    <div className="flex flex-col gap-1">
                      <span className="text-[9px] uppercase tracking-wide text-slate-500 font-bold">Freight (₹)</span>
@@ -1093,14 +1094,14 @@ export default function PurchaseCreateForm({
                        type="number"
                        value={freight}
                        onChange={(e) => setFreight(e.target.value)}
-                       disabled={isSaving}
-                       className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-500 rounded-sm text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
+                       disabled={isSaving || isLocked}
+                       className="w-full h-6 text-xs font-mono px-1.5 outline-none border border-slate-300 focus:border-indigo-505 rounded-sm text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield] disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed"
                        id="input-form-freight"
                      />
                    </div>
                 </div>
+                </div>
 
-              </div>
               {/* SECTION B: Editable Spreadsheet Grid */}
               <PurchaseCreateGrid
                 lineItems={lineItems}
@@ -1112,6 +1113,7 @@ export default function PurchaseCreateForm({
                 handleRowFieldChange={handleRowFieldChange}
                 deleteLineRow={deleteLineRow}
                 addLineRow={addLineRow}
+                isLocked={isLocked}
               />
             </div>
 

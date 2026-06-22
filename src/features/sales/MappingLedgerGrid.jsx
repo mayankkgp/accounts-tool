@@ -83,7 +83,7 @@ export default function MappingLedgerGrid({
         )}
         <div className="flex-1 grid grid-cols-4 gap-2">
           <div className="flex flex-col">
-            <label className="text-[9px] uppercase font-bold text-slate-450 mb-0.5">Customer</label>
+            <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Customer</label>
             <select
               defaultValue={req?.customer || "Standard Customer"}
               className="h-6 text-[11px] border border-slate-300 rounded-xs px-1 bg-white focus:border-indigo-500 focus:outline-none cursor-pointer"
@@ -95,7 +95,7 @@ export default function MappingLedgerGrid({
             </select>
           </div>
           <div className="flex flex-col">
-            <label className="text-[9px] uppercase font-bold text-slate-450 mb-0.5">Bill To</label>
+            <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Bill To</label>
             <input
               type="text"
               defaultValue={req?.logistics?.billTo || "Office Corporate Head"}
@@ -103,7 +103,7 @@ export default function MappingLedgerGrid({
             />
           </div>
           <div className="flex flex-col">
-            <label className="text-[9px] uppercase font-bold text-slate-450 mb-0.5">Ship To</label>
+            <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Ship To</label>
             <input
               type="text"
               defaultValue={req?.logistics?.shipTo || "Factory Warehouse Block D"}
@@ -111,7 +111,7 @@ export default function MappingLedgerGrid({
             />
           </div>
           <div className="flex flex-col">
-            <label className="text-[9px] uppercase font-bold text-slate-450 mb-0.5">Transporter Name</label>
+            <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Transporter Name</label>
             <input
               type="text"
               defaultValue={req?.logistics?.transporterName || "VRL Logistics"}
@@ -119,7 +119,7 @@ export default function MappingLedgerGrid({
             />
           </div>
           <div className="flex flex-col">
-            <label className="text-[9px] uppercase font-bold text-slate-450 mb-0.5">Freight Terms</label>
+            <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Freight Terms</label>
             <input
               type="text"
               defaultValue={req?.logistics?.freight || "Fixed Standard To Collect"}
@@ -127,7 +127,7 @@ export default function MappingLedgerGrid({
             />
           </div>
           <div className="flex flex-col">
-            <label className="text-[9px] uppercase font-bold text-slate-450 mb-0.5">Payment Terms</label>
+            <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Payment Terms</label>
             <input
               type="text"
               defaultValue={req?.logistics?.paymentTerms || "Net 30 Days"}
@@ -135,7 +135,7 @@ export default function MappingLedgerGrid({
             />
           </div>
           <div className="flex flex-col">
-            <label className="text-[9px] uppercase font-bold text-slate-450 mb-0.5">Sales L-Value</label>
+            <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Sales L-Value</label>
             <input
               type="number"
               defaultValue={100}
@@ -150,18 +150,17 @@ export default function MappingLedgerGrid({
         {salesItems.map((parent, index) => {
           // Soft alert logic: Quantities match warning
           const totalLinkedQty = parent.linkedCosts.reduce((acc, c) => acc + (c.consumed || 0), 0);
-          const needsWarning = !parent.isFoc && parent.linkedCosts.length === 1 && totalLinkedQty !== parent.quantity;
 
           return (
             <div
               key={parent.id}
-              className="flex flex-col border-b border-slate-200 pb-3 mb-2 last:border-b-0 last:pb-0 relative group/parent"
+              className="bg-white border border-slate-200 rounded-sm p-3 mb-3 last:mb-0 relative group/parent shadow-xs hover:border-slate-300 transition-colors"
             >
               {/* Parent Delete Action */}
               <button
                 type="button"
                 onClick={() => setSalesItems(prev => prev.filter(item => item.id !== parent.id))}
-                className="absolute top-0 right-1 p-0.5 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer rounded-xs"
+                className="absolute top-2 right-2 p-0.5 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer rounded-xs"
                 title="Delete Sales Item"
               >
                 <Trash2 size={12} strokeWidth={2.5} />
@@ -170,9 +169,10 @@ export default function MappingLedgerGrid({
               {/* Row 1: Core Description */}
               <div className="grid grid-cols-12 gap-1.5 items-center mb-2 pr-6">
                 <div className="col-span-8 flex flex-col gap-0.5">
-                  <label className="text-[10px] uppercase font-extrabold text-slate-900 tracking-wider mb-0.5">
-                    Sales Item #{index + 1} Description
-                  </label>
+                  <div className="flex items-center">
+                    <label className="text-[10px] uppercase font-extrabold text-slate-900 mb-0.5">Sales Item #{index + 1} Description</label>
+                    {!parent.isFoc && parent.linkedCosts.length === 0 && <AlertTriangle size={11} className="text-rose-500 ml-1 mb-0.5 animate-bounce" title="Requires mapping" />}
+                  </div>
                   <input
                     type="text"
                     value={parent.itemName}
@@ -181,9 +181,7 @@ export default function MappingLedgerGrid({
                   />
                 </div>
                 <div className="col-span-4 flex flex-col gap-0.5">
-                  <label className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5">
-                    HSN Code
-                  </label>
+                  <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">HSN Code</label>
                   <input
                     type="text"
                     value={parent.hsnCode}
@@ -197,13 +195,13 @@ export default function MappingLedgerGrid({
               {/* Row 2: Metrics Inputs */}
               <div className="grid grid-cols-5 gap-1.5 mb-2">
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5">Sales Qty *</span>
+                  <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Sales Qty *</span>
                   <div className="flex h-6 border border-slate-300 rounded-xs overflow-hidden focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500/50 bg-white">
                     <input
                       type="number"
                       value={parent.quantity}
                       onChange={e => updateParentItem(parent.id, { quantity: Math.max(1, Number(e.target.value) || 0) })}
-                      className="w-full h-full border-none focus:ring-0 font-mono text-center bg-transparent px-1 m-0 appearance-none focus:outline-none"
+                      className="w-full h-full border-none focus:ring-0 font-mono text-left pl-1.5 bg-transparent px-1 m-0 appearance-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                     <select
                       value={parent.uom || "m"}
@@ -217,26 +215,26 @@ export default function MappingLedgerGrid({
                   </div>
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5">Price (₹) *</span>
+                  <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Price (₹) *</span>
                   <input
                     type="number"
                     value={parent.rate}
                     onChange={e => updateParentItem(parent.id, { rate: Math.max(0, Number(e.target.value) || 0) })}
-                    className="h-6 border border-slate-300 font-mono text-center rounded-xs"
+                    className="h-6 border border-slate-300 font-mono text-left px-1.5 rounded-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5">IGST (%)</span>
+                  <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">IGST (%)</span>
                   <input
                     type="number"
                     value={parent.igst}
                     onChange={e => updateParentItem(parent.id, { igst: Number(e.target.value) || 0 })}
-                    className="h-6 border border-slate-300 font-mono text-center rounded-xs"
+                    className="h-6 border border-slate-300 font-mono text-left px-1.5 rounded-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5">Row total</span>
-                  <span className="h-6 bg-slate-50 border border-slate-200 flex items-center justify-center font-mono font-bold text-slate-650 rounded-xs">
+                  <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Row total</span>
+                  <span className="h-6 bg-slate-50 border border-slate-200 flex items-center justify-start px-2 font-mono font-bold text-slate-650 rounded-xs">
                     ₹{(parent.quantity * parent.rate).toLocaleString()}
                   </span>
                 </div>
@@ -255,130 +253,121 @@ export default function MappingLedgerGrid({
 
               {/* Row 3: Linked cost Child list (THREADED HIERARCHY STYLE) */}
               {!parent.isFoc && parent.linkedCosts.length > 0 && (
-                <div className="flex flex-col gap-2 ml-4 pl-4 border-l-2 border-indigo-100 mt-2">
+                <div className="flex flex-col gap-1 ml-4 pl-4 border-l-2 border-indigo-100 mt-1">
                   <span className="text-[9px] uppercase font-bold text-indigo-600 tracking-wide">Linked Cost Sources:</span>
                   <div className="flex flex-col gap-2">
-                    {parent.linkedCosts.map((child) => (
-                      <div key={child.id} className="flex flex-col gap-1.5 relative group hover:bg-slate-50 -mx-2 px-2 py-1 rounded-xs transition-colors">
-                        {/* Title Row with Explicit Tags and Data Columns (Rate, HSN) */}
-                        <div className="flex items-center justify-between flex-wrap gap-1">
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            <Link2 size={11} className="text-indigo-500 shrink-0" />
-                            <span className="font-extrabold text-slate-800 text-[11px]">{child.itemName}</span>
-                            <span className="font-mono text-[10px] text-slate-500 ml-2">HSN: {child.itemId || "N/A"}</span>
+                    {parent.linkedCosts.map((child) => {
+                      const totalBuckets = (Number(child.consumed) || 0) + (Number(child.toInventory) || 0) + (Number(child.toDebit) || 0);
+                      const hasError = child.isPurchase ? totalBuckets !== child.availableQty : (Number(child.consumed) || 0) > child.availableQty;
+                      return (
+                        <div key={child.id} className="flex flex-col gap-1.5 relative group hover:bg-slate-50 -mx-2 px-2 py-1 rounded-xs transition-colors border-b border-slate-200 pb-2 mb-2 last:border-b-0 last:pb-0 last:mb-0">
+                          {/* Title Row with Explicit Tags and Data Columns (Rate, HSN) */}
+                          <div className="flex items-center justify-between flex-wrap gap-1">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <Link2 size={11} className="text-indigo-500 shrink-0" />
+                              <span className="font-extrabold text-slate-800 text-[11px]">{child.itemName}</span>
+                              <span className="font-mono text-[10px] text-slate-500 ml-2">HSN: {child.itemId || "N/A"}</span>
+                              <button
+                                type="button"
+                                onClick={() => navigator.clipboard.writeText(child.itemId || "")}
+                                className="text-slate-400 hover:text-indigo-600 cursor-pointer border-none bg-transparent ml-1"
+                                title="Copy HSN"
+                              >
+                                <Copy size={10} />
+                              </button>
+                              
+                              <span className={`px-1.5 py-0.2 rounded-xs text-[8px] font-extrabold tracking-wide uppercase font-sans ${
+                                child.isPurchase
+                                  ? "bg-indigo-100 text-indigo-700"
+                                  : "bg-teal-100 text-teal-700"
+                              }`}>
+                                {child.isPurchase ? "PURCHASE" : "INVENTORY"}
+                              </span>
+
+                              <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-200/60 px-1 py-0.2 rounded-xs">
+                                Rate: ₹{child.rate}/m
+                              </span>
+
+                              {child.isPurchase && child.lValue !== 100 && (
+                                <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-100 px-1 py-0.2 rounded-xs">
+                                  L-{child.lValue}
+                                </span>
+                              )}
+                            </div>
+                            
                             <button
                               type="button"
-                              onClick={() => navigator.clipboard.writeText(child.itemId || "")}
-                              className="text-slate-400 hover:text-indigo-600 cursor-pointer border-none bg-transparent ml-1"
-                              title="Copy HSN"
+                              onClick={() => handleRemoveChild(parent.id, child.id)}
+                              className="text-slate-500 hover:text-rose-600 border-none bg-transparent cursor-pointer ml-auto"
+                              title="Remove cost link node"
                             >
-                              <Copy size={10} />
+                              <Trash2 size={11} />
                             </button>
-                            
-                            <span className={`px-1.5 py-0.2 rounded-xs text-[8px] font-extrabold tracking-wide uppercase font-sans ${
-                              child.isPurchase
-                                ? "bg-indigo-100 text-indigo-700"
-                                : "bg-teal-100 text-teal-700"
-                            }`}>
-                              {child.isPurchase ? "PURCHASE" : "INVENTORY"}
-                            </span>
-
-                            <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-200/60 px-1 py-0.2 rounded-xs">
-                              Rate: ₹{child.rate}/m
-                            </span>
-
-                            {child.isPurchase && child.lValue !== 100 && (
-                              <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-100 px-1 py-0.2 rounded-xs">
-                                L-{child.lValue}
-                              </span>
-                            )}
                           </div>
-                          
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveChild(parent.id, child.id)}
-                            className="text-slate-450 hover:text-rose-600 border-none bg-transparent cursor-pointer ml-auto"
-                            title="Remove cost link node"
-                          >
-                            <Trash2 size={11} />
-                          </button>
-                        </div>
 
-                        {/* Quantity labels inline before buckets */}
-                        <div className="mt-1 border-t border-slate-200/45 pt-1.5">
-                          {child.isPurchase ? (
-                            <div className="text-[10px] font-bold text-slate-550 mb-1">
-                              Total Qty: <span className="text-indigo-700 font-mono font-bold">{child.availableQty || 200}m</span>
-                            </div>
-                          ) : (
-                            <div className="text-[10px] font-bold text-slate-550 mb-1">
-                              Available Qty: <span className="text-teal-700 font-mono font-bold">{child.availableQty || 120}m</span>
-                            </div>
-                          )}
+                          {/* Quantity labels inline before buckets */}
+                          <div className="mt-1 pt-1.5">
 
-                          {/* Numeric Input Buckets: consumed, to inventory, to debit */}
-                          <div className="grid grid-cols-3 gap-2">
-                            <div className="flex flex-col gap-0.5">
-                              <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5">Consumed Qty (m)</span>
-                              <input
-                                type="number"
-                                value={child.consumed || ""}
-                                onChange={e => handleUpdateChildBucket(parent.id, child.id, "consumed", e.target.value)}
-                                className="h-6 w-full border border-slate-200 px-1 text-center font-mono font-bold rounded-xs bg-indigo-50/20"
-                              />
-                            </div>
-
-                            {child.isPurchase ? (
-                              <>
-                                <div className="flex flex-col gap-0.5 relative">
-                                  <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5 flex items-center justify-between">
-                                    <span>To Inv (m)</span>
-                                    {(child.toInventory || 0) > 0 && (
-                                      <span className="text-[8px] text-indigo-500 font-bold leading-none animate-pulse">Conv. L100</span>
-                                    )}
-                                  </span>
-                                  <input
-                                    type="number"
-                                    value={child.toInventory || ""}
-                                    onChange={e => handleUpdateChildBucket(parent.id, child.id, "toInventory", e.target.value)}
-                                    className="h-6 w-full border border-slate-200 px-1 text-center font-mono rounded-xs bg-slate-50"
-                                  />
-                                </div>
-                                <div className="flex flex-col gap-0.5">
-                                  <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5">To Debit (m)</span>
-                                  <input
-                                    type="number"
-                                    value={child.toDebit || ""}
-                                    onChange={e => handleUpdateChildBucket(parent.id, child.id, "toDebit", e.target.value)}
-                                    className="h-6 w-full border border-slate-200 px-1 text-center font-mono rounded-xs bg-slate-50"
-                                  />
-                                </div>
-                              </>
-                            ) : (
-                              <div className="col-span-2 text-slate-400 italic text-[9px] flex items-center pt-3 pl-2">
-                                No surplus buckets for direct stock matches.
+                            {/* Numeric Input Buckets: consumed, to inventory, to debit */}
+                            <div className="flex flex-row flex-wrap gap-6">
+                              <div className="flex flex-col gap-0.5">
+                                <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">
+                                  {child.isPurchase ? "Total Qty" : "Available Qty"}
+                                </span>
+                                <span className="h-6 flex items-center font-mono text-[11px] font-medium text-slate-900">
+                                  {child.availableQty || (child.isPurchase ? 200 : 120)} {parent.uom || "m"}
+                                </span>
                               </div>
-                            )}
+                              <div className="flex flex-col gap-0.5 relative">
+                                <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Consumed Qty</span>
+                                <input
+                                  type="number"
+                                  value={child.consumed || ""}
+                                  onChange={e => handleUpdateChildBucket(parent.id, child.id, "consumed", e.target.value)}
+                                  className="h-6 w-[84px] border border-slate-200 text-left px-1.5 font-mono font-bold rounded-xs bg-indigo-50/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                />
+                                {hasError && <AlertTriangle size={11} className="absolute right-1.5 top-5 text-rose-500 pointer-events-none animate-pulse" />}
+                              </div>
+
+                              {child.isPurchase ? (
+                                <>
+                                  <div className="flex flex-col gap-0.5 relative">
+                                    <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5 flex items-center justify-between">
+                                      <span>To Inv</span>
+                                      {(child.toInventory || 0) > 0 && (
+                                        <span className="text-[8px] text-indigo-500 font-bold leading-none animate-pulse">Conv. L100</span>
+                                      )}
+                                    </span>
+                                    <input
+                                      type="number"
+                                      value={child.toInventory || ""}
+                                      onChange={e => handleUpdateChildBucket(parent.id, child.id, "toInventory", e.target.value)}
+                                      className="h-6 w-[84px] border border-slate-200 text-left px-1.5 font-mono rounded-xs bg-slate-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    />
+                                  </div>
+                                  <div className="flex flex-col gap-0.5">
+                                    <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">To Debit</span>
+                                    <input
+                                      type="number"
+                                      value={child.toDebit || ""}
+                                      onChange={e => handleUpdateChildBucket(parent.id, child.id, "toDebit", e.target.value)}
+                                      className="h-6 w-[84px] border border-slate-200 text-left px-1.5 font-mono rounded-xs bg-slate-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    />
+                                  </div>
+                                </>
+                              ) : null}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
 
-                  {/* Non-blocking soft alert if single mapping has qty mismatch */}
-                  {needsWarning && (
-                    <div className="flex items-center gap-1.5 p-1.5 px-2 border.none bg-amber-55/70 rounded-md text-amber-900 text-[10px] leading-tight font-medium">
-                      <AlertTriangle size={11} className="text-amber-600 shrink-0" />
-                      <span>
-                        Quantity Mismatch: Linked costing (<strong>{totalLinkedQty}{parent.uom || "m"}</strong>) does not equal Sales Quantity (<strong>{parent.quantity}{parent.uom || "m"}</strong>).
-                      </span>
-                    </div>
-                  )}
                 </div>
               )}
 
               {/* Card Footer Single-click CTAs */}
-              <div className="pt-1 flex items-center justify-between pointer-events-auto" id="parent-card-actions">
+              <div className="pt-3 mt-1 flex items-center justify-between pointer-events-auto" id="parent-card-actions">
                 <span className="text-[9px] italic text-slate-400 font-medium select-none">
                   {parent.isFoc ? "Exempt due to FOC status." : `${parent.linkedCosts.length} cost link nodes aligned`}
                 </span>
@@ -414,7 +403,7 @@ export default function MappingLedgerGrid({
               { id: 'S' + Date.now(), itemName: '', quantity: 1, rate: 0, hsnCode: '', igst: 0, linkedCosts: [], isFoc: false, uom: 'm' }
             ]);
           }}
-          className="flex items-center justify-center gap-1.5 w-full h-8 border border-dashed border-slate-300 rounded-sm text-slate-500 font-bold uppercase text-[10px] tracking-wider hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/30 transition-colors cursor-pointer mt-2"
+          className="flex items-center justify-center gap-1.5 w-full h-8 border border-dashed border-slate-300 rounded-sm text-slate-500 font-bold uppercase text-[10px] tracking-wider hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/30 transition-colors cursor-pointer mt-1"
         >
           <Plus size={11} strokeWidth={2.5} />
           Add Sales Item
@@ -423,67 +412,73 @@ export default function MappingLedgerGrid({
 
       {/* 3. Unlinked Purchases section (FLATTENED DESIGN) */}
       {unlinkedPurchases.length > 0 && (
-        <div className="border-t-2 border-slate-200 pt-3 mt-2 flex flex-col gap-2 shrink-0" id="unlinked-purchases-container">
+        <div className="border-t-2 border-slate-200 pt-3 mt-1 flex flex-col gap-2 shrink-0" id="unlinked-purchases-container">
           <div className="flex items-center justify-between border-b border-slate-200 pb-1 mr-1">
             <span className="text-[9px] uppercase font-bold text-slate-500 tracking-wide">Unlinked Staged Purchases</span>
             <span className="text-[8px] font-mono text-slate-400 uppercase font-bold">{unlinkedPurchases.length} items to distribute</span>
           </div>
           <div className="flex flex-col gap-2">
-            {unlinkedPurchases.map((u) => (
-              <div key={u.id} className="flex flex-col gap-1.5 border-b border-slate-100 pb-2 last:border-0 last:pb-0">
-                <div className="flex items-center justify-between text-[11px] font-bold text-slate-700 leading-tight flex-wrap gap-1">
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="truncate text-slate-800">{u.itemName}</span>
-                    <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-200/60 px-1 py-0.2 rounded-xs">
-                      Rate: ₹{u.rate}/m
-                    </span>
-                    <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-200/60 px-1 py-0.2 rounded-xs">
-                      HSN: {u.hsnCode || "520212"}
-                    </span>
-                    {u.lValue !== 100 && (
-                      <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-100 px-1 rounded-sm">
-                        L-{u.lValue}
+            {unlinkedPurchases.map((u) => {
+              const unlinkedTotal = (Number(u.toInventory) || 0) + (Number(u.toDebit) || 0);
+              const uError = unlinkedTotal !== u.availableQty;
+              return (
+                <div key={u.id} className="bg-white border border-slate-200 rounded-sm p-3 mb-2 relative shadow-xs hover:border-slate-300 transition-colors flex flex-col gap-1.5">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-slate-700 leading-tight flex-wrap gap-1">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="truncate text-slate-800">{u.itemName}</span>
+                      <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-200/60 px-1 py-0.2 rounded-xs">
+                        Rate: ₹{u.rate}/m
                       </span>
-                    )}
+                      <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-200/60 px-1 py-0.2 rounded-xs">
+                        HSN: {u.hsnCode || "520212"}
+                      </span>
+                      {u.lValue !== 100 && (
+                        <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-100 px-1 rounded-sm">
+                          L-{u.lValue}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <span className="text-[10px] text-slate-500 font-medium">Available: {u.availableQty}m</span>
-                </div>
-                
-                {/* Buckets Section */}
-                <div className="mt-1 border-t border-slate-200/40 pt-1.5">
-                  {/* Inline Quantity label */}
-                  <div className="text-[10px] font-bold text-slate-550 mb-1">
-                    Total Qty: <span className="text-slate-850 font-mono font-bold">{u.availableQty}m</span>
-                  </div>
+                  
+                  {/* Buckets Section */}
+                  <div className="mt-1 pt-1.5">
 
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="flex flex-col gap-0.5 relative">
-                      <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5 flex items-center justify-between">
-                        <span>To Inventory (m)</span>
-                        {(u.toInventory || 0) > 0 && (
-                          <span className="text-[8px] text-indigo-500 font-bold leading-none animate-pulse">Conv. L100</span>
-                        )}
-                      </span>
-                      <input
-                        type="number"
-                        value={u.toInventory || ""}
-                        onChange={e => handleUpdateUnlinkedBucket(u.id, "toInventory", e.target.value)}
-                        className="h-6 w-full border border-slate-200 px-1 text-center font-mono rounded-xs"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-[9px] uppercase font-bold text-slate-450 tracking-wider mb-0.5">To Debit (m)</span>
-                      <input
-                        type="number"
-                        value={u.toDebit || ""}
-                        onChange={e => handleUpdateUnlinkedBucket(u.id, "toDebit", e.target.value)}
-                        className="h-6 w-full border border-slate-200 px-1 text-center font-mono rounded-xs"
-                      />
+                    <div className="flex flex-row flex-wrap gap-6">
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Total Qty</span>
+                        <span className="h-6 flex items-center font-mono text-[11px] font-medium text-slate-900">
+                          {u.availableQty} {u.uom || "m"}
+                        </span>
+                      </div>
+                      <div className="flex flex-col gap-0.5 relative">
+                        <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5 flex items-center justify-between">
+                          <span>To Inventory</span>
+                          {(u.toInventory || 0) > 0 && (
+                            <span className="text-[8px] text-indigo-500 font-bold leading-none animate-pulse">Conv. L100</span>
+                          )}
+                        </span>
+                        <input
+                          type="number"
+                          value={u.toInventory || ""}
+                          onChange={e => handleUpdateUnlinkedBucket(u.id, "toInventory", e.target.value)}
+                          className="h-6 w-[84px] border border-slate-200 text-left px-1.5 font-mono rounded-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
+                        {uError && <AlertTriangle size={11} className="absolute right-1.5 top-5 text-rose-500 pointer-events-none animate-pulse" />}
+                      </div>
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">To Debit</span>
+                        <input
+                          type="number"
+                          value={u.toDebit || ""}
+                          onChange={e => handleUpdateUnlinkedBucket(u.id, "toDebit", e.target.value)}
+                          className="h-6 w-[84px] border border-slate-200 text-left px-1.5 font-mono rounded-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

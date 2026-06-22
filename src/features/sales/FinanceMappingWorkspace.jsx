@@ -144,7 +144,7 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
   return (
     <div className="flex-1 flex flex-col min-h-0 bg-slate-100 relative font-sans text-xs select-none p-2 h-full gap-2" id="finance-mapping-root">
       {/* 1. Global Header Match CostInwarding (Strict Light Theme) */}
-      <div className="h-8 bg-white border border-slate-200 shadow-xs rounded-sm px-2.5 flex items-center justify-between text-slate-800 font-sans text-xs select-none shrink-0" id="mapping-master-header">
+      <div className="h-8 bg-white px-2.5 flex items-center justify-between text-slate-800 font-sans text-xs select-none shrink-0" id="mapping-master-header">
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -155,7 +155,7 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
             <ArrowLeft size={10} className="stroke-[3]" />
             <span className="text-[10px]">Back</span>
           </button>
-          <span className="text-slate-300">|</span>
+          <span className="text-slate-305">|</span>
           <span className="text-[11px] font-mono font-bold text-indigo-600 bg-indigo-50 border border-indigo-100/50 px-1.5 py-0.2 rounded-xs">
             {req.id}
           </span>
@@ -168,7 +168,7 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
       </div>
 
       {/* 2. Resizer Content block */}
-      <div className="flex-1 flex overflow-hidden min-h-0 bg-white border border-slate-200 shadow-xs rounded-sm relative" id="layout-body-wrapper">
+      <div className="flex-1 flex overflow-hidden min-h-0 bg-transparent relative" id="layout-body-wrapper">
         
         {/* Left Pane (Document Reference Canvas) */}
         {isLeftPaneOpen && (
@@ -191,11 +191,11 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
         {/* Right Pane (Ledger & Sticky Footer) */}
         <div
           style={{ width: isLeftPaneOpen ? `${100 - leftWidth}%` : "100%" }}
-          className="flex-1 flex flex-col min-h-0 bg-white p-2.5 shrink-0 border border-slate-200 rounded-sm relative"
+          className="flex-1 flex flex-col min-h-0 bg-transparent py-2.5 pl-2.5 pr-0 shrink-0 relative"
           id="mapping-ledger-grid-root"
         >
           {/* Scrollable grid section */}
-          <div className="flex-1 overflow-y-auto mb-2 min-h-0 relative pr-0.5">
+          <div className="flex-1 overflow-y-auto mb-2 min-h-0 relative pr-2.5 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full">
             <MappingLedgerGrid
               req={req}
               salesItems={salesItems}

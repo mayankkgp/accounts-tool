@@ -66,7 +66,7 @@ export default function LedgerLookupHeader({
         )}
         {/* 1. Vendor Entity Dropdown Selector */}
         <div className="flex-1 min-w-[140px] flex flex-col gap-1 w-full sm:w-auto">
-          <label className="text-[9px] uppercase font-bold text-slate-450 tracking-wider">Vendor Entity *</label>
+          <label className="text-[9px] uppercase tracking-wide text-slate-500 font-bold">Vendor Entity *</label>
           <select
             value={vendor}
             onChange={(e) => setVendor(e.target.value)}
@@ -83,7 +83,7 @@ export default function LedgerLookupHeader({
 
         {/* 2. Invoice Number Input */}
         <div className="flex-1 min-w-[140px] flex flex-col gap-1 w-full sm:w-auto">
-          <label className="text-[9px] uppercase font-bold text-slate-450 tracking-wider">Invoice No *</label>
+          <label className="text-[9px] uppercase tracking-wide text-slate-500 font-bold">Invoice No *</label>
           <div className="relative">
             <input
               type="text"
@@ -109,7 +109,7 @@ export default function LedgerLookupHeader({
 
         {/* 3. Invoice Label (Dropdown selector sits inline) */}
         <div className="flex-1 min-w-[90px] flex flex-col gap-1 w-full sm:w-auto">
-          <label className="text-[9px] uppercase font-bold text-slate-450 tracking-wider">Invoice Label *</label>
+          <label className="text-[9px] uppercase tracking-wide text-slate-500 font-bold">Invoice Label *</label>
           <select
             value={label}
             onChange={(e) => setLabel(e.target.value)}
@@ -124,7 +124,7 @@ export default function LedgerLookupHeader({
 
         {/* 4. L-Value Input (Strictly constrained width to match single-line label) */}
         <div className="w-14 flex flex-col gap-1 shrink-0">
-          <label className="text-[9px] uppercase font-bold text-slate-450 tracking-wider whitespace-nowrap">L-Value *</label>
+          <label className="text-[9px] uppercase tracking-wide text-slate-500 font-bold whitespace-nowrap">L-Value *</label>
           <input
             type="number"
             min={0}

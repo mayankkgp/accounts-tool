@@ -9,7 +9,7 @@ export default function TriageHeader({ req, onClose, loading }) {
   if (!req) return null;
 
   return (
-    <div className="h-8 bg-white border border-slate-200 shadow-xs rounded-sm px-2.5 flex items-center justify-between shrink-0 select-none">
+    <div className="h-8 bg-white px-2.5 flex items-center justify-between shrink-0 select-none">
       <div className="flex items-center gap-2">
         <button
           type="button"

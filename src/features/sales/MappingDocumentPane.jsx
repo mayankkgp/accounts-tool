@@ -44,7 +44,7 @@ export default function MappingDocumentPane({ req, onCollapse }) {
   const resolvedUrl = selectedFile ? getTrueDocPath(selectedFile) : "";
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 bg-slate-100 border border-slate-200 rounded-sm overflow-hidden" id="mapping-doc-pane">
+    <div className="flex-1 flex flex-col min-h-0 bg-transparent overflow-hidden" id="mapping-doc-pane">
       {/* 1. Main Category Tab Row */}
       <div className="h-8 bg-slate-50 border-b border-slate-200 px-2 flex items-center justify-between shrink-0 select-none font-sans text-xs">
         <div className="flex items-center gap-1 overflow-x-auto scrollbar-none py-0.5">

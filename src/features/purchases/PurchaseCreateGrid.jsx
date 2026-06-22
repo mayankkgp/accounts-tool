@@ -15,6 +15,7 @@ export default function PurchaseCreateGrid({
   handleRowFieldChange,
   deleteLineRow,
   addLineRow,
+  isLocked = false,
 }) {
   return (
     <div className="flex-1 flex flex-col min-h-[160px] border border-slate-200/80 rounded-sm bg-white overflow-hidden" id="purchase-form-spreadsheet-container">
@@ -71,8 +72,8 @@ export default function PurchaseCreateGrid({
                       type="text"
                       value={it.itemName}
                       onChange={(e) => handleRowFieldChange(it.rowId, "itemName", e.target.value)}
-                      disabled={isSaving}
-                      className={`w-full bg-transparent px-1 font-sans focus:bg-slate-50/80 hover:border-slate-300 rounded-sm text-xs h-5 font-medium text-slate-900 leading-none outline-none truncate border ${
+                      disabled={isSaving || isLocked}
+                      className={`w-full bg-transparent px-1 font-sans focus:bg-slate-50/80 hover:border-slate-300 rounded-sm text-xs h-5 font-medium text-slate-900 leading-none outline-none truncate border disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed ${
                         rowErrors.itemName 
                           ? "!border-red-500 bg-rose-50/10 focus:ring-1 focus:ring-red-500" 
                           : "border-transparent focus:border-indigo-505"
@@ -87,8 +88,8 @@ export default function PurchaseCreateGrid({
                       type="text"
                       value={it.description || ""}
                       onChange={(e) => handleRowFieldChange(it.rowId, "description", e.target.value)}
-                      disabled={isSaving}
-                      className="w-full bg-transparent px-1 font-sans focus:bg-slate-50/80 hover:border-slate-300 border border-transparent rounded-sm text-[10px] h-5 leading-none text-slate-500 outline-none truncate"
+                      disabled={isSaving || isLocked}
+                      className="w-full bg-transparent px-1 font-sans focus:bg-slate-50/80 hover:border-slate-300 border border-transparent rounded-sm text-[10px] h-5 leading-none text-slate-500 outline-none truncate disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed"
                     />
                   </td>
 
@@ -98,19 +99,18 @@ export default function PurchaseCreateGrid({
                       type="text"
                       value={it.hsnCode}
                       onChange={(e) => handleRowFieldChange(it.rowId, "hsnCode", e.target.value)}
-                      disabled={isSaving}
-                      className="w-full text-center bg-transparent px-1 font-mono focus:bg-slate-50/85 hover:border-slate-300 border border-transparent rounded-sm text-xs h-5 text-slate-550 outline-none"
+                      disabled={isSaving || isLocked}
+                      className="w-full text-center bg-transparent px-1 font-mono focus:bg-slate-50/85 hover:border-slate-300 border border-transparent rounded-sm text-xs h-5 text-slate-550 outline-none disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed"
                     />
                   </td>
-
                   {/* Unit Rate */}
                   <td className="py-0.5 px-1 text-center">
                     <input
                       type="number"
                       value={it.rate}
                       onChange={(e) => handleRowFieldChange(it.rowId, "rate", e.target.value)}
-                      disabled={isSaving}
-                      className={`w-full text-center bg-transparent px-1 font-mono focus:bg-slate-50/80 hover:border-slate-300 rounded-sm text-xs h-5 text-slate-900 font-medium outline-none text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield] border ${
+                      disabled={isSaving || isLocked}
+                      className={`w-full text-center bg-transparent px-1 font-mono focus:bg-slate-50/80 hover:border-slate-300 rounded-sm text-xs h-5 text-slate-900 font-medium outline-none text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield] border disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed ${
                         rowErrors.rate 
                           ? "!border-red-500 bg-rose-50/10 focus:ring-1 focus:ring-red-500" 
                           : "border-transparent focus:border-indigo-505"
@@ -125,8 +125,8 @@ export default function PurchaseCreateGrid({
                       type="number"
                       value={it.quantity}
                       onChange={(e) => handleRowFieldChange(it.rowId, "quantity", e.target.value)}
-                      disabled={isSaving}
-                      className={`w-full text-center bg-transparent px-1 font-mono focus:bg-slate-50/80 hover:border-slate-300 rounded-sm text-xs h-5 text-slate-900 font-bold outline-none text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield] border ${
+                      disabled={isSaving || isLocked}
+                      className={`w-full text-center bg-transparent px-1 font-mono focus:bg-slate-550/80 hover:border-slate-300 rounded-sm text-xs h-5 text-slate-900 font-bold outline-none text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield] border disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed ${
                         rowErrors.quantity 
                           ? "!border-red-500 bg-rose-50/10 focus:ring-1 focus:ring-red-500" 
                           : "border-transparent focus:border-indigo-505"
@@ -140,8 +140,8 @@ export default function PurchaseCreateGrid({
                     <select
                       value={it.uom}
                       onChange={(e) => handleRowFieldChange(it.rowId, "uom", e.target.value)}
-                      disabled={isSaving}
-                      className="h-5 text-[10px] px-1 font-sans font-medium focus:bg-slate-50/80 hover:border-slate-300 border border-transparent rounded-sm outline-none bg-white text-slate-600"
+                      disabled={isSaving || isLocked}
+                      className="h-5 text-[10px] px-1 font-sans font-medium focus:bg-slate-50/80 hover:border-slate-300 border border-transparent rounded-sm outline-none bg-white text-slate-600 disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed"
                     >
                       <option value="kg">kg</option>
                       <option value="m">m</option>
@@ -154,7 +154,8 @@ export default function PurchaseCreateGrid({
                       type="number"
                       value={it.itemDiscount}
                       onChange={(e) => handleRowFieldChange(it.rowId, "itemDiscount", e.target.value)}
-                      className="w-full text-center bg-transparent px-1 font-mono focus:bg-slate-50/80 hover:border-slate-300 focus:border-indigo-505 border border-transparent rounded-sm text-xs h-5 text-rose-600 outline-none text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
+                      disabled={isSaving || isLocked}
+                      className="w-full text-center bg-transparent px-1 font-mono focus:bg-slate-50/80 hover:border-slate-300 focus:border-indigo-550 border border-transparent rounded-sm text-xs h-5 text-rose-600 outline-none text-right [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield] disabled:opacity-60 disabled:bg-slate-50 disabled:cursor-not-allowed"
                     />
                   </td>
 
@@ -195,7 +196,8 @@ export default function PurchaseCreateGrid({
                     <button
                       type="button"
                       onClick={() => deleteLineRow(it.rowId)}
-                      className="h-5 w-5 rounded-xs flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 border-none bg-transparent cursor-pointer shrink-0 mx-auto"
+                      disabled={isSaving || isLocked}
+                      className="h-5 w-5 rounded-xs flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 border-none bg-transparent cursor-pointer shrink-0 mx-auto disabled:opacity-40 disabled:cursor-not-allowed"
                       title="Remove item line row"
                       id={`delete-row-${it.rowId}`}
                     >
@@ -215,7 +217,8 @@ export default function PurchaseCreateGrid({
         <button
           type="button"
           onClick={addLineRow}
-          className="h-5 bg-white border border-slate-300 hover:bg-slate-50 hover:border-slate-400 text-slate-705 rounded-sm px-2 text-[10px] uppercase font-bold tracking-wider cursor-pointer flex items-center justify-center gap-1"
+          disabled={isSaving || isLocked}
+          className="h-5 bg-white border border-slate-300 hover:bg-slate-50 hover:border-slate-400 text-slate-705 rounded-sm px-2 text-[10px] uppercase font-bold tracking-wider cursor-pointer flex items-center justify-center gap-1 disabled:opacity-45 disabled:cursor-not-allowed"
           id="btn-form-add-row"
         >
           <Plus size={10} className="stroke-[2.5]" />

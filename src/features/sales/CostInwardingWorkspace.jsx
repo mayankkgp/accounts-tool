@@ -188,7 +188,7 @@ export default function CostInwardingWorkspace({ req, onClose, onRefresh }) {
       />
 
       {/* Dynamic Split Screen Body */}
-      <div className="flex-1 flex overflow-hidden min-h-0 bg-white border border-slate-200 shadow-xs rounded-sm" id="inwarding-workspace-pane-layout">
+      <div className="flex-1 flex overflow-hidden min-h-0 bg-transparent items-stretch" id="inwarding-workspace-pane-layout">
         {/* Left Canvas (Document Viewer Sub-component occupies leftWidth %) */}
         {isLeftPaneOpen && (
           <>
@@ -214,7 +214,7 @@ export default function CostInwardingWorkspace({ req, onClose, onRefresh }) {
         )}
 
         {/* Right Workspace - Fills Remainder */}
-        <div style={{ width: isLeftPaneOpen ? `${100 - leftWidth}%` : "100%" }} className="flex-1 flex flex-col min-h-0 bg-white p-2 shrink-0 border border-slate-200 rounded-sm">
+        <div style={{ width: isLeftPaneOpen ? `${100 - leftWidth}%` : "100%" }} className="flex-1 flex flex-col min-h-0 h-full bg-transparent p-2 shrink-0">
           {/* Header section sitting inline */}
           <LedgerLookupHeader
             vendor={activeInvoice.vendor}

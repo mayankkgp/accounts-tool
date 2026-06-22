@@ -46,10 +46,25 @@ export default function DocumentViewerPane({ req }) {
   const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.15, 0.5));
   const handleRotate = () => setRotation(prev => (prev + 90) % 360);
 
-  const resolvedUrl = selectedFile ? getTrueDocPath(selectedFile) : "";
+  const handleUploadedFile = (uploadedFile) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const newFileObj = {
+        filename: uploadedFile.name,
+        label: `UPLOADED: ${uploadedFile.name}`,
+        docType: "Vendor Bill",
+        mockUrl: reader.result
+      };
+      setFiles((prev) => [...prev, newFileObj]);
+      setSelectedFile(newFileObj);
+    };
+    reader.readAsDataURL(uploadedFile);
+  };
+
+  const resolvedUrl = selectedFile ? (selectedFile.mockUrl || getTrueDocPath(selectedFile)) : "";
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 bg-slate-100 border border-slate-200 rounded-sm overflow-hidden animate-fade-in" id="document-viewer-pane-root">
+    <div className="flex-1 flex flex-col min-h-0 h-full bg-transparent overflow-hidden animate-fade-in" id="document-viewer-pane-root">
       
       {/* Detached Action Controls Toolbar */}
       <DocumentViewerToolbar
@@ -64,6 +79,7 @@ export default function DocumentViewerPane({ req }) {
         onZoomOut={handleZoomOut}
         onRotate={handleRotate}
         resolvedUrl={resolvedUrl}
+        onUpload={handleUploadedFile}
       />
 
       {/* Viewing Canvas */}

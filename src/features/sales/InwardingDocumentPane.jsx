@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { FileText, ZoomIn, ZoomOut, RotateCw, Download, ExternalLink, PanelLeftClose } from "lucide-react";
+import { FileText } from "lucide-react";
 import getTrueDocPath from "./getTrueDocPath";
+import DocumentViewerToolbar from "./DocumentViewerToolbar";
 
 /**
  * Left-pane document viewer component for Cost Inwarding.
  * Shows horizontal tabs for matching invoices only.
  */
 export default function InwardingDocumentPane({ req, defaultActiveFile, activeIdx, setActiveIdx, onCollapse }) {
-  const [tabs, setTabs] = useState([]);
+  const [files, setFiles] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
@@ -22,126 +23,69 @@ export default function InwardingDocumentPane({ req, defaultActiveFile, activeId
       // Fallback
       list.push({ filename: "Simulated_Vendor_Invoice.pdf", docType: "VI", label: "INV 1" });
     }
-    setTabs(list);
-    
-    // Default to the activeIdx or provided active invoice file
-    if (activeIdx !== undefined && list[activeIdx]) {
-      setActiveTab(list[activeIdx]);
+    setFiles(list);
+  }, [req]);
+
+  useEffect(() => {
+    if (activeIdx !== undefined && files[activeIdx]) {
+      setActiveTab(files[activeIdx]);
     } else if (defaultActiveFile) {
-      const matchIdx = list.findIndex(t => t.filename === defaultActiveFile.filename);
+      const matchIdx = files.findIndex(t => t.filename === defaultActiveFile.filename);
       if (matchIdx !== -1) {
-        setActiveTab(list[matchIdx]);
-      } else if (list.length > 0) {
-        setActiveTab(list[0]);
+        setActiveTab(files[matchIdx]);
       }
-    } else if (list.length > 0) {
-      setActiveTab(list[0]);
     }
-  }, [req, defaultActiveFile, activeIdx]);
+  }, [defaultActiveFile, activeIdx, files]);
 
   const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.15, 2.5));
   const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.15, 0.5));
   const handleRotate = () => setRotation(prev => (prev + 90) % 360);
 
-  const resolvedUrl = activeTab ? getTrueDocPath(activeTab) : "";
+  const resolvedUrl = activeTab 
+    ? (activeTab.isLocal ? activeTab.localUrl : getTrueDocPath(activeTab)) 
+    : "";
 
-  const handleTabClick = (idx, tab) => {
-    if (setActiveIdx) {
-      setActiveIdx(idx);
-    } else {
-      setActiveTab(tab);
-      setZoom(1);
-      setRotation(0);
+  const handleSelectFile = (file) => {
+    const idx = files.findIndex(t => t.filename === file.filename);
+    if (idx !== -1 && idx < (req?.proofs?.purchaseInvoices?.length || 1)) {
+      if (setActiveIdx) {
+        setActiveIdx(idx);
+      }
     }
+    setActiveTab(file);
+    setZoom(1);
+    setRotation(0);
+  };
+
+  const handleUploadFile = (uploadedFile) => {
+    if (!uploadedFile) return;
+    const objectUrl = URL.createObjectURL(uploadedFile);
+    const nextIndex = files.length + 1;
+    const newFileObj = {
+      filename: uploadedFile.name,
+      label: "INV " + nextIndex,
+      docType: "VI",
+      isLocal: true,
+      localUrl: objectUrl
+    };
+    setFiles(prev => [...prev, newFileObj]);
+    setActiveTab(newFileObj);
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 bg-slate-100 border border-slate-200 rounded-sm overflow-hidden" id="inwarding-doc-pane">
+    <div className="flex-1 flex flex-col min-h-0 h-full bg-transparent overflow-hidden" id="inwarding-doc-pane">
       {/* 1. Header Toolbar matches Triage Document Viewer exactly */}
-      <div className="h-8 bg-slate-50 border-b border-slate-200 px-2 flex items-center justify-between shrink-0 select-none font-sans text-xs">
-        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5">
-          {tabs.map((tab, idx) => {
-            const isActive = activeIdx !== undefined ? activeIdx === idx : activeTab && activeTab.filename === tab.filename;
-            return (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => handleTabClick(idx, tab)}
-                className={`h-5.5 px-2.5 text-[10px] uppercase font-bold tracking-wider rounded-sm cursor-pointer transition-all border-none font-sans whitespace-nowrap ${
-                  isActive
-                    ? "bg-indigo-600 text-white font-extrabold shadow-sm"
-                    : "bg-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-300"
-                }`}
-                title={tab.filename}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Action controllers matches Triage exactement */}
-        <div className="flex items-center gap-1 shrink-0">
-          <button
-            type="button"
-            onClick={handleZoomIn}
-            disabled={!activeTab}
-            className="w-5 h-5 rounded-sm bg-white border border-slate-300 hover:bg-slate-50 hover:text-slate-800 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer text-slate-500 shadow-xs"
-            title="Zoom In"
-          >
-            <ZoomIn size={12} />
-          </button>
-          <button
-            type="button"
-            onClick={handleZoomOut}
-            disabled={!activeTab}
-            className="w-5 h-5 rounded-sm bg-white border border-slate-300 hover:bg-slate-50 hover:text-slate-800 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer text-slate-500 shadow-xs"
-            title="Zoom Out"
-          >
-            <ZoomOut size={12} />
-          </button>
-          <button
-            type="button"
-            onClick={handleRotate}
-            disabled={!activeTab}
-            className="w-5 h-5 rounded-sm bg-white border border-slate-300 hover:bg-slate-50 hover:text-slate-800 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer text-slate-500 shadow-xs"
-            title="Rotate 90°"
-          >
-            <RotateCw size={12} />
-          </button>
-          {activeTab && (
-            <a
-              href={resolvedUrl || "#"}
-              download={activeTab.filename}
-              title="Download File"
-              className="w-5 h-5 rounded-sm bg-white border border-slate-300 hover:bg-slate-200 text-slate-600 flex items-center justify-center shadow-xs cursor-pointer"
-            >
-              <Download size={12} />
-            </a>
-          )}
-          {activeTab && (
-            <a
-              href={resolvedUrl || "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Pop-out (New Tab)"
-              className="w-5 h-5 rounded-sm bg-white border border-slate-300 hover:bg-slate-50 text-slate-500 hover:text-indigo-600 flex items-center justify-center shadow-xs"
-            >
-              <ExternalLink size={12} />
-            </a>
-          )}
-          {onCollapse && (
-            <button
-              type="button"
-              onClick={onCollapse}
-              className="w-5 h-5 rounded-sm bg-white border border-slate-300 hover:bg-rose-50 text-slate-500 hover:text-rose-600 flex items-center justify-center shadow-xs cursor-pointer ml-1"
-              title="Collapse Document Panel"
-            >
-              <PanelLeftClose size={12} />
-            </button>
-          )}
-        </div>
-      </div>
+      <DocumentViewerToolbar
+        files={files}
+        selectedFile={activeTab}
+        onSelectFile={handleSelectFile}
+        onZoomIn={handleZoomIn}
+        onZoomOut={handleZoomOut}
+        onRotate={handleRotate}
+        resolvedUrl={resolvedUrl}
+        onUploadFile={handleUploadFile}
+        onCollapse={onCollapse}
+      />
 
       {/* 2. PDF iframe viewer container */}
       <div className="flex-1 overflow-hidden relative flex items-center justify-center bg-slate-200/55 p-0.5 min-h-0" id="inwarding-pdf-viewport">

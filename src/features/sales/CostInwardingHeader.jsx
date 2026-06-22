@@ -21,7 +21,7 @@ export default function CostInwardingHeader({
   handleSaveAndFulfilled
 }) {
   return (
-    <div className="h-8 shrink-0 bg-white border border-slate-200 shadow-xs rounded-sm px-2.5 flex items-center justify-between text-slate-800 font-sans text-xs select-none" id="inwarding-master-header">
+    <div className="h-8 shrink-0 bg-white px-2.5 flex items-center justify-between text-slate-800 font-sans text-xs select-none" id="inwarding-master-header">
       {/* Left Side: Back Button + Request ID + Status Badge */}
       <div className="flex items-center gap-2">
         <button

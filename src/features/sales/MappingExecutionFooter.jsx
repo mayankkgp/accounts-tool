@@ -85,7 +85,7 @@ export default function MappingExecutionFooter({
 
       {/* 2. Compact Sticky Footer */}
       <div
-        className="border-t border-slate-150 pt-2.5 flex items-center justify-between shrink-0 select-none gap-2 bg-white text-slate-800 font-sans"
+        className="border-t border-slate-150 pt-2.5 flex items-center justify-between shrink-0 select-none gap-2 bg-white text-slate-800 font-sans px-3 pb-2"
         id="mapping-sticky-footer"
       >
         {/* Left indicators: Margin badge */}
@@ -122,7 +122,7 @@ export default function MappingExecutionFooter({
               className="h-6 px-4 bg-slate-900 text-white hover:bg-slate-800 font-bold rounded-sm text-[10px] uppercase tracking-wider cursor-pointer border-none flex items-center gap-1 select-none pointer-events-auto transition-all"
               id="btn-execute-booking"
             >
-              <span>Book Sale {isFullyMapped ? "(Full)" : "(Partial)"}</span>
+              <span>Book Sales</span>
               <ArrowRight size={10} className="stroke-[3] text-indigo-400" />
             </button>
           ) : (

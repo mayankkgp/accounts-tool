@@ -5,7 +5,7 @@ export default function TriageDataPane({ req, onRejectInitiate, onProceed }) {
   if (!req) return null;
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 bg-white border border-slate-200 rounded-sm select-none p-2.5 font-sans justify-between" id="triage-data-pane-root">
+    <div className="flex-1 flex flex-col min-h-0 h-full bg-transparent select-none p-2.5 font-sans justify-between" id="triage-data-pane-root">
       
       {/* Scrollable content container */}
       <div className="flex-1 overflow-y-auto flex flex-col gap-2.5 min-h-0 pr-1" id="triage-scrollable-content">
@@ -109,7 +109,7 @@ export default function TriageDataPane({ req, onRejectInitiate, onProceed }) {
       </div>
 
       {/* Global Footer Actions */}
-      <div className="border-t border-slate-150 pt-2.5 flex items-center justify-between shrink-0 select-none gap-2" id="triage-actions-footer">
+      <div className="border-t border-slate-150 pt-2.5 flex items-center justify-between shrink-0 select-none gap-2 px-3 pb-2" id="triage-actions-footer">
         <button
           type="button"
           onClick={onRejectInitiate}

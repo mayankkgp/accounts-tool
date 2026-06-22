@@ -67,7 +67,7 @@ export default function FinanceTriageWorkspace({ req, onClose, onRefresh }) {
       />
 
       {/* Screen container: 50/50 Split Screen comparison */}
-      <div className="flex-1 grid grid-cols-2 gap-2 min-h-0 relative select-none" id="triage-workspace-split">
+      <div className="flex-1 grid grid-cols-2 gap-2 min-h-0 relative select-none items-stretch" id="triage-workspace-split">
         {loading && (
           <div className="absolute inset-0 bg-slate-100/50 backdrop-blur-xs flex items-center justify-center z-[900]">
             <div className="bg-slate-900 border border-slate-800 text-white p-2.5 rounded-sm shadow-xl flex items-center gap-2 text-xs font-mono">

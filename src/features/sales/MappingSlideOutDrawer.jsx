@@ -144,17 +144,7 @@ export default function MappingSlideOutDrawer({
         </button>
       </div>
 
-      {/* Highlights Count Banner instead of target header block */}
-      {selectedIds.length > 0 ? (
-        <div className="bg-indigo-600 border-b border-indigo-700/50 p-2.5 text-white leading-tight font-extrabold text-[11px] text-center shadow-inner">
-          ✨ {selectedIds.length} {selectedIds.length === 1 ? "item" : "items"} selected to align
-        </div>
-      ) : (
-        <div className="bg-slate-50 border-b border-slate-200/60 p-2 text-slate-500 leading-tight">
-          <p className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Target Item Link Target</p>
-          <p className="font-semibold text-[11px] truncate text-slate-750">{parentItemName}</p>
-        </div>
-      )}
+
 
       {/* Search Filter Bar */}
       <div className="p-2 border-b border-slate-200 bg-slate-5 font-sans flex gap-1 items-center shrink-0">
