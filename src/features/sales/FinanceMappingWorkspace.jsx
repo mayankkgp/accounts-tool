@@ -25,14 +25,14 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
     const specItems = [];
     if (req.id === "REQ-1001") {
       specItems.push(
-        { id: "S1", itemName: "Premium Cotton Yarn 40s", quantity: 500, rate: 250, hsnCode: "", igst: 18, linkedCosts: [], isFoc: false },
-        { id: "S2", itemName: "Poly Blend Fabric 30s", quantity: 300, rate: 180, hsnCode: "", igst: 12, linkedCosts: [], isFoc: false },
-        { id: "S3", itemName: "Greige Standard Loom", quantity: 150, rate: 120, hsnCode: "", igst: 5, linkedCosts: [], isFoc: false }
+        { id: "S1", itemName: "Premium Cotton Yarn 40s", quantity: 500, rate: 250, hsnCode: "", igst: 18, linkedCosts: [], isFoc: false, uom: "kg" },
+        { id: "S2", itemName: "Poly Blend Fabric 30s", quantity: 300, rate: 180, hsnCode: "", igst: 12, linkedCosts: [], isFoc: false, uom: "m" },
+        { id: "S3", itemName: "Greige Standard Loom", quantity: 150, rate: 120, hsnCode: "", igst: 5, linkedCosts: [], isFoc: false, uom: "m" }
       );
     } else {
       specItems.push(
-        { id: "S1", itemName: "Premium Cotton Print Fabric", quantity: 400, rate: 220, hsnCode: "", igst: 18, linkedCosts: [], isFoc: false },
-        { id: "S2", itemName: "Double Ply Weave Slub Yarn", quantity: 250, rate: 110, hsnCode: "", igst: 12, linkedCosts: [], isFoc: false }
+        { id: "S1", itemName: "Premium Cotton Print Fabric", quantity: 400, rate: 220, hsnCode: "", igst: 18, linkedCosts: [], isFoc: false, uom: "m" },
+        { id: "S2", itemName: "Double Ply Weave Slub Yarn", quantity: 250, rate: 110, hsnCode: "", igst: 12, linkedCosts: [], isFoc: false, uom: "kg" }
       );
     }
     setSalesItems(specItems);
@@ -43,10 +43,14 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
       let itemName = "Premium Cotton Greige Fabric";
       let totalQty = 200;
       let lVal = 100;
+      let rate = 110;
+      let hsn = "520212";
       if (idx === 1) {
         itemName = "Double Ply Weave Slub Yarn";
         totalQty = 150;
         lVal = 98;
+        rate = 95;
+        hsn = "520512";
       }
       return {
         id: `U-${idx}`,
@@ -54,7 +58,9 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
         availableQty: totalQty,
         lValue: lVal,
         toInventory: 0,
-        toDebit: 0
+        toDebit: 0,
+        rate: rate,
+        hsnCode: hsn
       };
     });
     setUnlinkedPurchases(preppedUnlinked);
@@ -102,8 +108,10 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
               itemName: s.itemName,
               isPurchase: s.isPurchase,
               lValue: s.lValue,
-              rate: s.rate,
-              consumed: Math.min(p.quantity, s.availableQty),
+              rate: s.rate || 140,
+              hsnCode: s.itemId || "520512",
+              availableQty: s.availableQty || 200,
+              consumed: Math.min(p.quantity, s.availableQty || 200),
               toInventory: 0,
               toDebit: 0
             });
@@ -157,16 +165,6 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
         </div>
 
         {/* Action Toggle for canvas display */}
-        <div className="flex gap-1">
-          {!isLeftPaneOpen && (
-            <button
-              onClick={() => setIsLeftPaneOpen(true)}
-              className="h-5 px-1.5 text-[9px] uppercase font-bold text-slate-650 bg-white border border-slate-300 hover:bg-slate-50 rounded-sm cursor-pointer"
-            >
-              Expand Reference Panel
-            </button>
-          )}
-        </div>
       </div>
 
       {/* 2. Resizer Content block */}
@@ -199,11 +197,14 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
           {/* Scrollable grid section */}
           <div className="flex-1 overflow-y-auto mb-2 min-h-0 relative pr-0.5">
             <MappingLedgerGrid
+              req={req}
               salesItems={salesItems}
               setSalesItems={setSalesItems}
               unlinkedPurchases={unlinkedPurchases}
               setUnlinkedPurchases={setUnlinkedPurchases}
               onTriggerLink={handleOpenLinkDrawer}
+              isLeftPaneOpen={isLeftPaneOpen}
+              onToggleLeftPane={() => setIsLeftPaneOpen(true)}
             />
           </div>
 

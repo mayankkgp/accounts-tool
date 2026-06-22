@@ -8,7 +8,7 @@ import getTrueDocPath from "./getTrueDocPath";
  * Supports tabs: PO, Packing List, Invoices, SM Request Details
  */
 export default function MappingDocumentPane({ req, onCollapse }) {
-  const [activeTab, setActiveTab] = useState("PO"); // "PO" | "PL" | "VI" | "DETAILS"
+  const [activeTab, setActiveTab] = useState("DETAILS"); // "DETAILS" | "PO" | "PL"
   const [subFiles, setSubFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [zoom, setZoom] = useState(1);
@@ -22,8 +22,6 @@ export default function MappingDocumentPane({ req, onCollapse }) {
       list = req.proofs?.po || [];
     } else if (activeTab === "PL") {
       list = req.proofs?.packingList || [];
-    } else if (activeTab === "VI") {
-      list = req.proofs?.purchaseInvoices || [];
     } else {
       list = [];
     }
@@ -51,10 +49,9 @@ export default function MappingDocumentPane({ req, onCollapse }) {
       <div className="h-8 bg-slate-50 border-b border-slate-200 px-2 flex items-center justify-between shrink-0 select-none font-sans text-xs">
         <div className="flex items-center gap-1 overflow-x-auto scrollbar-none py-0.5">
           {[
+            { id: "DETAILS", label: "Details" },
             { id: "PO", label: "PO" },
-            { id: "PL", label: "Packing List" },
-            { id: "VI", label: "Invoices" },
-            { id: "DETAILS", label: "SM Request Details" }
+            { id: "PL", label: "Packing List" }
           ].map((tab) => {
             const isActive = activeTab === tab.id;
             return (
@@ -175,12 +172,9 @@ export default function MappingDocumentPane({ req, onCollapse }) {
       {/* 3. Document Workspace Content Panel */}
       <div className="flex-1 overflow-hidden min-h-0 relative bg-white" id="mapping-doc-canvas-workspace">
         {activeTab === "DETAILS" ? (
-          <div className="w-full h-full p-3 overflow-y-auto select-text font-sans text-xs bg-white text-slate-800 flex flex-col gap-3" id="sm-req-details">
+          <div className="w-full h-full p-3 overflow-y-auto select-text font-sans text-xs bg-white text-slate-800 flex flex-col gap-4" id="sm-req-details">
             {/* Section A: Logistics & Meta Grid */}
-            <div className="border border-slate-200 rounded-sm bg-slate-50/50 p-2 text-slate-705">
-              <h4 className="text-[10px] uppercase font-bold tracking-wider text-slate-450 border-b border-slate-200/80 pb-1 mb-1.5">
-                Logistics & Meta Data
-              </h4>
+            <div className="text-slate-705">
               <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-[11px]">
                 <div className="flex flex-col">
                   <span className="text-[9px] uppercase text-slate-400 font-bold">Customer Name</span>
@@ -206,7 +200,7 @@ export default function MappingDocumentPane({ req, onCollapse }) {
                   <span className="text-[9px] uppercase text-slate-400 font-bold">Transporter Name</span>
                   <span>{req.logistics?.transporterName || "N/A"}</span>
                 </div>
-                <div className="flex flex-col col-span-2 border-t border-slate-150 pt-1 mt-1">
+                <div className="flex flex-col col-span-2">
                   <span className="text-[9px] uppercase text-slate-400 font-bold">Payment Terms</span>
                   <span className="font-semibold text-indigo-700">{req.logistics?.paymentTerms || "N/A"}</span>
                 </div>
@@ -214,11 +208,7 @@ export default function MappingDocumentPane({ req, onCollapse }) {
             </div>
 
             {/* Section B: Unstructured Text Area */}
-            <div className="border border-slate-200 rounded-sm bg-slate-50/50 p-2 flex flex-col gap-2 flex-grow">
-              <h4 className="text-[10px] uppercase font-bold tracking-wider text-slate-450 border-b border-slate-200/80 pb-1">
-                Unstructured Requests & Comments
-              </h4>
-              
+            <div className="flex flex-col gap-2 flex-grow">
               <div className="flex flex-col">
                 <span className="text-[9px] uppercase text-slate-400 font-bold mb-0.5">Line Items Specifications</span>
                 <pre className="bg-white border border-slate-200 p-2 rounded-sm text-[11px] text-slate-700 font-mono whitespace-pre-wrap leading-tight h-24 overflow-y-auto">

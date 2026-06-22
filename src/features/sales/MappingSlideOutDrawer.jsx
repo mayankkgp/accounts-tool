@@ -26,8 +26,8 @@ export default function MappingSlideOutDrawer({
   // Mock search linkable items simulating backend latency
   const mockSearchLinkableItems = async (queryStr) => {
     setLoading(true);
-    // Simulated delay 500ms - 800ms
-    await new Promise((r) => setTimeout(r, 600));
+    // Simulated delay 300ms
+    await new Promise((r) => setTimeout(r, 400));
 
     try {
       const dbInv = JSON.parse(localStorage.getItem("fabrito_inventory") || "[]");
@@ -36,16 +36,21 @@ export default function MappingSlideOutDrawer({
       let source = [];
       if (mode === "purchase") {
         // Flatten staged purchase line items to link
-        dbPurchases.forEach((p) => {
+        const targetPurchases = dbPurchases.length > 0 ? dbPurchases : [
+          { id: "PI-402", invoiceNo: "PI-402", vendorName: "Auro Textiles", lValue: 98, lineItems: [{ itemName: "Premium Cotton Greige Fabric", hsnCode: "520212", quantity: 200, rate: 110 }] },
+          { id: "PI-419", invoiceNo: "PI-419", vendorName: "Sutlej Weaves", lValue: 100, lineItems: [{ itemName: "Double Ply Weave Slub Yarn", hsnCode: "520512", quantity: 150, rate: 95 }] }
+        ];
+
+        targetPurchases.forEach((p) => {
           const lines = p.lineItems || [
-            { itemName: "Premium Cotton Greige Fabric", hsnCode: "520512", quantity: 200, rate: 160 },
-            { itemName: "Double Ply Weave Slub Yarn", hsnCode: "550921", quantity: 150, rate: 95 }
+            { itemName: "Premium Cotton Greige Fabric", hsnCode: "520212", quantity: 200, rate: 110 }
           ];
           lines.forEach((l, idx) => {
             source.push({
               id: `${p.id || "PI"}-${idx}-${l.itemName}`,
-              itemId: l.hsnCode || "520512",
-              itemName: `${l.itemName} (from ${p.vendorName || "Attached Vendor"})`,
+              itemId: l.hsnCode || "520212",
+              itemName: l.itemName,
+              invoiceNo: p.invoiceNo || p.id || "PI-092",
               supplier: p.vendorName || "Direct Bill",
               availableQty: l.quantity || 100,
               rate: l.rate || 100,
@@ -55,14 +60,25 @@ export default function MappingSlideOutDrawer({
           });
         });
       } else {
-        // Fetch from stock inventory
-        source = dbInv.map((item, idx) => ({
-          id: `${item.itemId || "INV"}-${idx}-${item.itemName}`,
-          itemId: item.itemId,
+        // Fetch from stock inventory. Fill in default SKU items.
+        const defaultInv = [
+          { itemId: "SKU-YARN-40S", itemName: "Premium Cotton Yarn 40s", availableQty: 300, rate: 140, invoiceNo: "PI-402", vendorName: "Auro Textiles", location: "Warehouse A" },
+          { itemId: "SKU-POLY-30S", itemName: "Poly Blend Fabric 30s", availableQty: 250, rate: 110, invoiceNo: "PI-419", vendorName: "Sutlej Weaves", location: "Warehouse B" },
+          { itemId: "SKU-GREIGE-ST", itemName: "Greige Standard Loom", availableQty: 180, rate: 90, invoiceNo: "PI-502", vendorName: "Birla Century", location: "Warehouse A" }
+        ];
+        
+        const trackingInv = dbInv.length > 0 ? dbInv : defaultInv;
+
+        source = trackingInv.map((item, idx) => ({
+          id: `SKU-${idx}-${item.itemName}`,
+          skuId: item.itemId ? item.itemId.replace("INV", "SKU") : `SKU-FAB-${100 + idx}`,
+          itemId: item.itemId || `SKU-FAB-${100 + idx}`,
           itemName: item.itemName,
-          supplier: item.supplier || "Warehouse Stock",
-          availableQty: item.availableQty || 500,
-          rate: item.rate || 140,
+          invoiceNo: item.invoiceNo || `PI-8${idx}1`,
+          supplier: item.vendorName || "General Mill Store",
+          location: item.location || (idx % 2 === 0 ? "Warehouse A" : "Warehouse B"),
+          availableQty: item.availableQty || 400,
+          rate: item.rate || 135,
           lValue: 100,
           isPurchase: false
         }));
@@ -113,7 +129,7 @@ export default function MappingSlideOutDrawer({
   if (!isOpen) return null;
 
   return (
-    <div className="absolute inset-y-0 right-0 w-[420px] bg-white border-l border-slate-300 shadow-2xl z-50 flex flex-col min-h-0 font-sans text-xs animate-slide-in select-none">
+    <div className="absolute inset-y-0 right-0 w-[520px] bg-white border-l border-slate-300 shadow-2xl z-50 flex flex-col min-h-0 font-sans text-xs animate-slide-in select-none">
       {/* Drawer Header Toolbar */}
       <div className="h-8 shrink-0 bg-slate-900 text-slate-100 flex items-center justify-between px-3">
         <span className="font-bold uppercase tracking-wider text-[10px]">
@@ -128,11 +144,17 @@ export default function MappingSlideOutDrawer({
         </button>
       </div>
 
-      {/* Target Info Node */}
-      <div className="bg-indigo-50 border-b border-indigo-100/50 p-2 text-slate-800 leading-tight">
-        <p className="text-[9px] uppercase font-bold text-indigo-500 tracking-wider">Active Target Sales Item</p>
-        <p className="font-semibold text-[11px] truncate">{parentItemName}</p>
-      </div>
+      {/* Highlights Count Banner instead of target header block */}
+      {selectedIds.length > 0 ? (
+        <div className="bg-indigo-600 border-b border-indigo-700/50 p-2.5 text-white leading-tight font-extrabold text-[11px] text-center shadow-inner">
+          ✨ {selectedIds.length} {selectedIds.length === 1 ? "item" : "items"} selected to align
+        </div>
+      ) : (
+        <div className="bg-slate-50 border-b border-slate-200/60 p-2 text-slate-500 leading-tight">
+          <p className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Target Item Link Target</p>
+          <p className="font-semibold text-[11px] truncate text-slate-750">{parentItemName}</p>
+        </div>
+      )}
 
       {/* Search Filter Bar */}
       <div className="p-2 border-b border-slate-200 bg-slate-5 font-sans flex gap-1 items-center shrink-0">
@@ -162,18 +184,31 @@ export default function MappingSlideOutDrawer({
           <div className="flex flex-col items-center justify-center gap-1.5 py-24 select-none">
             <Loader2 size={18} className="animate-spin text-slate-500" />
             <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest leading-none font-mono">
-              SEARCHING REGISTRIES (500ms)...
+              RETRIEVING LEDGER RECORDS...
             </span>
           </div>
         ) : items.length > 0 ? (
           <table className="w-full text-left font-sans text-xs border-collapse">
             <thead>
-              <tr className="bg-slate-100/80 border-b border-slate-250 text-slate-500 text-[10px] uppercase font-bold">
-                <th className="py-1 px-1 text-center w-[10%]"></th>
-                <th className="py-1 px-1 w-[20%]">ID</th>
-                <th className="py-1 px-1 w-[45%]">Name</th>
-                <th className="py-1 px-1 text-right w-[25%] pr-1">Qty / Rate</th>
-              </tr>
+              {mode === "purchase" ? (
+                // 1. Column Layout (Purchase): Checkbox, Invoice (No ID), Item, Qty/Rate
+                <tr className="bg-slate-100/90 border-b border-slate-250 text-slate-500 text-[10px] uppercase font-bold text-center">
+                  <th className="py-2.5 px-1.5 text-center w-[8%]"></th>
+                  <th className="py-2.5 px-1.5 text-left w-[32%]">Invoice</th>
+                  <th className="py-2.5 px-1.5 text-left w-[40%]">Item</th>
+                  <th className="py-2.5 px-1.5 text-right w-[20%] pr-1.5">Qty / Rate</th>
+                </tr>
+              ) : (
+                // 2. Column Layout (Inventory): Checkbox, SKU, Invoice, Item, Location, Qty/Rate
+                <tr className="bg-slate-100/90 border-b border-slate-250 text-slate-500 text-[10px] uppercase font-bold text-center">
+                  <th className="py-2.5 px-1.5 text-center w-[6%]"></th>
+                  <th className="py-2.5 px-1.5 text-left w-[18%]">SKU</th>
+                  <th className="py-2.5 px-1.5 text-left w-[28%]">Invoice</th>
+                  <th className="py-2.5 px-1.5 text-left w-[24%]">Item</th>
+                  <th className="py-2.5 px-1.5 text-left w-[12%]">Location</th>
+                  <th className="py-2.5 px-1.5 text-right w-[12%] pr-1.5">Qty / Rate</th>
+                </tr>
+              )}
             </thead>
             <tbody>
               {items.map((item) => {
@@ -182,11 +217,12 @@ export default function MappingSlideOutDrawer({
                   <tr
                     key={item.id}
                     onClick={() => handleCheckboxToggle(item.id)}
-                    className={`border-b border-slate-150 h-8 hover:bg-slate-50 cursor-pointer ${
+                    className={`border-b border-slate-150 h-10 hover:bg-slate-50/70 cursor-pointer ${
                       isChecked ? "bg-indigo-50/40" : ""
                     }`}
                   >
-                    <td className="py-0.5 px-1 text-center">
+                    {/* Checkbox column */}
+                    <td className="py-1 px-1.5 text-center">
                       <input
                         type="checkbox"
                         checked={isChecked}
@@ -194,25 +230,63 @@ export default function MappingSlideOutDrawer({
                         className="cursor-pointer"
                       />
                     </td>
-                    <td className="py-0.5 px-1 font-mono text-[10px] font-bold text-slate-500">
-                      {item.itemId}
-                    </td>
-                    <td className="py-0.5 px-1 font-semibold text-slate-700 leading-tight">
-                      <div className="flex flex-col pt-0.5">
-                        <span className="truncate max-w-[170px]">{item.itemName}</span>
-                        {item.isPurchase && (
-                          <span className="text-[9px] text-indigo-500 font-medium">
-                            L-Value: {item.lValue}%
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="py-0.5 px-1 text-right pr-1 font-mono hover:text-slate-900">
-                      <div className="flex flex-col text-[10px] leading-tight">
-                        <span className="font-bold text-slate-700">{item.availableQty}</span>
-                        <span className="text-slate-400">₹{item.rate}</span>
-                      </div>
-                    </td>
+
+                    {mode === "purchase" ? (
+                      // PURCHASE ROW cells
+                      <>
+                        {/* Invoice column (stacked Invoice ID and Vendor Name) */}
+                        <td className="py-1 px-1.5">
+                          <div className="flex flex-col leading-tight">
+                            <span className="font-mono text-[10px] font-bold text-slate-700">{item.invoiceNo}</span>
+                            <span className="text-[9px] text-slate-400 font-medium truncate max-w-[120px]">{item.supplier}</span>
+                          </div>
+                        </td>
+                        {/* Item renamed header Column */}
+                        <td className="py-1 px-1.5">
+                          <div className="flex flex-col leading-tight">
+                            <span className="font-extrabold text-slate-800 text-[11px] truncate max-w-[170px]">{item.itemName}</span>
+                            <span className="text-[9px] text-slate-400 font-mono">HSN: {item.itemId}</span>
+                          </div>
+                        </td>
+                        {/* Qty / Rate with appends */}
+                        <td className="py-1 px-1.5 text-right pr-1.5 font-mono">
+                          <div className="flex flex-col text-[10px] leading-tight">
+                            <span className="font-bold text-slate-800">{item.availableQty}m</span>
+                            <span className="text-slate-400">₹{item.rate}/m</span>
+                          </div>
+                        </td>
+                      </>
+                    ) : (
+                      // INVENTORY ROW cells
+                      <>
+                        {/* SKU column */}
+                        <td className="py-1 px-1.5 font-mono text-[10px] font-bold text-slate-650">
+                          {item.skuId}
+                        </td>
+                        {/* Original Invoice column stacked */}
+                        <td className="py-1 px-1.5">
+                          <div className="flex flex-col leading-tight">
+                            <span className="font-mono text-[10px] font-bold text-slate-700">{item.invoiceNo || "Stock Entry"}</span>
+                            <span className="text-[9px] text-slate-400 font-medium truncate max-w-[100px]">{item.supplier}</span>
+                          </div>
+                        </td>
+                        {/* Item name column */}
+                        <td className="py-1 px-1.5">
+                          <span className="font-extrabold text-slate-800 text-[11px] truncate max-w-[130px]">{item.itemName}</span>
+                        </td>
+                        {/* Location Mock Column */}
+                        <td className="py-1 px-1.5 font-semibold text-slate-500">
+                          {item.location}
+                        </td>
+                        {/* Qty / Rate with appends */}
+                        <td className="py-1 px-1.5 text-right pr-1.5 font-mono">
+                          <div className="flex flex-col text-[10px] leading-tight">
+                            <span className="font-bold text-slate-800">{item.availableQty}m</span>
+                            <span className="text-slate-400">₹{item.rate}/m</span>
+                          </div>
+                        </td>
+                      </>
+                    )}
                   </tr>
                 );
               })}
