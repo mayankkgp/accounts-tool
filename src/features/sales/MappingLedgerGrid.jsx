@@ -1,5 +1,5 @@
-import React from "react";
-import { Link2, Trash2, AlertTriangle, ShieldCheck, HelpCircle, PanelLeftOpen, Copy, Plus } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Link2, Trash2, AlertTriangle, ShieldCheck, HelpCircle, PanelLeftOpen, Copy, Plus, ChevronDown, ChevronUp, CheckSquare } from "lucide-react";
 
 /**
  * MappingLedgerGrid Component (Phase 5 Right Mapping Grid)
@@ -13,7 +13,21 @@ export default function MappingLedgerGrid({
   setUnlinkedPurchases,
   onTriggerLink,
   isLeftPaneOpen,
-  onToggleLeftPane
+  onToggleLeftPane,
+  customer,
+  setCustomer,
+  billTo,
+  setBillTo,
+  shipTo,
+  setShipTo,
+  transporter,
+  setTransporter,
+  freight,
+  setFreight,
+  paymentTerms,
+  setPaymentTerms,
+  salesLValue,
+  setSalesLValue
 }) {
   
   // Handler helper to dynamically modify selected parent row properties
@@ -67,86 +81,226 @@ export default function MappingLedgerGrid({
     }));
   };
 
+  const [isHeaderExpanded, setIsHeaderExpanded] = useState(false);
+  const [isSameAsBillTo, setIsSameAsBillTo] = useState(false);
+  const headerRef = useRef(null);
+
+  // Sync Ship To with Bill To immediately when isSameAsBillTo is true or when billTo changes
+  useEffect(() => {
+    if (isSameAsBillTo) {
+      setShipTo(billTo);
+      if (req) {
+        if (!req.logistics) req.logistics = {};
+        req.logistics.shipTo = billTo;
+      }
+    }
+  }, [isSameAsBillTo, billTo, req]);
+
+  // Handle outside click to collapse the header
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (headerRef.current && !headerRef.current.contains(event.target)) {
+        setIsHeaderExpanded(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleCustomerChange = (val) => {
+    setCustomer(val);
+    if (req) req.customer = val;
+  };
+
+  const handleBillToChange = (val) => {
+    setBillTo(val);
+    if (req) {
+      if (!req.logistics) req.logistics = {};
+      req.logistics.billTo = val;
+    }
+  };
+
+  const handleShipToChange = (val) => {
+    setShipTo(val);
+    if (req) {
+      if (!req.logistics) req.logistics = {};
+      req.logistics.shipTo = val;
+    }
+  };
+
+  const handleTransporterChange = (val) => {
+    setTransporter(val);
+    if (req) {
+      if (!req.logistics) req.logistics = {};
+      req.logistics.transporterName = val;
+    }
+  };
+
+  const handleFreightChange = (val) => {
+    setFreight(val);
+    if (req) {
+      if (!req.logistics) req.logistics = {};
+      req.logistics.freight = val;
+    }
+  };
+
+  const handlePaymentTermsChange = (val) => {
+    setPaymentTerms(val);
+    if (req) {
+      if (!req.logistics) req.logistics = {};
+      req.logistics.paymentTerms = val;
+    }
+  };
+
   return (
     <div className="flex-grow flex flex-col gap-1.5 font-sans text-xs select-none p-1 shrink-0" id="mapping-ledger-container">
       {/* 1. Sales Context Header (Editable Grid) */}
-      <div className="bg-slate-50 border border-slate-200 rounded-sm p-2 mb-1.5 shrink-0 flex items-start gap-2 relative" id="sales-context-header">
-        {!isLeftPaneOpen && (
-          <button
-            type="button"
-            onClick={onToggleLeftPane}
-            className="mt-[13px] h-6 w-6 rounded-xs border border-slate-300 hover:bg-slate-105 hover:text-indigo-600 transition-colors bg-white cursor-pointer shrink-0 flex items-center justify-center text-slate-500"
-            title="Expand Reference Panel"
-          >
-            <PanelLeftOpen size={12} className="stroke-[2.5]" />
-          </button>
-        )}
-        <div className="flex-1 grid grid-cols-4 gap-2">
-          <div className="flex flex-col">
-            <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Customer</label>
-            <select
-              defaultValue={req?.customer || "Standard Customer"}
-              className="h-6 text-[11px] border border-slate-300 rounded-xs px-1 bg-white focus:border-indigo-500 focus:outline-none cursor-pointer"
+      <div 
+        ref={headerRef}
+        className="bg-slate-50 border border-slate-200 rounded-sm p-2 mb-1.5 shrink-0 flex flex-col relative cursor-pointer transition-all" 
+        id="sales-context-header"
+      >
+        {/* Row 1 (Always Visible) */}
+        <div 
+          className="flex items-start gap-2 w-full pr-8"
+          onClick={() => setIsHeaderExpanded(true)}
+        >
+          {!isLeftPaneOpen && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleLeftPane();
+              }}
+              className="mt-[13px] h-6 w-6 rounded-xs border border-slate-300 hover:bg-slate-105 hover:text-indigo-600 transition-colors bg-white cursor-pointer shrink-0 flex items-center justify-center text-slate-500"
+              title="Expand Reference Panel"
             >
-              <option value="Standard Customer">Standard Customer</option>
-              <option value="Apex Textiles">Apex Textiles</option>
-              <option value="Trident Group">Trident Group</option>
-              <option value="Loom & Co">Loom & Co</option>
-            </select>
-          </div>
-          <div className="flex flex-col">
-            <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Bill To</label>
-            <input
-              type="text"
-              defaultValue={req?.logistics?.billTo || "Office Corporate Head"}
-              className="h-6 text-[11px] border border-slate-300 rounded-xs px-1.5 focus:border-indigo-500 focus:outline-none"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Ship To</label>
-            <input
-              type="text"
-              defaultValue={req?.logistics?.shipTo || "Factory Warehouse Block D"}
-              className="h-6 text-[11px] border border-slate-300 rounded-xs px-1.5 focus:border-indigo-500 focus:outline-none"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Transporter Name</label>
-            <input
-              type="text"
-              defaultValue={req?.logistics?.transporterName || "VRL Logistics"}
-              className="h-6 text-[11px] border border-slate-300 rounded-xs px-1.5 focus:border-indigo-500 focus:outline-none"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Freight Terms</label>
-            <input
-              type="text"
-              defaultValue={req?.logistics?.freight || "Fixed Standard To Collect"}
-              className="h-6 text-[11px] border border-slate-300 rounded-xs px-1.5 focus:border-indigo-500 focus:outline-none"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Payment Terms</label>
-            <input
-              type="text"
-              defaultValue={req?.logistics?.paymentTerms || "Net 30 Days"}
-              className="h-6 text-[11px] border border-slate-300 rounded-xs px-1.5 focus:border-indigo-500 focus:outline-none"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Sales L-Value</label>
-            <input
-              type="number"
-              defaultValue={100}
-              className="h-6 text-[11px] border border-indigo-200 bg-indigo-50/50 rounded-xs px-1.5 focus:border-indigo-500 focus:outline-none font-bold font-mono text-indigo-700"
-            />
+              <PanelLeftOpen size={12} className="stroke-[2.5]" />
+            </button>
+          )}
+
+          <div className="flex-1 flex items-start gap-2 min-w-0">
+            {/* Customer */}
+            <div className="flex flex-col flex-1 min-w-0">
+              <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Customer</label>
+              <select
+                value={customer}
+                onChange={(e) => handleCustomerChange(e.target.value)}
+                className="h-6 text-[11px] border border-slate-300 rounded-xs px-1 bg-white focus:border-indigo-500 focus:outline-none cursor-pointer w-full text-slate-800"
+              >
+                <option value="Standard Customer">Standard Customer</option>
+                <option value="Apex Textiles">Apex Textiles</option>
+                <option value="Trident Group">Trident Group</option>
+                <option value="Loom & Co">Loom & Co</option>
+              </select>
+            </div>
+
+            {/* Payment Terms */}
+            <div className="flex flex-col flex-1 min-w-0">
+              <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Payment Terms</label>
+              <input
+                type="text"
+                value={paymentTerms}
+                onChange={(e) => handlePaymentTermsChange(e.target.value)}
+                className="h-6 text-[11px] border border-slate-300 rounded-xs px-1.5 focus:border-indigo-500 focus:outline-none w-full text-slate-800"
+              />
+            </div>
+
+            {/* Transporter Name */}
+            <div className="flex flex-col flex-1 min-w-0">
+              <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Transporter Name</label>
+              <input
+                type="text"
+                value={transporter}
+                onChange={(e) => handleTransporterChange(e.target.value)}
+                className="h-6 text-[11px] border border-slate-300 rounded-xs px-1.5 focus:border-indigo-500 focus:outline-none w-full text-slate-800"
+              />
+            </div>
+
+            {/* Freight Terms */}
+            <div className="flex flex-col w-24 shrink-0">
+              <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Freight Terms</label>
+              <input
+                type="text"
+                value={freight}
+                onChange={(e) => handleFreightChange(e.target.value)}
+                className="h-6 text-[11px] border border-slate-300 rounded-xs px-1.5 focus:border-indigo-500 focus:outline-none w-full text-slate-800"
+              />
+            </div>
+
+            {/* Sales L-Value */}
+            <div className="flex flex-col w-24 shrink-0">
+              <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Sales L-Value</label>
+              <input
+                type="number"
+                value={salesLValue}
+                onChange={(e) => setSalesLValue(Number(e.target.value) || 0)}
+                className="h-6 text-[11px] border border-indigo-200 bg-indigo-50/50 rounded-xs px-1.5 focus:border-indigo-500 focus:outline-none font-bold font-mono text-indigo-700 w-full"
+              />
+            </div>
           </div>
         </div>
+
+        {/* Chevron Toggle Button */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsHeaderExpanded(!isHeaderExpanded);
+          }}
+          className="absolute top-1.5 right-2 h-5 w-5 flex items-center justify-center text-slate-400 hover:text-slate-600 z-10"
+          title={isHeaderExpanded ? "Collapse Details" : "Expand Details"}
+        >
+          {isHeaderExpanded ? <ChevronUp size={14} className="stroke-[2.5]" /> : <ChevronDown size={14} className="stroke-[2.5]" />}
+        </button>
+
+        {/* Row 2 (Collapsible Bill To & Ship To) */}
+        {isHeaderExpanded && (
+          <div 
+            className="grid grid-cols-2 gap-4 mt-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Bill To */}
+            <div className="flex flex-col">
+              <label className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Bill To</label>
+              <textarea
+                rows={2}
+                value={billTo}
+                onChange={(e) => handleBillToChange(e.target.value)}
+                className="resize-y min-h-[40px] max-h-[100px] text-xs p-1 outline-none border border-slate-300 focus:border-indigo-500 rounded-sm bg-white text-slate-800"
+              />
+            </div>
+
+            {/* Ship To */}
+            <div className="flex flex-col">
+              <div className="flex items-center justify-between mb-0.5">
+                <label className="text-[9px] uppercase font-bold text-slate-500">Ship To</label>
+                <label className="flex items-center gap-1.5 text-[9px] font-bold text-slate-500 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={isSameAsBillTo}
+                    onChange={(e) => setIsSameAsBillTo(e.target.checked)}
+                    className="rounded-xs border-slate-300 text-indigo-600 focus:ring-indigo-500 h-3.5 w-3.5 cursor-pointer"
+                  />
+                  Same as Bill to
+                </label>
+              </div>
+              <textarea
+                rows={2}
+                value={shipTo}
+                onChange={(e) => handleShipToChange(e.target.value)}
+                disabled={isSameAsBillTo}
+                className="resize-y min-h-[40px] max-h-[100px] text-xs p-1 outline-none border border-slate-300 focus:border-indigo-500 rounded-sm bg-white text-slate-800 disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 2. Parent-Child list */}
-      <div className="flex flex-col gap-2 min-h-0" id="main-ledger-nested-loop">
+      <div className="flex flex-col gap-0 min-h-0" id="main-ledger-nested-loop">
         {salesItems.map((parent, index) => {
           // Soft alert logic: Quantities match warning
           const totalLinkedQty = parent.linkedCosts.reduce((acc, c) => acc + (c.consumed || 0), 0);
@@ -154,7 +308,7 @@ export default function MappingLedgerGrid({
           return (
             <div
               key={parent.id}
-              className="bg-white border border-slate-200 rounded-sm p-2 relative group/parent shadow-xs hover:border-slate-300 transition-colors"
+              className={`bg-white border-t border-b border-r border-slate-200 border-l-[4px] ${index % 2 === 0 ? 'border-l-indigo-500 hover:border-l-indigo-500' : 'border-l-slate-300 hover:border-l-slate-300'} p-2 relative group/parent shadow-xs hover:border-slate-300 transition-colors`}
             >
               {/* Parent Delete Action */}
               <button
@@ -257,7 +411,7 @@ export default function MappingLedgerGrid({
                   <span className="text-[9px] uppercase font-bold text-indigo-600 tracking-wide">Linked Cost Sources:</span>
                   <div className="flex flex-col gap-2">
                     {parent.linkedCosts.map((child) => {
-                      const totalBuckets = (Number(child.consumed) || 0) + (Number(child.toInventory) || 0) + (Number(child.toDebit) || 0);
+                      const totalBuckets = (Number(child.consumed) || 0) + (Number(child.toInventory) || 0) + (Number(child.toDebit) || 0) + (Number(child.wasteage) || 0);
                       const hasError = child.isPurchase ? totalBuckets !== child.availableQty : (Number(child.consumed) || 0) > child.availableQty;
                       return (
                         <div key={child.id} className="flex flex-col gap-1.5 relative group hover:bg-slate-50 -mx-2 px-2 py-1 rounded-xs transition-colors border-b border-slate-200 pb-2 mb-2 last:border-b-0 last:pb-0 last:mb-0">
@@ -266,6 +420,14 @@ export default function MappingLedgerGrid({
                             <div className="flex items-center gap-1.5 flex-wrap">
                               <Link2 size={11} className="text-indigo-500 shrink-0" />
                               <span className="font-extrabold text-slate-800 text-[11px]">{child.itemName}</span>
+                              <button
+                                type="button"
+                                onClick={() => navigator.clipboard.writeText(child.itemName || "")}
+                                className="text-slate-400 hover:text-indigo-600 cursor-pointer border-none bg-transparent ml-1"
+                                title="Copy Item Name"
+                              >
+                                <Copy size={10} />
+                              </button>
                               <span className="font-mono text-[10px] text-slate-500 ml-2">HSN: {child.itemId || "N/A"}</span>
                               <button
                                 type="button"
@@ -283,6 +445,7 @@ export default function MappingLedgerGrid({
                               }`}>
                                 {child.isPurchase ? "PURCHASE" : "INVENTORY"}
                               </span>
+                              <span className="text-[8px] font-bold uppercase tracking-wide text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded-xs ml-1 border border-slate-200">{child.label || "Greige"}</span>
 
                               <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-200/60 px-1 py-0.2 rounded-xs">
                                 Rate: ₹{child.rate}/m
@@ -332,11 +495,8 @@ export default function MappingLedgerGrid({
                               {child.isPurchase ? (
                                 <>
                                   <div className="flex flex-col gap-0.5 relative">
-                                    <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5 flex items-center justify-between">
-                                      <span>To Inv</span>
-                                      {(child.toInventory || 0) > 0 && (
-                                        <span className="text-[8px] text-indigo-500 font-bold leading-none animate-pulse">Conv. L100</span>
-                                      )}
+                                    <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">
+                                      To Inv
                                     </span>
                                     <input
                                       type="number"
@@ -351,6 +511,15 @@ export default function MappingLedgerGrid({
                                       type="number"
                                       value={child.toDebit || ""}
                                       onChange={e => handleUpdateChildBucket(parent.id, child.id, "toDebit", e.target.value)}
+                                      className="h-6 w-[84px] border border-slate-200 text-left px-1.5 font-mono rounded-xs bg-slate-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    />
+                                  </div>
+                                  <div className="flex flex-col gap-0.5">
+                                    <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Wasteage</span>
+                                    <input
+                                      type="number"
+                                      value={child.wasteage || ""}
+                                      onChange={e => handleUpdateChildBucket(parent.id, child.id, "wasteage", e.target.value)}
                                       className="h-6 w-[84px] border border-slate-200 text-left px-1.5 font-mono rounded-xs bg-slate-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                     />
                                   </div>
@@ -403,7 +572,7 @@ export default function MappingLedgerGrid({
               { id: 'S' + Date.now(), itemName: '', quantity: 1, rate: 0, hsnCode: '', igst: 0, linkedCosts: [], isFoc: false, uom: 'm' }
             ]);
           }}
-          className="flex items-center justify-center gap-1.5 w-full h-8 border border-dashed border-slate-300 rounded-sm text-slate-500 font-bold uppercase text-[10px] tracking-wider hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/30 transition-colors cursor-pointer"
+          className="flex items-center justify-center gap-1.5 w-full h-8 mt-2 border border-dashed border-slate-300 rounded-sm text-slate-500 font-bold uppercase text-[10px] tracking-wider hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/30 transition-colors cursor-pointer"
         >
           <Plus size={11} strokeWidth={2.5} />
           Add Sales Item
@@ -417,12 +586,12 @@ export default function MappingLedgerGrid({
             <span className="text-[9px] uppercase font-bold text-slate-500 tracking-wide">Unlinked Staged Purchases</span>
             <span className="text-[8px] font-mono text-slate-400 uppercase font-bold">{unlinkedPurchases.length} items to distribute</span>
           </div>
-          <div className="flex flex-col gap-2">
-            {unlinkedPurchases.map((u) => {
-              const unlinkedTotal = (Number(u.toInventory) || 0) + (Number(u.toDebit) || 0);
+          <div className="flex flex-col gap-0">
+            {unlinkedPurchases.map((u, index) => {
+              const unlinkedTotal = (Number(u.toInventory) || 0) + (Number(u.toDebit) || 0) + (Number(u.wasteage) || 0);
               const uError = unlinkedTotal !== u.availableQty;
               return (
-                <div key={u.id} className="bg-white border border-slate-200 rounded-sm p-2 relative shadow-xs hover:border-slate-300 transition-colors flex flex-col gap-1.5">
+                <div key={u.id} className={`bg-white border-t border-b border-r border-slate-200 border-l-[4px] ${index % 2 === 0 ? 'border-l-indigo-500 hover:border-l-indigo-500' : 'border-l-slate-300 hover:border-l-slate-300'} p-2 relative shadow-xs hover:border-slate-300 transition-colors flex flex-col gap-1.5`}>
                   <div className="flex items-center justify-between text-[11px] font-bold text-slate-700 leading-tight flex-wrap gap-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="truncate text-slate-800">{u.itemName}</span>
@@ -451,11 +620,8 @@ export default function MappingLedgerGrid({
                         </span>
                       </div>
                       <div className="flex flex-col gap-0.5 relative">
-                        <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5 flex items-center justify-between">
-                          <span>To Inventory</span>
-                          {(u.toInventory || 0) > 0 && (
-                            <span className="text-[8px] text-indigo-500 font-bold leading-none animate-pulse">Conv. L100</span>
-                          )}
+                        <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">
+                          To Inventory
                         </span>
                         <input
                           type="number"
@@ -471,6 +637,15 @@ export default function MappingLedgerGrid({
                           type="number"
                           value={u.toDebit || ""}
                           onChange={e => handleUpdateUnlinkedBucket(u.id, "toDebit", e.target.value)}
+                          className="h-6 w-[84px] border border-slate-200 text-left px-1.5 font-mono rounded-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[9px] uppercase font-bold text-slate-500 mb-0.5">Wasteage</span>
+                        <input
+                          type="number"
+                          value={u.wasteage || ""}
+                          onChange={e => handleUpdateUnlinkedBucket(u.id, "wasteage", e.target.value)}
                           className="h-6 w-[84px] border border-slate-200 text-left px-1.5 font-mono rounded-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         />
                       </div>

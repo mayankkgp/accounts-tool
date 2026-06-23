@@ -76,7 +76,7 @@ export default function CostInwardingFooter({
             className="h-6 px-4 bg-amber-600 hover:bg-amber-500 text-white rounded-sm font-bold border-none text-[10px] uppercase tracking-wider cursor-pointer transition-all"
             id="btn-unstage-edit"
           >
-            Unstage / Edit Items
+            {activeInvoice.stageStatus === "Skipped" ? "Unskip Purchase" : "Unstage / Edit Items"}
           </button>
         )}
       </div>

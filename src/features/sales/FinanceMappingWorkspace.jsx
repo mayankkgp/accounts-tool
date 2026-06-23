@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, Loader2, Maximize2, Minimize2 } from "lucide-react";
+import { ArrowLeft, Loader2, Maximize2, Minimize2, AlertTriangle } from "lucide-react";
 import MappingDocumentPane from "./MappingDocumentPane";
 import MappingLedgerGrid from "./MappingLedgerGrid";
 import MappingSlideOutDrawer from "./MappingSlideOutDrawer";
@@ -13,28 +13,41 @@ import { saveSalesRequest } from "../../services/salesService";
 export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
   const [leftWidth, setLeftWidth] = useState(35);
   const [isLeftPaneOpen, setIsLeftPaneOpen] = useState(true);
-  const [salesItems, setSalesItems] = useState([]);
+  const [salesItems, setSalesItems] = useState([
+    { id: 'S1', itemName: '', quantity: '', rate: '', hsnCode: '', igst: 0, linkedCosts: [], isFoc: false, uom: 'm' },
+    { id: 'S2', itemName: '', quantity: '', rate: '', hsnCode: '', igst: 0, linkedCosts: [], isFoc: false, uom: 'm' }
+  ]);
   const [unlinkedPurchases, setUnlinkedPurchases] = useState([]);
   const [drawerConfig, setDrawerConfig] = useState({ isOpen: false, mode: "purchase", parentId: null, parentName: "" });
+
+  const [customer, setCustomer] = useState(req?.customer || "Standard Customer");
+  const [billTo, setBillTo] = useState(req?.logistics?.billTo || "Office Corporate Head");
+  const [shipTo, setShipTo] = useState(req?.logistics?.shipTo || "Factory Warehouse Block D");
+  const [transporter, setTransporter] = useState(req?.logistics?.transporterName || "VRL Logistics");
+  const [freight, setFreight] = useState(req?.logistics?.freight || "Fixed Standard To Collect");
+  const [paymentTerms, setPaymentTerms] = useState(req?.logistics?.paymentTerms || "Net 30 Days");
+  const [salesLValue, setSalesLValue] = useState(100);
+
+  useEffect(() => {
+    if (req) {
+      setCustomer(req.customer || "Standard Customer");
+      setBillTo(req.logistics?.billTo || "Office Corporate Head");
+      setShipTo(req.logistics?.shipTo || "Factory Warehouse Block D");
+      setTransporter(req.logistics?.transporterName || "VRL Logistics");
+      setFreight(req.logistics?.freight || "Fixed Standard To Collect");
+      setPaymentTerms(req.logistics?.paymentTerms || "Net 30 Days");
+    }
+  }, [req]);
 
   // Initialize structured mapping parent-child elements based on specs
   useEffect(() => {
     if (!req) return;
 
     // 1. Procedural parent sales items
-    const specItems = [];
-    if (req.id === "REQ-1001") {
-      specItems.push(
-        { id: "S1", itemName: "Premium Cotton Yarn 40s", quantity: 500, rate: 250, hsnCode: "", igst: 18, linkedCosts: [], isFoc: false, uom: "kg" },
-        { id: "S2", itemName: "Poly Blend Fabric 30s", quantity: 300, rate: 180, hsnCode: "", igst: 12, linkedCosts: [], isFoc: false, uom: "m" },
-        { id: "S3", itemName: "Greige Standard Loom", quantity: 150, rate: 120, hsnCode: "", igst: 5, linkedCosts: [], isFoc: false, uom: "m" }
-      );
-    } else {
-      specItems.push(
-        { id: "S1", itemName: "Premium Cotton Print Fabric", quantity: 400, rate: 220, hsnCode: "", igst: 18, linkedCosts: [], isFoc: false, uom: "m" },
-        { id: "S2", itemName: "Double Ply Weave Slub Yarn", quantity: 250, rate: 110, hsnCode: "", igst: 12, linkedCosts: [], isFoc: false, uom: "kg" }
-      );
-    }
+    const specItems = [
+      { id: 'S1', itemName: '', quantity: '', rate: '', hsnCode: '', igst: 0, linkedCosts: [], isFoc: false, uom: 'm' },
+      { id: 'S2', itemName: '', quantity: '', rate: '', hsnCode: '', igst: 0, linkedCosts: [], isFoc: false, uom: 'm' }
+    ];
     setSalesItems(specItems);
 
     // 2. Procedural unlinked staged purchases from attached bills
@@ -100,6 +113,9 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
       if (p.id === parentId) {
         // Build new child cost links
         const nextCosts = [...p.linkedCosts];
+        let updatedItemName = p.itemName;
+        let updatedHsnCode = p.hsnCode;
+
         selectedSources.forEach(s => {
           if (!nextCosts.some(c => c.id === s.id)) {
             nextCosts.push({
@@ -111,13 +127,24 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
               rate: s.rate || 140,
               hsnCode: s.itemId || "520512",
               availableQty: s.availableQty || 200,
-              consumed: Math.min(p.quantity, s.availableQty || 200),
+              consumed: Math.min(Number(p.quantity) || 0, s.availableQty || 200),
               toInventory: 0,
-              toDebit: 0
+              toDebit: 0,
+              label: s.label
             });
+
+            if (updatedItemName === "" && updatedHsnCode === "") {
+              updatedItemName = s.itemName;
+              updatedHsnCode = s.itemId || "";
+            }
           }
         });
-        return { ...p, linkedCosts: nextCosts };
+        return { 
+          ...p, 
+          itemName: updatedItemName, 
+          hsnCode: updatedHsnCode, 
+          linkedCosts: nextCosts 
+        };
       }
       return p;
     }));
@@ -138,6 +165,10 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
       console.error(e);
     }
   };
+
+  const hasUnmappedSales = salesItems.some(item => !item.isFoc && item.linkedCosts.length === 0);
+  const hasUnbookedPurchases = salesItems.some(p => p.linkedCosts.some(c => c.isPurchase && ((Number(c.consumed) || 0) + (Number(c.toInventory) || 0) + (Number(c.toDebit) || 0) + (Number(c.wasteage) || 0)) !== c.availableQty)) ||
+    unlinkedPurchases.some(u => ((Number(u.toInventory) || 0) + (Number(u.toDebit) || 0) + (Number(u.wasteage) || 0)) !== u.availableQty);
 
   if (!req) return null;
 
@@ -164,7 +195,18 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
           </span>
         </div>
 
-        {/* Action Toggle for canvas display */}
+        <div className="flex items-center gap-2">
+          {hasUnmappedSales && (
+            <span className="bg-rose-100 text-rose-700 border border-rose-200 px-1.5 py-0.5 rounded-xs font-bold text-[10px] flex items-center gap-1 uppercase tracking-wider">
+              <AlertTriangle size={10} /> UNMAPPED SALES
+            </span>
+          )}
+          {hasUnbookedPurchases && (
+            <span className="bg-amber-100 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded-xs font-bold text-[10px] flex items-center gap-1 uppercase tracking-wider">
+              <AlertTriangle size={10} /> PURCHASE UNBOOKED
+            </span>
+          )}
+        </div>
       </div>
 
       {/* 2. Resizer Content block */}
@@ -205,6 +247,20 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
               onTriggerLink={handleOpenLinkDrawer}
               isLeftPaneOpen={isLeftPaneOpen}
               onToggleLeftPane={() => setIsLeftPaneOpen(true)}
+              customer={customer}
+              setCustomer={setCustomer}
+              billTo={billTo}
+              setBillTo={setBillTo}
+              shipTo={shipTo}
+              setShipTo={setShipTo}
+              transporter={transporter}
+              setTransporter={setTransporter}
+              freight={freight}
+              setFreight={setFreight}
+              paymentTerms={paymentTerms}
+              setPaymentTerms={setPaymentTerms}
+              salesLValue={salesLValue}
+              setSalesLValue={setSalesLValue}
             />
           </div>
 
@@ -213,6 +269,13 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
             salesItems={salesItems}
             unlinkedPurchases={unlinkedPurchases}
             onBookSale={handleBookSaleFinal}
+            customer={customer}
+            billTo={billTo}
+            shipTo={shipTo}
+            transporter={transporter}
+            freight={freight}
+            paymentTerms={paymentTerms}
+            salesLValue={salesLValue}
           />
         </div>
 
