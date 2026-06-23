@@ -73,22 +73,22 @@ export default function ConditionAInventory({
                   </td>
 
                   {/* Item Name */}
-                  <td className="py-0.5 px-1 font-sans font-semibold text-slate-800 break-words line-clamp-1 truncate" title={item.itemName}>
+                  <td className="py-0.5 px-1 font-sans font-semibold text-slate-800 break-words whitespace-normal" title={item.itemName}>
                     {item.itemName}
                   </td>
 
                   {/* HSN */}
-                  <td className="py-0.5 px-1 text-center text-slate-500 font-bold">
+                  <td className="py-0.5 px-1 text-center text-slate-500 font-bold break-words whitespace-normal">
                     {item.hsnCode || "—"}
                   </td>
 
                   {/* Qty */}
-                  <td className="py-0.5 px-1 text-right text-slate-900 font-bold text-xs">
+                  <td className="py-0.5 px-1 text-right text-slate-900 font-bold text-xs break-words whitespace-normal">
                     {item.availableQty} units
                   </td>
 
                   {/* Location */}
-                  <td className="py-0.5 px-1 text-left text-[11px] font-sans text-slate-650 pr-2 truncate">
+                  <td className="py-0.5 px-1 text-left text-[11px] font-sans text-slate-650 pr-2 break-words whitespace-normal">
                     {item.location || "Default Yard"}
                   </td>
                 </tr>

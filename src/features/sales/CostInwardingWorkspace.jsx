@@ -192,7 +192,7 @@ export default function CostInwardingWorkspace({ req, onClose, onRefresh }) {
         {/* Left Canvas (Document Viewer Sub-component occupies leftWidth %) */}
         {isLeftPaneOpen && (
           <>
-            <div style={{ width: `${leftWidth}%` }} className="flex flex-col select-none min-h-0 shrink-0">
+            <div style={{ width: `${leftWidth}%` }} className="flex flex-col select-none min-h-0 shrink-0 h-full">
               <InwardingDocumentPane 
                 req={req} 
                 defaultActiveFile={activeInvoice} 
@@ -205,7 +205,7 @@ export default function CostInwardingWorkspace({ req, onClose, onRefresh }) {
             {/* Separation Resizer Bar */}
             <div
               onMouseDown={handleSeparatorMouseDown}
-              className="w-1 h-full bg-slate-205 hover:bg-indigo-300 active:bg-indigo-500 cursor-col-resize flex items-center justify-center transition-colors group z-20"
+              className="w-1 h-full bg-slate-205 hover:bg-slate-300 active:bg-indigo-500 cursor-col-resize flex items-center justify-center transition-colors group z-20"
               title="Drag resizer bar"
             >
               <span className="w-0.5 h-6 bg-slate-350 group-hover:bg-indigo-600 transition-colors rounded-xs" />
@@ -214,7 +214,7 @@ export default function CostInwardingWorkspace({ req, onClose, onRefresh }) {
         )}
 
         {/* Right Workspace - Fills Remainder */}
-        <div style={{ width: isLeftPaneOpen ? `${100 - leftWidth}%` : "100%" }} className="flex-1 flex flex-col min-h-0 h-full bg-transparent p-2 shrink-0">
+        <div style={{ width: isLeftPaneOpen ? `${100 - leftWidth}%` : "100%" }} className="flex-1 flex flex-col min-h-0 h-full bg-transparent pl-2.5 pr-0 py-0 shrink-0">
           {/* Header section sitting inline */}
           <LedgerLookupHeader
             vendor={activeInvoice.vendor}

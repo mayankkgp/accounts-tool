@@ -168,19 +168,19 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
       </div>
 
       {/* 2. Resizer Content block */}
-      <div className="flex-1 flex overflow-hidden min-h-0 bg-transparent relative" id="layout-body-wrapper">
+      <div className="flex-1 flex overflow-hidden min-h-0 bg-transparent items-stretch relative" id="layout-body-wrapper">
         
         {/* Left Pane (Document Reference Canvas) */}
         {isLeftPaneOpen && (
           <>
-            <div style={{ width: `${leftWidth}%` }} className="flex flex-col select-none min-h-0 shrink-0">
+            <div style={{ width: `${leftWidth}%` }} className="flex flex-col select-none min-h-0 shrink-0 h-full">
               <MappingDocumentPane req={req} onCollapse={() => setIsLeftPaneOpen(false)} />
             </div>
             
             {/* Split Resizer bar */}
             <div
               onMouseDown={handleSeparatorMouseDown}
-              className="w-1 h-full bg-slate-205 hover:bg-indigo-300 active:bg-indigo-500 cursor-col-resize flex items-center justify-center transition-colors group z-20 shrink-0"
+              className="w-1 h-full bg-slate-205 hover:bg-slate-300 active:bg-indigo-500 cursor-col-resize flex items-center justify-center transition-colors group z-20 shrink-0"
               title="Drag resizer bar"
             >
               <span className="w-0.5 h-6 bg-slate-350 group-hover:bg-indigo-600 transition-colors rounded-xs" />
@@ -191,7 +191,7 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
         {/* Right Pane (Ledger & Sticky Footer) */}
         <div
           style={{ width: isLeftPaneOpen ? `${100 - leftWidth}%` : "100%" }}
-          className="flex-1 flex flex-col min-h-0 bg-transparent py-2.5 pl-2.5 pr-0 shrink-0 relative"
+          className="flex-1 flex flex-col min-h-0 bg-transparent pl-2.5 pr-0 py-0 shrink-0 relative h-full"
           id="mapping-ledger-grid-root"
         >
           {/* Scrollable grid section */}

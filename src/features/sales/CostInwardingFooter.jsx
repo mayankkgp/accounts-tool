@@ -19,7 +19,7 @@ export default function CostInwardingFooter({
   handleUnstageEdit
 }) {
   return (
-    <div className="border-t border-slate-150 pt-2.5 flex items-center justify-between shrink-0 select-none gap-2 bg-white text-slate-800 font-sans px-3 pb-2" id="inwarding-sticky-footer">
+    <div className="border-t border-slate-150 pt-2.5 flex items-center justify-between shrink-0 select-none gap-2 bg-white text-slate-800 font-sans px-2 pb-2" id="inwarding-sticky-footer">
       {/* Item Staging Status ONLY (Strictly no "Req Status" representation) */}
       <div className="flex items-center gap-1.5 select-none branding-rail font-sans text-[10px] uppercase tracking-wider">
         <span className="text-slate-500 font-bold">Item Staging Status:</span>

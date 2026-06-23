@@ -146,7 +146,7 @@ export default function MappingLedgerGrid({
       </div>
 
       {/* 2. Parent-Child list */}
-      <div className="flex flex-col gap-1.5 min-h-0" id="main-ledger-nested-loop">
+      <div className="flex flex-col gap-2 min-h-0" id="main-ledger-nested-loop">
         {salesItems.map((parent, index) => {
           // Soft alert logic: Quantities match warning
           const totalLinkedQty = parent.linkedCosts.reduce((acc, c) => acc + (c.consumed || 0), 0);
@@ -154,7 +154,7 @@ export default function MappingLedgerGrid({
           return (
             <div
               key={parent.id}
-              className="bg-white border border-slate-200 rounded-sm p-3 mb-3 last:mb-0 relative group/parent shadow-xs hover:border-slate-300 transition-colors"
+              className="bg-white border border-slate-200 rounded-sm p-2 relative group/parent shadow-xs hover:border-slate-300 transition-colors"
             >
               {/* Parent Delete Action */}
               <button
@@ -403,7 +403,7 @@ export default function MappingLedgerGrid({
               { id: 'S' + Date.now(), itemName: '', quantity: 1, rate: 0, hsnCode: '', igst: 0, linkedCosts: [], isFoc: false, uom: 'm' }
             ]);
           }}
-          className="flex items-center justify-center gap-1.5 w-full h-8 border border-dashed border-slate-300 rounded-sm text-slate-500 font-bold uppercase text-[10px] tracking-wider hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/30 transition-colors cursor-pointer mt-1"
+          className="flex items-center justify-center gap-1.5 w-full h-8 border border-dashed border-slate-300 rounded-sm text-slate-500 font-bold uppercase text-[10px] tracking-wider hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/30 transition-colors cursor-pointer"
         >
           <Plus size={11} strokeWidth={2.5} />
           Add Sales Item
@@ -412,7 +412,7 @@ export default function MappingLedgerGrid({
 
       {/* 3. Unlinked Purchases section (FLATTENED DESIGN) */}
       {unlinkedPurchases.length > 0 && (
-        <div className="border-t-2 border-slate-200 pt-3 mt-1 flex flex-col gap-2 shrink-0" id="unlinked-purchases-container">
+        <div className="border-t-2 border-slate-200 pt-3 mt-2 flex flex-col gap-2 shrink-0" id="unlinked-purchases-container">
           <div className="flex items-center justify-between border-b border-slate-200 pb-1 mr-1">
             <span className="text-[9px] uppercase font-bold text-slate-500 tracking-wide">Unlinked Staged Purchases</span>
             <span className="text-[8px] font-mono text-slate-400 uppercase font-bold">{unlinkedPurchases.length} items to distribute</span>
@@ -422,7 +422,7 @@ export default function MappingLedgerGrid({
               const unlinkedTotal = (Number(u.toInventory) || 0) + (Number(u.toDebit) || 0);
               const uError = unlinkedTotal !== u.availableQty;
               return (
-                <div key={u.id} className="bg-white border border-slate-200 rounded-sm p-3 mb-2 relative shadow-xs hover:border-slate-300 transition-colors flex flex-col gap-1.5">
+                <div key={u.id} className="bg-white border border-slate-200 rounded-sm p-2 relative shadow-xs hover:border-slate-300 transition-colors flex flex-col gap-1.5">
                   <div className="flex items-center justify-between text-[11px] font-bold text-slate-700 leading-tight flex-wrap gap-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="truncate text-slate-800">{u.itemName}</span>

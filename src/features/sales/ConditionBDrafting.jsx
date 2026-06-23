@@ -45,7 +45,8 @@ export default function ConditionBDrafting({
         itemName: "Draft Fabric / Blend",
         hsnCode: "520832",
         quantity: 100,
-        rate: 150
+        rate: 150,
+        uom: "m"
       }
     ]);
   };
@@ -89,21 +90,21 @@ export default function ConditionBDrafting({
           <table className="w-full border-collapse text-left text-slate-700 text-xs">
             <thead className="bg-slate-100 text-[10px] uppercase tracking-wider text-slate-500 font-bold h-6 sticky top-0 border-b border-slate-250 select-none z-10 font-sans">
               <tr>
-                <th className="py-0.5 px-2 text-center w-[4%]">#</th>
-                <th className="py-0.5 px-1 text-left w-[36%]">Item Description *</th>
-                <th className="py-0.5 px-1 text-center w-[10%]">HSN</th>
-                <th className="py-0.5 px-1 text-center w-[8%]">Qty</th>
-                <th className="py-0.5 px-1 text-center w-[8%]">Rate (₹)</th>
+                <th className="py-0.5 px-2 text-center w-[4%] whitespace-normal break-words">#</th>
+                <th className="py-0.5 px-1 text-left w-[36%] whitespace-normal break-words">Item Description *</th>
+                <th className="py-0.5 px-1 text-center w-[10%] whitespace-normal break-words">HSN</th>
+                <th className="py-0.5 px-1 text-center w-[80px] whitespace-normal break-words">Qty</th>
+                <th className="py-0.5 px-1 text-center w-[8%] whitespace-normal break-words">Rate (₹)</th>
                 {!isHaryana ? (
-                  <th className="py-0.5 px-1 text-center w-[10%]">IGST</th>
+                  <th className="py-0.5 px-1 text-center w-[10%] whitespace-normal break-words">IGST</th>
                 ) : (
                   <>
-                    <th className="py-0.5 px-1 text-center w-[6%]">CGST</th>
-                    <th className="py-0.5 px-1 text-center w-[6%]">SGST</th>
+                    <th className="py-0.5 px-1 text-center w-[6%] whitespace-normal break-words">CGST</th>
+                    <th className="py-0.5 px-1 text-center w-[6%] whitespace-normal break-words">SGST</th>
                   </>
                 )}
-                <th className="py-0.5 px-1 text-right w-[10%]">Subtotal</th>
-                <th className="py-0.5 px-1 text-right w-[12%]">Adj Total</th>
+                <th className="py-0.5 px-1 text-right w-[10%] whitespace-normal break-words">Subtotal</th>
+                <th className="py-0.5 px-1 text-right w-[12%] whitespace-normal break-words">Adj Total</th>
                 {/* Strict Directive: Remove Del text label but keep empty cell */}
                 <th className="py-0.5 px-1 text-center w-[6%]"></th>
               </tr>
@@ -126,42 +127,72 @@ export default function ConditionBDrafting({
                     <td className="py-0.5 px-2 text-center font-bold text-slate-400 font-sans">{idx + 1}</td>
 
                     <td className="py-0.5 px-1">
-                      <input
-                        type="text"
+                      <textarea
+                        rows={1}
                         value={it.itemName}
                         onChange={(e) => handleRowChange(it.id, "itemName", e.target.value)}
                         disabled={isLocked}
-                        className="w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-indigo-500 rounded-sm text-xs h-5.5 px-1 font-sans font-semibold text-slate-800"
+                        className="w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-indigo-500 rounded-sm text-xs py-0.5 px-1 font-sans font-semibold text-slate-800 resize-none whitespace-normal break-words leading-tight outline-none"
+                        style={{ height: "auto", minHeight: "22px" }}
                       />
                     </td>
 
                     <td className="py-0.5 px-1 text-center">
-                      <input
-                        type="text"
+                      <textarea
+                        rows={1}
                         value={it.hsnCode}
                         onChange={(e) => handleRowChange(it.id, "hsnCode", e.target.value)}
                         disabled={isLocked}
-                        className="w-full text-center bg-transparent border border-transparent hover:border-slate-300 focus:border-indigo-500 rounded-sm text-xs h-5.5 px-1"
+                        className="w-full text-center bg-transparent border border-transparent hover:border-slate-300 focus:border-indigo-500 rounded-sm text-xs py-0.5 px-1 font-mono resize-none whitespace-normal break-words leading-tight outline-none"
+                        style={{ height: "auto", minHeight: "22px" }}
                       />
                     </td>
 
                     <td className="py-0.5 px-1 text-center">
-                      <input
-                        type="number"
-                        value={it.quantity}
-                        onChange={(e) => handleRowChange(it.id, "quantity", e.target.value)}
-                        disabled={isLocked}
-                        className={`w-full text-right bg-transparent border border-transparent hover:border-slate-300 focus:border-indigo-500 rounded-sm text-xs h-5.5 px-1 font-bold ${numericInputClass}`}
-                      />
+                      <div className="w-[80px] min-w-[80px] max-w-[80px] mx-auto p-0 flex flex-wrap items-center border border-slate-200 rounded-sm bg-white overflow-hidden focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition-shadow h-auto min-h-5">
+                        <textarea
+                          rows={1}
+                          value={it.quantity}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/[^0-9.]/g, '');
+                            handleRowChange(it.id, "quantity", val);
+                            e.target.style.height = "auto";
+                            e.target.style.height = `${e.target.scrollHeight}px`;
+                          }}
+                          ref={(el) => {
+                            if (el) {
+                              el.style.height = "auto";
+                              el.style.height = `${el.scrollHeight}px`;
+                            }
+                          }}
+                          disabled={isLocked}
+                          className="flex-1 bg-transparent p-0 text-right font-mono text-xs font-bold outline-none resize-none whitespace-normal break-all leading-tight min-w-0"
+                          style={{ minHeight: "18px" }}
+                        />
+                        <select
+                          value={it.uom || "m"}
+                          onChange={(e) => handleRowChange(it.id, "uom", e.target.value)}
+                          disabled={isLocked}
+                          className="h-full text-[10px] p-0 font-sans font-medium focus:bg-slate-50/80 hover:bg-slate-50 border-l border-slate-200 outline-none bg-transparent text-slate-600 disabled:opacity-60 disabled:cursor-not-allowed appearance-none text-center [-moz-appearance:none] [-webkit-appearance:none] shrink-0"
+                        >
+                          <option value="m">m</option>
+                          <option value="kg">kg</option>
+                          <option value="pcs">pcs</option>
+                        </select>
+                      </div>
                     </td>
 
                     <td className="py-0.5 px-1 text-center">
-                      <input
-                        type="number"
+                      <textarea
+                        rows={1}
                         value={it.rate}
-                        onChange={(e) => handleRowChange(it.id, "rate", e.target.value)}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/[^0-9.]/g, '');
+                          handleRowChange(it.id, "rate", val);
+                        }}
                         disabled={isLocked}
-                        className={`w-full text-right bg-transparent border border-transparent hover:border-slate-300 focus:border-indigo-500 rounded-sm text-xs h-5.5 px-1 font-medium ${numericInputClass}`}
+                        className="w-full text-right bg-transparent border border-transparent hover:border-slate-300 focus:border-indigo-500 rounded-sm text-xs py-0.5 px-1 font-mono resize-none whitespace-normal break-all leading-tight outline-none"
+                        style={{ height: "auto", minHeight: "22px" }}
                       />
                     </td>
 
@@ -169,31 +200,31 @@ export default function ConditionBDrafting({
                       Strict Directive: Inside Tax columns, stack tax percentage and absolute value: [Percentage]% \n (₹[Abs Value])
                     */}
                     {!isHaryana ? (
-                      <td className="py-0.5 px-1 text-center text-slate-700">
+                      <td className="py-0.5 px-1 text-center text-slate-700 whitespace-normal break-words">
                         <div className="flex flex-col leading-tight select-none font-sans">
-                          <span className="font-semibold text-[10px]">18%</span>
-                          <span className="text-[9px] text-slate-400 font-normal font-mono">(₹{rowTax.toFixed(1)})</span>
+                          <span className="font-semibold text-[10px] break-words whitespace-normal">18%</span>
+                          <span className="text-[9px] text-slate-400 font-normal font-mono break-all whitespace-normal">(₹{rowTax.toFixed(1)})</span>
                         </div>
                       </td>
                     ) : (
                       <>
-                        <td className="py-0.5 px-1 text-center text-slate-700">
+                        <td className="py-0.5 px-1 text-center text-slate-700 whitespace-normal break-words">
                           <div className="flex flex-col leading-tight select-none font-sans">
-                            <span className="font-semibold text-[10px]">9%</span>
-                            <span className="text-[9px] text-slate-400 font-normal font-mono">(₹{(rowTax / 2).toFixed(1)})</span>
+                            <span className="font-semibold text-[10px] break-words whitespace-normal">9%</span>
+                            <span className="text-[9px] text-slate-400 font-normal font-mono break-all whitespace-normal">(₹{(rowTax / 2).toFixed(1)})</span>
                           </div>
                         </td>
-                        <td className="py-0.5 px-1 text-center text-slate-700">
+                        <td className="py-0.5 px-1 text-center text-slate-700 whitespace-normal break-words">
                           <div className="flex flex-col leading-tight select-none font-sans">
-                            <span className="font-semibold text-[10px]">9%</span>
-                            <span className="text-[9px] text-slate-400 font-normal font-mono">(₹{(rowTax / 2).toFixed(1)})</span>
+                            <span className="font-semibold text-[10px] break-words whitespace-normal">9%</span>
+                            <span className="text-[9px] text-slate-400 font-normal font-mono break-all whitespace-normal">(₹{(rowTax / 2).toFixed(1)})</span>
                           </div>
                         </td>
                       </>
                     )}
 
-                    <td className="py-0.5 px-1 text-right text-slate-800 pr-1 select-none font-bold">₹{rowSubtotal.toFixed(1)}</td>
-                    <td className="py-0.5 px-1 text-right text-indigo-700 pr-1 select-none font-bold bg-indigo-50/10">₹{rowAdjustedTotal.toFixed(1)}</td>
+                    <td className="py-0.5 px-1 text-right text-slate-800 pr-1 select-none font-bold whitespace-normal break-all">₹{rowSubtotal.toFixed(1)}</td>
+                    <td className="py-0.5 px-1 text-right text-indigo-700 pr-1 select-none font-bold bg-indigo-50/10 whitespace-normal break-all">₹{rowAdjustedTotal.toFixed(1)}</td>
 
                     <td className="py-0.5 px-1 text-center">
                       <button
