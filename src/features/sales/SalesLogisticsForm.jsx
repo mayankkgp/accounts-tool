@@ -20,9 +20,6 @@ export default function SalesLogisticsForm({
   setTransporterName,
   paymentTerms,
   setPaymentTerms,
-  brand,
-  setBrand,
-  brandList = [],
   customersList = [],
   addressOptions = []
 }) {
@@ -110,16 +107,6 @@ export default function SalesLogisticsForm({
             className="w-full h-6 text-[11px] px-1.5 border border-slate-300 rounded-sm hover:border-slate-400 focus:border-indigo-500 outline-none font-sans"
             placeholder="e.g. 30 Days Credit"
             required
-          />
-        </div>
-
-        {/* Brand */}
-        <div className="flex flex-col gap-1">
-          <label className="text-[9px] uppercase font-bold text-slate-500 tracking-wider">Brand</label>
-          <Combobox
-            value={brand}
-            onChange={setBrand}
-            options={brandList || []}
           />
         </div>
       </div>

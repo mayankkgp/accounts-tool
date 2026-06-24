@@ -19,7 +19,6 @@ export default function useSalesFormState(editingRequest, isOpen, onClose, onSav
   const [freight, setFreight] = useState("To Pay");
   const [transporterName, setTransporterName] = useState("");
   const [paymentTerms, setPaymentTerms] = useState("");
-  const [brand, setBrand] = useState("");
   
   const [lineItems, setLineItems] = useState("");
   const [greigeDetails, setGreigeDetails] = useState("");
@@ -43,7 +42,6 @@ export default function useSalesFormState(editingRequest, isOpen, onClose, onSav
       setFreight(editingRequest.logistics?.freight || "To Pay");
       setTransporterName(editingRequest.logistics?.transporterName || "");
       setPaymentTerms(editingRequest.logistics?.paymentTerms || "");
-      setBrand(editingRequest.logistics?.brand || "");
 
       setLineItems(editingRequest.unstructuredData?.lineItems || "");
       setGreigeDetails(editingRequest.unstructuredData?.greigeDetails || "");
@@ -60,7 +58,6 @@ export default function useSalesFormState(editingRequest, isOpen, onClose, onSav
       setFreight("To Pay");
       setTransporterName("VRL Logistics");
       setPaymentTerms("30 Days Credit");
-      setBrand("Fabrito Primary");
       setLineItems("");
       setGreigeDetails("");
       setComments("");
@@ -220,8 +217,7 @@ export default function useSalesFormState(editingRequest, isOpen, onClose, onSav
           shipTo,
           freight,
           transporterName,
-          paymentTerms,
-          brand
+          paymentTerms
         },
         proofs: {
           po: poList.filter(p => !p.uploading),
@@ -250,7 +246,6 @@ export default function useSalesFormState(editingRequest, isOpen, onClose, onSav
     freight, setFreight,
     transporterName, setTransporterName,
     paymentTerms, setPaymentTerms,
-    brand, setBrand,
     lineItems, setLineItems,
     greigeDetails, setGreigeDetails,
     comments, setComments,

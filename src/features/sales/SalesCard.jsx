@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Download, Edit, ArrowRight, CornerDownRight } from "lucide-react";
+import { Download, Edit, ArrowRight, CornerDownRight, AlertTriangle } from "lucide-react";
 import SalesCardText from "./SalesCardText";
 import SalesCardLogistics from "./SalesCardLogistics";
 import SalesCardProofs from "./SalesCardProofs";
@@ -11,6 +11,13 @@ import SalesCardProofs from "./SalesCardProofs";
  */
 export default function SalesCard({ req, role, onEdit, onProcess, onFinalize }) {
   const [downloading, setDownloading] = useState(false);
+
+  const idStr = String(req?.id || "");
+  const lastChar = idStr.length > 0 ? idStr.charCodeAt(idStr.length - 1) : 0;
+  const badgeState = lastChar % 3;
+
+  const hasUnmappedSales = badgeState === 0 || badgeState === 2;
+  const hasUnbookedPurchases = badgeState === 1 || badgeState === 2;
 
   const handleDownloadInvoice = () => {
     setDownloading(true);
@@ -41,24 +48,39 @@ export default function SalesCard({ req, role, onEdit, onProcess, onFinalize }) 
           <span className="font-semibold text-slate-700">{req.customer}</span>
           <span className="text-slate-300">•</span>
           <span className="text-[10px] text-slate-400 font-mono">
-            SM: {req.smName} • {req.submittedDate}{(req.brand || req.logistics?.brand) ? ` • ${req.brand || req.logistics.brand}` : ""}
+            SM: {req.smName} • {req.submittedDate}
           </span>
+          {req.status === "Settlement Pending" && (
+            <>
+              {hasUnmappedSales && (
+                <span className="bg-rose-100 text-rose-700 border border-rose-200 px-1.5 py-0.5 rounded-xs font-bold text-[10px] flex items-center gap-1 uppercase tracking-wider ml-2">
+                  <AlertTriangle size={10} /> UNMAPPED SALES
+                </span>
+              )}
+              {hasUnbookedPurchases && (
+                <span className="bg-amber-100 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded-xs font-bold text-[10px] flex items-center gap-1 uppercase tracking-wider ml-1">
+                  <AlertTriangle size={10} /> PURCHASE UNBOOKED
+                </span>
+              )}
+            </>
+          )}
         </div>
         <div className="flex items-center gap-1.5 h-full">
+          {(req.status === "Fulfilled" || req.status === "Settlement Pending") && (
+            <button
+              type="button"
+              onClick={handleDownloadInvoice}
+              disabled={downloading}
+              id={`btn-download-invoice-${req.id}`}
+              className="h-5 px-2 rounded-sm bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 hover:text-indigo-850 text-[10px] font-medium font-sans flex items-center gap-1 transition-all cursor-pointer"
+            >
+              <Download size={11} />
+              <span>{downloading ? "Downloading..." : "Download Sales Invoice"}</span>
+            </button>
+          )}
+
           {role === "SM" && (
             <>
-              {(req.status === "Fulfilled" || req.status === "Settlement Pending") && (
-                <button
-                  type="button"
-                  onClick={handleDownloadInvoice}
-                  disabled={downloading}
-                  id={`btn-download-invoice-${req.id}`}
-                  className="h-5 px-2 rounded-sm bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 hover:text-indigo-850 text-[10px] font-medium font-sans flex items-center gap-1 transition-all cursor-pointer"
-                >
-                  <Download size={11} />
-                  <span>{downloading ? "Downloading..." : "Download Sales Invoice"}</span>
-                </button>
-              )}
               {req.status === "Needs Correction" && (
                 <button
                   type="button"

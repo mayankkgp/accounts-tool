@@ -6,7 +6,7 @@ import SalesFormActionFooter from "./SalesFormActionFooter";
 import SalesLogisticsForm from "./SalesLogisticsForm";
 import SalesUnstructuredForm from "./SalesUnstructuredForm";
 import SalesUploadGrid from "./SalesUploadGrid";
-import { brandList, customersList, addressOptions } from "./salesConstants";
+import { customersList, addressOptions } from "./salesConstants";
 
 /**
  * Workspace Modal used by Sales Managers to formulate new sales invoice requests
@@ -63,9 +63,6 @@ export default function SalesRequestFormModal({ isOpen, onClose, editingRequest,
             setTransporterName={state.setTransporterName}
             paymentTerms={state.paymentTerms}
             setPaymentTerms={state.setPaymentTerms}
-            brand={state.brand}
-            setBrand={state.setBrand}
-            brandList={brandList}
             customersList={customersList}
             addressOptions={addressOptions}
           />

@@ -27,7 +27,8 @@ export default function MappingLedgerGrid({
   paymentTerms,
   setPaymentTerms,
   salesLValue,
-  setSalesLValue
+  setSalesLValue,
+  isFinanceFinalizing
 }) {
   
   // Handler helper to dynamically modify selected parent row properties
@@ -311,14 +312,16 @@ export default function MappingLedgerGrid({
               className={`bg-white border-t border-b border-r border-slate-200 border-l-[4px] ${index % 2 === 0 ? 'border-l-indigo-500 hover:border-l-indigo-500' : 'border-l-slate-300 hover:border-l-slate-300'} p-2 relative group/parent shadow-xs hover:border-slate-300 transition-colors`}
             >
               {/* Parent Delete Action */}
-              <button
-                type="button"
-                onClick={() => setSalesItems(prev => prev.filter(item => item.id !== parent.id))}
-                className="absolute top-2 right-2 p-0.5 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer rounded-xs"
-                title="Delete Sales Item"
-              >
-                <Trash2 size={12} strokeWidth={2.5} />
-              </button>
+              {!isFinanceFinalizing && (
+                <button
+                  type="button"
+                  onClick={() => setSalesItems(prev => prev.filter(item => item.id !== parent.id))}
+                  className="absolute top-2 right-2 p-0.5 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer rounded-xs"
+                  title="Delete Sales Item"
+                >
+                  <Trash2 size={12} strokeWidth={2.5} />
+                </button>
+              )}
 
               {/* Row 1: Core Description */}
               <div className="grid grid-cols-12 gap-1.5 items-center mb-2 pr-6">
@@ -331,7 +334,8 @@ export default function MappingLedgerGrid({
                     type="text"
                     value={parent.itemName}
                     onChange={e => updateParentItem(parent.id, { itemName: e.target.value })}
-                    className="h-6 w-full border border-slate-300 px-1.5 text-slate-850 font-semibold focus:border-indigo-500 rounded-xs bg-white text-[11px]"
+                    disabled={isFinanceFinalizing}
+                    className="h-6 w-full border border-slate-300 px-1.5 text-slate-850 font-semibold focus:border-indigo-500 rounded-xs bg-white text-[11px] disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed"
                   />
                 </div>
                 <div className="col-span-4 flex flex-col gap-0.5">
@@ -340,7 +344,8 @@ export default function MappingLedgerGrid({
                     type="text"
                     value={parent.hsnCode}
                     onChange={e => updateParentItem(parent.id, { hsnCode: e.target.value })}
-                    className="h-6 w-full border border-slate-300 px-1.5 focus:border-indigo-500 rounded-xs font-mono text-[10px]"
+                    disabled={isFinanceFinalizing}
+                    className="h-6 w-full border border-slate-300 px-1.5 focus:border-indigo-500 rounded-xs font-mono text-[10px] disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed"
                     placeholder="Enter HSN"
                   />
                 </div>
@@ -355,12 +360,14 @@ export default function MappingLedgerGrid({
                       type="number"
                       value={parent.quantity}
                       onChange={e => updateParentItem(parent.id, { quantity: Math.max(1, Number(e.target.value) || 0) })}
-                      className="w-full h-full border-none focus:ring-0 font-mono text-left pl-1.5 bg-transparent px-1 m-0 appearance-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      disabled={isFinanceFinalizing}
+                      className="w-full h-full border-none focus:ring-0 font-mono text-left pl-1.5 bg-transparent px-1 m-0 appearance-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed"
                     />
                     <select
                       value={parent.uom || "m"}
                       onChange={e => updateParentItem(parent.id, { uom: e.target.value })}
-                      className="w-[42px] shrink-0 h-full bg-slate-100 border-none border-l border-slate-300 text-[10px] font-bold text-slate-600 focus:ring-0 cursor-pointer outline-none text-center appearance-none"
+                      disabled={isFinanceFinalizing}
+                      className="w-[42px] shrink-0 h-full bg-slate-100 border-none border-l border-slate-300 text-[10px] font-bold text-slate-600 focus:ring-0 cursor-pointer outline-none text-center appearance-none disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed"
                     >
                       <option value="m">m</option>
                       <option value="kg">kg</option>
@@ -374,7 +381,8 @@ export default function MappingLedgerGrid({
                     type="number"
                     value={parent.rate}
                     onChange={e => updateParentItem(parent.id, { rate: Math.max(0, Number(e.target.value) || 0) })}
-                    className="h-6 border border-slate-300 font-mono text-left px-1.5 rounded-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    disabled={isFinanceFinalizing}
+                    className="h-6 border border-slate-300 font-mono text-left px-1.5 rounded-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed"
                   />
                 </div>
                 <div className="flex flex-col gap-0.5">
@@ -383,7 +391,8 @@ export default function MappingLedgerGrid({
                     type="number"
                     value={parent.igst}
                     onChange={e => updateParentItem(parent.id, { igst: Number(e.target.value) || 0 })}
-                    className="h-6 border border-slate-300 font-mono text-left px-1.5 rounded-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    disabled={isFinanceFinalizing}
+                    className="h-6 border border-slate-300 font-mono text-left px-1.5 rounded-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed"
                   />
                 </div>
                 <div className="flex flex-col gap-0.5">
@@ -564,19 +573,21 @@ export default function MappingLedgerGrid({
           );
         })}
         {/* Full-width Add Sales Item Button */}
-        <button
-          type="button"
-          onClick={() => {
-            setSalesItems(prev => [
-              ...prev,
-              { id: 'S' + Date.now(), itemName: '', quantity: 1, rate: 0, hsnCode: '', igst: 0, linkedCosts: [], isFoc: false, uom: 'm' }
-            ]);
-          }}
-          className="flex items-center justify-center gap-1.5 w-full h-8 mt-2 border border-dashed border-slate-300 rounded-sm text-slate-500 font-bold uppercase text-[10px] tracking-wider hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/30 transition-colors cursor-pointer"
-        >
-          <Plus size={11} strokeWidth={2.5} />
-          Add Sales Item
-        </button>
+        {!isFinanceFinalizing && (
+          <button
+            type="button"
+            onClick={() => {
+              setSalesItems(prev => [
+                ...prev,
+                { id: 'S' + Date.now(), itemName: '', quantity: 1, rate: 0, hsnCode: '', igst: 0, linkedCosts: [], isFoc: false, uom: 'm' }
+              ]);
+            }}
+            className="flex items-center justify-center gap-1.5 w-full h-8 mt-2 border border-dashed border-slate-300 rounded-sm text-slate-500 font-bold uppercase text-[10px] tracking-wider hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/30 transition-colors cursor-pointer"
+          >
+            <Plus size={11} strokeWidth={2.5} />
+            Add Sales Item
+          </button>
+        )}
       </div>
 
       {/* 3. Unlinked Purchases section (FLATTENED DESIGN) */}

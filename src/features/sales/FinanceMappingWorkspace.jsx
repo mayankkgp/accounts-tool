@@ -10,13 +10,19 @@ import { saveSalesRequest } from "../../services/salesService";
  * FinanceMappingWorkspace Component (Phase 5 Master Component)
  * Utilizing strict 35/65 split resizer pane.
  */
-export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
+export default function FinanceMappingWorkspace({ req, onClose, onRefresh, onBackToInwarding }) {
+  const isFinanceFinalizing = req?.status === "Settlement Pending";
   const [leftWidth, setLeftWidth] = useState(35);
   const [isLeftPaneOpen, setIsLeftPaneOpen] = useState(true);
-  const [salesItems, setSalesItems] = useState([
-    { id: 'S1', itemName: '', quantity: '', rate: '', hsnCode: '', igst: 0, linkedCosts: [], isFoc: false, uom: 'm' },
-    { id: 'S2', itemName: '', quantity: '', rate: '', hsnCode: '', igst: 0, linkedCosts: [], isFoc: false, uom: 'm' }
-  ]);
+  const [salesItems, setSalesItems] = useState(() => {
+    return req?.status === "Settlement Pending" ? [
+      { id: 'S1', itemName: 'Premium Cotton Greige Fabric', quantity: '200', rate: '150', hsnCode: '520212', igst: 18, linkedCosts: [], isFoc: false, uom: 'm' },
+      { id: 'S2', itemName: 'Double Ply Weave Slub Yarn', quantity: '150', rate: '120', hsnCode: '520512', igst: 18, linkedCosts: [], isFoc: false, uom: 'm' }
+    ] : [
+      { id: 'S1', itemName: '', quantity: '', rate: '', hsnCode: '', igst: 0, linkedCosts: [], isFoc: false, uom: 'm' },
+      { id: 'S2', itemName: '', quantity: '', rate: '', hsnCode: '', igst: 0, linkedCosts: [], isFoc: false, uom: 'm' }
+    ];
+  });
   const [unlinkedPurchases, setUnlinkedPurchases] = useState([]);
   const [drawerConfig, setDrawerConfig] = useState({ isOpen: false, mode: "purchase", parentId: null, parentName: "" });
 
@@ -44,7 +50,10 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
     if (!req) return;
 
     // 1. Procedural parent sales items
-    const specItems = [
+    const specItems = isFinanceFinalizing ? [
+      { id: 'S1', itemName: 'Premium Cotton Greige Fabric', quantity: '200', rate: '150', hsnCode: '520212', igst: 18, linkedCosts: [], isFoc: false, uom: 'm' },
+      { id: 'S2', itemName: 'Double Ply Weave Slub Yarn', quantity: '150', rate: '120', hsnCode: '520512', igst: 18, linkedCosts: [], isFoc: false, uom: 'm' }
+    ] : [
       { id: 'S1', itemName: '', quantity: '', rate: '', hsnCode: '', igst: 0, linkedCosts: [], isFoc: false, uom: 'm' },
       { id: 'S2', itemName: '', quantity: '', rate: '', hsnCode: '', igst: 0, linkedCosts: [], isFoc: false, uom: 'm' }
     ];
@@ -166,6 +175,20 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
     }
   };
 
+  const handleSaveProgress = async () => {
+    try {
+      const updated = {
+        ...req,
+        mappedSalesItems: salesItems,
+        unlinkedPurchases: unlinkedPurchases
+      };
+      await saveSalesRequest(updated);
+      if (onRefresh) onRefresh();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const hasUnmappedSales = salesItems.some(item => !item.isFoc && item.linkedCosts.length === 0);
   const hasUnbookedPurchases = salesItems.some(p => p.linkedCosts.some(c => c.isPurchase && ((Number(c.consumed) || 0) + (Number(c.toInventory) || 0) + (Number(c.toDebit) || 0) + (Number(c.wasteage) || 0)) !== c.availableQty)) ||
     unlinkedPurchases.some(u => ((Number(u.toInventory) || 0) + (Number(u.toDebit) || 0) + (Number(u.wasteage) || 0)) !== u.availableQty);
@@ -179,7 +202,7 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => isFinanceFinalizing && onBackToInwarding ? onBackToInwarding() : onClose()}
             className="h-5 px-1.5 rounded-[2px] border border-slate-300 hover:bg-slate-50 text-slate-705 font-bold transition-colors bg-white flex items-center gap-1 cursor-pointer"
             id="btn-triage-back"
           >
@@ -261,6 +284,7 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
               setPaymentTerms={setPaymentTerms}
               salesLValue={salesLValue}
               setSalesLValue={setSalesLValue}
+              isFinanceFinalizing={isFinanceFinalizing}
             />
           </div>
 
@@ -276,6 +300,8 @@ export default function FinanceMappingWorkspace({ req, onClose, onRefresh }) {
             freight={freight}
             paymentTerms={paymentTerms}
             salesLValue={salesLValue}
+            isFinanceFinalizing={isFinanceFinalizing}
+            onSaveProgress={handleSaveProgress}
           />
         </div>
 

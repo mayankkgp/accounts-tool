@@ -1,5 +1,5 @@
-import React from "react";
-import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import React, { useState } from "react";
+import { ArrowLeft, ArrowRight, Loader2, Check } from "lucide-react";
 
 /**
  * CostInwardingHeader Component
@@ -18,8 +18,23 @@ export default function CostInwardingHeader({
   onClose,
   isSubmittingAll,
   isProceedActive,
-  handleSaveAndFulfilled
+  handleSaveAndFulfilled,
+  onSaveProgress
 }) {
+  const [isSaving, setIsSaving] = useState(false);
+  const [showSavedFeedback, setShowSavedFeedback] = useState(false);
+
+  const handleMockSave = () => {
+    setIsSaving(true);
+    setTimeout(() => {
+      setIsSaving(false);
+      setShowSavedFeedback(true);
+      setTimeout(() => {
+        setShowSavedFeedback(false);
+      }, 2500);
+    }, 1500);
+  };
+
   return (
     <div className="h-8 shrink-0 bg-white px-2.5 flex items-center justify-between text-slate-800 font-sans text-xs select-none" id="inwarding-master-header">
       {/* Left Side: Back Button + Request ID + Status Badge */}
@@ -49,6 +64,34 @@ export default function CostInwardingHeader({
 
       {/* Right Side: Primary CTA "Proceed to Mapping" */}
       <div className="flex items-center gap-1.5">
+        <button
+          type="button"
+          onClick={handleMockSave}
+          disabled={isSaving}
+          className={`h-6 px-4 font-bold rounded-sm text-[10px] uppercase tracking-wider cursor-pointer transition-all flex items-center justify-center gap-1 border ${
+            isSaving
+              ? "bg-slate-50 border-slate-200 text-slate-400 opacity-70 cursor-not-allowed"
+              : showSavedFeedback
+              ? "bg-emerald-50 border-emerald-300 text-emerald-700"
+              : "bg-white hover:bg-slate-50 text-slate-700 border-slate-300"
+          }`}
+          id="btn-save-inwarding-draft"
+        >
+          {isSaving ? (
+            <>
+              <Loader2 size={10} className="animate-spin text-slate-400" />
+              <span>Saving...</span>
+            </>
+          ) : showSavedFeedback ? (
+            <>
+              <Check size={10} className="text-emerald-600 stroke-[3]" />
+              <span>Saved</span>
+            </>
+          ) : (
+            <span>Save</span>
+          )}
+        </button>
+
         <button
           type="button"
           onClick={handleSaveAndFulfilled}

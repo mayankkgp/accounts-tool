@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Loader2, ArrowRight, AlertTriangle } from "lucide-react";
+import { Loader2, ArrowRight, AlertTriangle, Check } from "lucide-react";
 
 /**
  * MappingExecutionFooter Component (Phase 5 Sticky Footer)
@@ -20,11 +20,26 @@ export default function MappingExecutionFooter({
   transporter,
   freight,
   paymentTerms,
-  salesLValue
+  salesLValue,
+  isFinanceFinalizing,
+  onSaveProgress
 }) {
   const [isBooking, setIsBooking] = useState(false);
   const [bookingMessage, setBookingMessage] = useState("");
   const [isPartialModalOpen, setIsPartialModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [showSavedFeedback, setShowSavedFeedback] = useState(false);
+
+  const handleMockSave = () => {
+    setIsSaving(true);
+    setTimeout(() => {
+      setIsSaving(false);
+      setShowSavedFeedback(true);
+      setTimeout(() => {
+        setShowSavedFeedback(false);
+      }, 2500);
+    }, 1500);
+  };
 
   // Determination of Settlement state
   // Fully mapped: every parent sales item has at least one cost link or is marked FOC
@@ -106,7 +121,7 @@ export default function MappingExecutionFooter({
   };
 
   const handleTriggerBookingClick = () => {
-    if (hasWarnings) {
+    if (hasWarnings && !isFinanceFinalizing) {
       setIsPartialModalOpen(true);
     } else {
       handleTriggerBooking();
@@ -153,16 +168,50 @@ export default function MappingExecutionFooter({
         <div className="flex items-center gap-1.5">
           <button
             type="button"
-            disabled={isBookSalesDisabled}
+            onClick={handleMockSave}
+            disabled={isSaving}
+            className={`h-6 px-4 font-bold rounded-sm text-[10px] uppercase tracking-wider cursor-pointer transition-all flex items-center justify-center gap-1 border ${
+              isSaving
+                ? "bg-slate-50 border-slate-200 text-slate-400 opacity-70 cursor-not-allowed"
+                : showSavedFeedback
+                ? "bg-emerald-50 border-emerald-300 text-emerald-700"
+                : "bg-white hover:bg-slate-50 text-slate-700 border-slate-300"
+            }`}
+            id="btn-save-mapping-draft"
+          >
+            {isSaving ? (
+              <>
+                <Loader2 size={10} className="animate-spin text-slate-400" />
+                <span>Saving...</span>
+              </>
+            ) : showSavedFeedback ? (
+              <>
+                <Check size={10} className="text-emerald-600 stroke-[3]" />
+                <span>Saved</span>
+              </>
+            ) : (
+              <span>Save</span>
+            )}
+          </button>
+
+          <button
+            type="button"
+            disabled={isBookSalesDisabled || (isFinanceFinalizing && hasWarnings)}
             onClick={handleTriggerBookingClick}
-            className={`h-6 px-4 font-bold rounded-sm text-[10px] uppercase tracking-wider cursor-pointer border-none flex items-center gap-1 select-none pointer-events-auto transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-              hasWarnings 
+            className={`h-6 px-4 font-bold rounded-sm text-[10px] uppercase tracking-wider cursor-pointer border-none flex items-center gap-1 select-none pointer-events-auto transition-all ${
+              isBookSalesDisabled || (isFinanceFinalizing && hasWarnings)
+                ? "bg-slate-300 text-slate-500 cursor-not-allowed opacity-50"
+                : hasWarnings 
                 ? "bg-rose-600 hover:bg-rose-700 text-white border border-rose-700" 
                 : "bg-slate-900 hover:bg-slate-800 text-white"
             }`}
             id="btn-execute-booking"
           >
-            <span>{hasWarnings ? "Book Sales (Partial)" : "Book Sales"}</span>
+            <span>
+              {isFinanceFinalizing
+                ? "Book Purchase"
+                : (hasWarnings ? "Book Sales (Partial)" : "Book Sales")}
+            </span>
             <ArrowRight size={10} className="stroke-[3] text-white" />
           </button>
         </div>

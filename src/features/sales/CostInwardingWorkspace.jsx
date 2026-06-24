@@ -14,7 +14,7 @@ import { saveSalesRequest } from "../../services/salesService";
  * Restructured with enhanced UI/UX consistency, dynamic taxes,
  * and unified headers/footers.
  */
-export default function CostInwardingWorkspace({ req, onClose, onRefresh }) {
+export default function CostInwardingWorkspace({ req, onClose, onRefresh, onProceedToMapping }) {
   // 1. Initial State Syncing across each invoice tab
   const [invoiceQueue, setInvoiceQueue] = useState([]);
   const [activeIdx, setActiveIdx] = useState(0);
@@ -156,9 +156,26 @@ export default function CostInwardingWorkspace({ req, onClose, onRefresh }) {
   // Check if every tab is marked Staged or Skipped
   const isProceedActive = invoiceQueue.length > 0 && invoiceQueue.every(t => t.stageStatus !== "Pending");
 
+  const handleSaveProgress = async () => {
+    try {
+      const updated = {
+        ...req,
+        invoiceQueue: invoiceQueue
+      };
+      await saveSalesRequest(updated);
+      if (onRefresh) onRefresh();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleSaveAndFulfilled = () => {
     if (!isProceedActive) return;
-    setShowMappingWorkspace(true);
+    if (onProceedToMapping) {
+      onProceedToMapping();
+    } else {
+      setShowMappingWorkspace(true);
+    }
   };
 
   if (showMappingWorkspace) {
@@ -185,6 +202,7 @@ export default function CostInwardingWorkspace({ req, onClose, onRefresh }) {
         isSubmittingAll={isSubmittingAll}
         isProceedActive={isProceedActive}
         handleSaveAndFulfilled={handleSaveAndFulfilled}
+        onSaveProgress={handleSaveProgress}
       />
 
       {/* Dynamic Split Screen Body */}
