@@ -85,7 +85,31 @@ export default function CostInwardingWorkspace({ req, onClose, onRefresh, onProc
     const invIdQuery = (activeInvoice.invoiceNo || "").trim().toLowerCase();
     
     // Query simulated inventory from localStorage
-    const masterInv = JSON.parse(localStorage.getItem("fabrito_inventory") || "[]");
+    const masterInvRaw = JSON.parse(localStorage.getItem("fabrito_inventory") || "[]");
+    const masterInv = Array.isArray(masterInvRaw)
+      ? masterInvRaw
+      : [
+          ...(masterInvRaw.pendingInventory || []).map(item => ({
+            itemId: item.id,
+            itemName: item.item,
+            availableQty: item.qty,
+            hsnCode: item.hsnCode,
+            invoiceID: item.invoice,
+            invoiceDate: item.inwardDate,
+            supplier: item.supplier,
+            location: item.location || ""
+          })),
+          ...(masterInvRaw.reviewedInventory || []).map(item => ({
+            itemId: item.id,
+            itemName: item.item,
+            availableQty: item.qty,
+            hsnCode: item.hsnCode,
+            invoiceID: item.invoice,
+            invoiceDate: item.inwardDate,
+            supplier: item.supplier,
+            location: item.location || ""
+          }))
+        ];
     const matched = masterInv.filter(item => {
       const dbId = (item.invoiceID || "").toLowerCase();
       return dbId === invIdQuery || dbId.includes(invIdQuery);

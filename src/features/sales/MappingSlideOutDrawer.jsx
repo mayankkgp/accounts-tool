@@ -30,7 +30,31 @@ export default function MappingSlideOutDrawer({
     await new Promise((r) => setTimeout(r, 400));
 
     try {
-      const dbInv = JSON.parse(localStorage.getItem("fabrito_inventory") || "[]");
+      const dbInvRaw = JSON.parse(localStorage.getItem("fabrito_inventory") || "[]");
+      const dbInv = Array.isArray(dbInvRaw)
+        ? dbInvRaw
+        : [
+            ...(dbInvRaw.pendingInventory || []).map(item => ({
+              itemId: item.id,
+              itemName: item.item,
+              availableQty: item.qty,
+              hsnCode: item.hsnCode,
+              invoiceID: item.invoice,
+              invoiceDate: item.inwardDate,
+              supplier: item.supplier,
+              location: item.location || ""
+            })),
+            ...(dbInvRaw.reviewedInventory || []).map(item => ({
+              itemId: item.id,
+              itemName: item.item,
+              availableQty: item.qty,
+              hsnCode: item.hsnCode,
+              invoiceID: item.invoice,
+              invoiceDate: item.inwardDate,
+              supplier: item.supplier,
+              location: item.location || ""
+            }))
+          ];
       const dbPurchases = JSON.parse(localStorage.getItem("fabrito_purchases") || "[]");
 
       let source = [];

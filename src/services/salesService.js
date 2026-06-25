@@ -114,7 +114,31 @@ export async function saveSalesRequest(reqData) {
 export async function fetchInventory({ query = "" } = {}) {
   // Uses a 500ms simulated delay to match production HTTP roundtrip delays.
   await simulateNetwork(500);
-  const data = JSON.parse(localStorage.getItem("fabrito_inventory") || "[]");
+  const rawData = JSON.parse(localStorage.getItem("fabrito_inventory") || "[]");
+  const data = Array.isArray(rawData)
+    ? rawData
+    : [
+        ...(rawData.pendingInventory || []).map(item => ({
+          itemId: item.id,
+          itemName: item.item,
+          availableQty: item.qty,
+          hsnCode: item.hsnCode,
+          invoiceID: item.invoice,
+          invoiceDate: item.inwardDate,
+          supplier: item.supplier,
+          location: item.location || ""
+        })),
+        ...(rawData.reviewedInventory || []).map(item => ({
+          itemId: item.id,
+          itemName: item.item,
+          availableQty: item.qty,
+          hsnCode: item.hsnCode,
+          invoiceID: item.invoice,
+          invoiceDate: item.inwardDate,
+          supplier: item.supplier,
+          location: item.location || ""
+        }))
+      ];
 
   if (query) {
     const q = query.toLowerCase().trim();

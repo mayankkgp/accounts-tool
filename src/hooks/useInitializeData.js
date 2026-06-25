@@ -3,6 +3,7 @@ import { entities, addresses, connections } from "../data/seedData";
 import purchases from "../data/purchases.json";
 import salesRequests from "../data/sales_requests.json";
 import inventory from "../data/inventory.json";
+import mockInventory from "../data/mockInventory.json";
 
 /**
  * Initializes localStorage with seed B2B data if not already initialized.
@@ -84,9 +85,23 @@ export function useInitializeData() {
     }
 
     const inventoryKey = "fabrito_inventory";
-    if (!localStorage.getItem(inventoryKey)) {
-      console.log("Seeding local storage with initial Fabrito inventory...");
-      localStorage.setItem("fabrito_inventory", JSON.stringify(inventory));
+    const existingInventory = localStorage.getItem(inventoryKey);
+    let shouldSeed = !existingInventory;
+    if (existingInventory) {
+      try {
+        const parsed = JSON.parse(existingInventory);
+        const isOldArray = Array.isArray(parsed);
+        const isEmptyNewSchema = parsed && !isOldArray && (!parsed.pendingInventory || !parsed.reviewedInventory || (parsed.pendingInventory.length === 0 && parsed.reviewedInventory.length === 0));
+        if (isOldArray || isEmptyNewSchema) {
+          shouldSeed = true;
+        }
+      } catch (e) {
+        shouldSeed = true;
+      }
+    }
+    if (shouldSeed) {
+      console.log("Seeding/Migrating local storage with initial Phase 2 Fabrito inventory...");
+      localStorage.setItem("fabrito_inventory", JSON.stringify(mockInventory));
     }
   }, []);
 }
