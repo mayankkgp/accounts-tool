@@ -92,7 +92,24 @@ export function useInitializeData() {
         const parsed = JSON.parse(existingInventory);
         const isOldArray = Array.isArray(parsed);
         const isEmptyNewSchema = parsed && !isOldArray && (!parsed.pendingInventory || !parsed.reviewedInventory || (parsed.pendingInventory.length === 0 && parsed.reviewedInventory.length === 0));
-        if (isOldArray || isEmptyNewSchema) {
+        
+        let needsRevisedQtyUpdate = false;
+        let needsInwardInvoiceUpdate = false;
+        if (parsed && parsed.reviewedInventory) {
+          const invR001 = parsed.reviewedInventory.find(item => item.id === "INV-R-001");
+          if (invR001 && invR001.history) {
+            const bucketDistEvent = invR001.history.find(evt => evt.eventType === "Bucket Distribution");
+            if (bucketDistEvent && bucketDistEvent.revisedQuantity === undefined) {
+              needsRevisedQtyUpdate = true;
+            }
+            const inwardEvent = invR001.history.find(evt => evt.eventType === "Inward");
+            if (inwardEvent && inwardEvent.purchaseInvoice === undefined) {
+              needsInwardInvoiceUpdate = true;
+            }
+          }
+        }
+        
+        if (isOldArray || isEmptyNewSchema || needsRevisedQtyUpdate || needsInwardInvoiceUpdate) {
           shouldSeed = true;
         }
       } catch (e) {

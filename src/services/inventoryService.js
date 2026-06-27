@@ -23,7 +23,24 @@ function getRawStorage() {
     const isOldArray = Array.isArray(parsed);
     const isEmptyNewSchema = parsed && !isOldArray && (!parsed.pendingInventory || !parsed.reviewedInventory || (parsed.pendingInventory.length === 0 && parsed.reviewedInventory.length === 0));
     
-    if (isOldArray || isEmptyNewSchema) {
+    // Also, check if we need to force update to include the revisedQuantity in history of INV-R-001
+    let needsRevisedQtyUpdate = false;
+    let needsInwardInvoiceUpdate = false;
+    if (parsed && parsed.reviewedInventory) {
+      const invR001 = parsed.reviewedInventory.find(item => item.id === "INV-R-001");
+      if (invR001 && invR001.history) {
+        const bucketDistEvent = invR001.history.find(evt => evt.eventType === "Bucket Distribution");
+        if (bucketDistEvent && bucketDistEvent.revisedQuantity === undefined) {
+          needsRevisedQtyUpdate = true;
+        }
+        const inwardEvent = invR001.history.find(evt => evt.eventType === "Inward");
+        if (inwardEvent && inwardEvent.purchaseInvoice === undefined) {
+          needsInwardInvoiceUpdate = true;
+        }
+      }
+    }
+
+    if (isOldArray || isEmptyNewSchema || needsRevisedQtyUpdate || needsInwardInvoiceUpdate) {
       console.log("Stale or old inventory structure detected. Migrating to Phase 2 mock inventory...");
       localStorage.setItem(STORAGE_KEY, JSON.stringify(mockInventory));
       return mockInventory;
@@ -106,7 +123,7 @@ export async function fetchInventory() {
  * @param {object} reviewData - Object containing { location, hsnCode, buckets, user }
  * @returns {Promise<object>} The newly updated/reviewed item.
  */
-export async function transitionItemToReviewed(itemId, { location, hsnCode, buckets, user = "Finance Manager" }) {
+export async function transitionItemToReviewed(itemId, { location, hsnCode, buckets, user = "Amit Patel" }) {
   await simulateNetwork("large"); // large preset (1200ms) for write mutations
   
   const raw = getRawStorage();
@@ -155,7 +172,8 @@ export async function transitionItemToReviewed(itemId, { location, hsnCode, buck
       eventType: "Bucket Distribution",
       debitIssuedQuantity: buckets.debitIssued || 0,
       toDebitQuantity: buckets.toDebit || 0,
-      wasteageQuantity: buckets.wasteage || 0
+      wasteageQuantity: buckets.wasteage || 0,
+      revisedQuantity: pendingItem.qty
     });
   }
 
@@ -183,7 +201,7 @@ export async function transitionItemToReviewed(itemId, { location, hsnCode, buck
  * @param {object} data - Object containing { buckets, user }
  * @returns {Promise<object>} The updated reviewed item.
  */
-export async function updateReviewedItemBuckets(itemId, { buckets, user = "Finance Manager" }) {
+export async function updateReviewedItemBuckets(itemId, { buckets, user = "Amit Patel" }) {
   await simulateNetwork("large");
   
   const raw = getRawStorage();
@@ -206,7 +224,8 @@ export async function updateReviewedItemBuckets(itemId, { buckets, user = "Finan
       eventType: "Bucket Distribution",
       debitIssuedQuantity: buckets.debitIssued || 0,
       toDebitQuantity: buckets.toDebit || 0,
-      wasteageQuantity: buckets.wasteage || 0
+      wasteageQuantity: buckets.wasteage || 0,
+      revisedQuantity: item.qty
     }
   ];
 
@@ -227,7 +246,7 @@ export async function updateReviewedItemBuckets(itemId, { buckets, user = "Finan
  * @param {object} data - Object containing { location, user }
  * @returns {Promise<object>} The updated reviewed item.
  */
-export async function updateReviewedItemLocation(itemId, { location, user = "Inventory Staff" }) {
+export async function updateReviewedItemLocation(itemId, { location, user = "Amit Patel" }) {
   await simulateNetwork("large");
   
   const raw = getRawStorage();

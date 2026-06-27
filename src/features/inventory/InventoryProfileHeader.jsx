@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { calculateAge } from "./inventoryUtils";
-import { Download } from "lucide-react";
+import { Download, Copy, Check } from "lucide-react";
 
 /**
  * InventoryProfileHeader Component
  * Renders a dense, expert-level grid displaying read-only properties of the inventory record.
  */
 export default function InventoryProfileHeader({ item }) {
+  const [copiedField, setCopiedField] = useState("");
   const dynamicAge = calculateAge(item.inwardDate);
 
   const formatCurrency = (num) => {
@@ -19,6 +20,14 @@ export default function InventoryProfileHeader({ item }) {
 
   const formatNumber = (num) => {
     return new Intl.NumberFormat("en-IN").format(num || 0);
+  };
+
+  const handleCopy = (text, fieldName) => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+      setCopiedField(fieldName);
+      setTimeout(() => setCopiedField(""), 1500);
+    }
   };
 
   const fields = [
@@ -48,27 +57,69 @@ export default function InventoryProfileHeader({ item }) {
               <span className="text-[11px] font-semibold text-slate-800 font-mono truncate" title={f.value}>
                 {f.value}
               </span>
-              {f.label === "Invoice" && item.invoice && item.invoice !== "—" && (
+              {f.label === "SKU" && item.sku && item.sku !== "—" && (
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    const element = document.createElement("a");
-                    const file = new Blob([
-                      `INVOICE DETAILS\n==============\nInvoice No: ${item.invoice}\nSKU: ${item.sku || "—"}\nType: ${item.type || "—"}\nSupplier: ${item.supplier || "—"}\nHSN Code: ${item.hsnCode || "—"}\nInward Date: ${item.inwardDate || "—"}\nQuantity: ${formatNumber(item.qty)} m\nRate: ${formatCurrency(item.rate)}\nTotal Value: ${formatCurrency(item.value || (item.qty * item.rate))}`
-                    ], { type: "text/plain" });
-                    element.href = URL.createObjectURL(file);
-                    element.download = `Invoice-${item.invoice}.txt`;
-                    document.body.appendChild(element);
-                    element.click();
-                    document.body.removeChild(element);
+                    handleCopy(item.sku, "sku");
                   }}
-                  className="p-0.5 rounded-sm hover:bg-slate-200 text-slate-400 hover:text-slate-700 transition-colors shrink-0 cursor-pointer"
-                  title="Download Invoice"
-                  id="download-invoice-cta"
+                  className="p-0.5 rounded-sm hover:bg-slate-200 text-slate-400 hover:text-slate-700 transition-colors shrink-0 cursor-pointer flex items-center justify-center"
+                  title="Copy SKU"
+                  id="copy-sku-cta"
                 >
-                  <Download size={10} />
+                  {copiedField === "sku" ? <Check size={10} className="text-emerald-500" /> : <Copy size={10} />}
                 </button>
+              )}
+              {f.label === "HSN Code" && item.hsnCode && item.hsnCode !== "—" && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCopy(item.hsnCode, "hsnCode");
+                  }}
+                  className="p-0.5 rounded-sm hover:bg-slate-200 text-slate-400 hover:text-slate-700 transition-colors shrink-0 cursor-pointer flex items-center justify-center"
+                  title="Copy HSN Code"
+                  id="copy-hsn-cta"
+                >
+                  {copiedField === "hsnCode" ? <Check size={10} className="text-emerald-500" /> : <Copy size={10} />}
+                </button>
+              )}
+              {f.label === "Invoice" && item.invoice && item.invoice !== "—" && (
+                <div className="flex items-center gap-0.5 shrink-0 select-none">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCopy(item.invoice, "invoice");
+                    }}
+                    className="p-0.5 rounded-sm hover:bg-slate-200 text-slate-400 hover:text-slate-700 transition-colors shrink-0 cursor-pointer flex items-center justify-center"
+                    title="Copy Invoice Number"
+                    id="copy-invoice-cta"
+                  >
+                    {copiedField === "invoice" ? <Check size={10} className="text-emerald-500" /> : <Copy size={10} />}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const element = document.createElement("a");
+                      const file = new Blob([
+                        `INVOICE DETAILS\n==============\nInvoice No: ${item.invoice}\nSKU: ${item.sku || "—"}\nType: ${item.type || "—"}\nSupplier: ${item.supplier || "—"}\nHSN Code: ${item.hsnCode || "—"}\nInward Date: ${item.inwardDate || "—"}\nQuantity: ${formatNumber(item.qty)} m\nRate: ${formatCurrency(item.rate)}\nTotal Value: ${formatCurrency(item.value || (item.qty * item.rate))}`
+                      ], { type: "text/plain" });
+                      element.href = URL.createObjectURL(file);
+                      element.download = `Invoice-${item.invoice}.txt`;
+                      document.body.appendChild(element);
+                      element.click();
+                      document.body.removeChild(element);
+                    }}
+                    className="p-0.5 rounded-sm hover:bg-slate-200 text-slate-400 hover:text-slate-700 transition-colors shrink-0 cursor-pointer flex items-center justify-center"
+                    title="Download Invoice"
+                    id="download-invoice-cta"
+                  >
+                    <Download size={10} />
+                  </button>
+                </div>
               )}
             </div>
           </div>

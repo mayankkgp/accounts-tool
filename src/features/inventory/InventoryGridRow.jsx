@@ -118,7 +118,7 @@ export default function InventoryGridRow({
 
           {/* Location Column (Conditional) */}
           {activeTab === "Reviewed" && (
-            <span className="text-indigo-600 font-semibold truncate text-[10px]" title={item.location}>
+            <span className="text-slate-600 truncate text-[10px]" title={item.location}>
               {item.location || "Not assigned"}
             </span>
           )}

@@ -48,16 +48,6 @@ export default function InventoryHistoryTab({ item }) {
 
   return (
     <div className="flex flex-col gap-0.5" id="inventory-history-timeline-container">
-      {/* Header with counter */}
-      <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
-        <span className="text-[9px] uppercase tracking-wider text-slate-400 font-bold font-sans">
-          Audit Logs Timeline
-        </span>
-        <span className="text-[10px] font-bold font-mono text-indigo-600 bg-indigo-50 px-1.5 py-0.25 rounded-sm">
-          {sortedHistory.length} Events
-        </span>
-      </div>
-
       {/* Timeline List */}
       <div className="flex flex-col pl-1">
         {sortedHistory.map((event, index) => (

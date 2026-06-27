@@ -25,7 +25,9 @@
           "date": "20/06/2026",
           "user": "Amit Patel",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0501",
+          "totalPurchaseQuantity": 2000
         }
       ]
     },
@@ -54,7 +56,9 @@
           "date": "21/06/2026",
           "user": "Suresh Desai",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0502",
+          "totalPurchaseQuantity": 4000
         }
       ]
     },
@@ -83,7 +87,9 @@
           "date": "17/06/2026",
           "user": "Priya Sharma",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0503",
+          "totalPurchaseQuantity": 1500
         }
       ]
     },
@@ -112,7 +118,9 @@
           "date": "14/06/2026",
           "user": "Amit Patel",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0504",
+          "totalPurchaseQuantity": 1100
         }
       ]
     },
@@ -141,7 +149,9 @@
           "date": "22/06/2026",
           "user": "Suresh Desai",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0505",
+          "totalPurchaseQuantity": 6000
         }
       ]
     },
@@ -170,7 +180,9 @@
           "date": "18/06/2026",
           "user": "Priya Sharma",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0506",
+          "totalPurchaseQuantity": 800
         }
       ]
     },
@@ -199,7 +211,9 @@
           "date": "20/06/2026",
           "user": "Amit Patel",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0507",
+          "totalPurchaseQuantity": 1250
         }
       ]
     },
@@ -228,7 +242,9 @@
           "date": "13/06/2026",
           "user": "Suresh Desai",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0508",
+          "totalPurchaseQuantity": 1800
         }
       ]
     },
@@ -257,7 +273,9 @@
           "date": "16/06/2026",
           "user": "Amit Patel",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0509",
+          "totalPurchaseQuantity": 3000
         }
       ]
     },
@@ -286,7 +304,9 @@
           "date": "23/06/2026",
           "user": "Priya Sharma",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0510",
+          "totalPurchaseQuantity": 1400
         }
       ]
     }
@@ -318,7 +338,9 @@
           "date": "15/05/2026",
           "user": "Amit Patel",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0112",
+          "totalPurchaseQuantity": 1200
         },
         {
           "eventId": "EVT-003",
@@ -344,7 +366,8 @@
           "eventType": "Sales Consumption",
           "consumedQuantity": 300,
           "salesInvoiceReference": "SLS-26-088",
-          "customerName": "Apex Textiles"
+          "customerName": "Apex Textiles",
+          "availableQty": 900
         },
         {
           "eventId": "EVT-006",
@@ -353,7 +376,8 @@
           "eventType": "Bucket Distribution",
           "debitIssuedQuantity": 30,
           "toDebitQuantity": 50,
-          "wasteageQuantity": 10
+          "wasteageQuantity": 10,
+          "revisedQuantity": 1200
         }
       ]
     },
@@ -383,7 +407,9 @@
           "date": "01/06/2026",
           "user": "Amit Patel",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0113",
+          "totalPurchaseQuantity": 5000
         },
         {
           "eventId": "EVT-R-022",
@@ -422,7 +448,9 @@
           "date": "25/05/2026",
           "user": "Priya Sharma",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0114",
+          "totalPurchaseQuantity": 850
         },
         {
           "eventId": "EVT-R-032",
@@ -461,7 +489,9 @@
           "date": "09/06/2026",
           "user": "Amit Patel",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0115",
+          "totalPurchaseQuantity": 600
         },
         {
           "eventId": "EVT-R-042",
@@ -500,7 +530,9 @@
           "date": "06/06/2026",
           "user": "Suresh Desai",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0116",
+          "totalPurchaseQuantity": 2200
         },
         {
           "eventId": "EVT-R-052",
@@ -539,7 +571,9 @@
           "date": "10/05/2026",
           "user": "Priya Sharma",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0117",
+          "totalPurchaseQuantity": 3500
         },
         {
           "eventId": "EVT-R-062",
@@ -578,7 +612,9 @@
           "date": "12/06/2026",
           "user": "Suresh Desai",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0118",
+          "totalPurchaseQuantity": 1500
         },
         {
           "eventId": "EVT-R-072",
@@ -617,7 +653,9 @@
           "date": "27/05/2026",
           "user": "Priya Sharma",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0119",
+          "totalPurchaseQuantity": 400
         },
         {
           "eventId": "EVT-R-082",
@@ -656,7 +694,9 @@
           "date": "15/06/2026",
           "user": "Suresh Desai",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0120",
+          "totalPurchaseQuantity": 950
         },
         {
           "eventId": "EVT-R-092",
@@ -695,7 +735,9 @@
           "date": "25/04/2026",
           "user": "Amit Patel",
           "eventType": "Inward",
-          "systemStatus": "Pending"
+          "systemStatus": "Pending",
+          "purchaseInvoice": "PUR-INV-0121",
+          "totalPurchaseQuantity": 350
         },
         {
           "eventId": "EVT-R-102",
