@@ -29,6 +29,52 @@ function getRawStorage() {
       return mockInventory;
     }
     
+    // Ensure all item IDs are completely unique to prevent React "Encountered two children with the same key" errors
+    const seenIds = new Set();
+    let changed = false;
+
+    const makeUniqueId = (item, prefix) => {
+      if (item.id && !seenIds.has(item.id)) {
+        seenIds.add(item.id);
+        return item.id;
+      }
+      let baseId = item.id || `${prefix}-001`;
+      let numericPart = baseId.match(/\d+/) ? baseId.match(/\d+/)[0] : "1";
+      let num = parseInt(numericPart, 10);
+      let newId = `${prefix}-${String(num).padStart(3, "0")}`;
+      while (seenIds.has(newId)) {
+        num++;
+        newId = `${prefix}-${String(num).padStart(3, "0")}`;
+      }
+      seenIds.add(newId);
+      changed = true;
+      return newId;
+    };
+
+    if (parsed.pendingInventory) {
+      parsed.pendingInventory = parsed.pendingInventory.map(item => {
+        const newId = makeUniqueId(item, "INV-P");
+        if (newId !== item.id) {
+          return { ...item, id: newId };
+        }
+        return item;
+      });
+    }
+
+    if (parsed.reviewedInventory) {
+      parsed.reviewedInventory = parsed.reviewedInventory.map(item => {
+        const newId = makeUniqueId(item, "INV-R");
+        if (newId !== item.id) {
+          return { ...item, id: newId };
+        }
+        return item;
+      });
+    }
+
+    if (changed) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+    }
+
     return parsed;
   } catch (error) {
     console.error("Failed to parse inventory storage, resetting to mock:", error);
@@ -72,9 +118,17 @@ export async function transitionItemToReviewed(itemId, { location, hsnCode, buck
 
   const pendingItem = raw.pendingInventory[pendingIdx];
   
-  // Create a new reviewed item ID (e.g., INV-R-XYZ or similar)
-  const numericPart = itemId.match(/\d+/) ? itemId.match(/\d+/)[0] : String(Math.floor(Math.random() * 900) + 100);
-  const reviewedId = `INV-R-${numericPart}`;
+  // Create a new reviewed item ID (e.g., INV-R-XYZ or similar) and ensure it is unique
+  let numericPart = itemId.match(/\d+/) ? itemId.match(/\d+/)[0] : String(Math.floor(Math.random() * 900) + 100);
+  let reviewedId = `INV-R-${numericPart}`;
+  
+  const existingReviewedIds = new Set(raw.reviewedInventory.map(item => item.id));
+  let counter = 1;
+  while (existingReviewedIds.has(reviewedId)) {
+    const num = parseInt(numericPart, 10) + counter;
+    reviewedId = `INV-R-${String(num).padStart(3, "0")}`;
+    counter++;
+  }
 
   const now = new Date();
   const dateStr = now.toLocaleDateString("en-GB"); // dd/mm/yyyy

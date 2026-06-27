@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import InventoryListToolbar from "./InventoryListToolbar";
 import InventoryDataGrid, { calculateAge } from "./InventoryDataGrid";
+import InventoryDetailPane from "./InventoryDetailPane";
 import { fetchInventory } from "../../services/inventoryService";
 
 /**
@@ -101,10 +102,19 @@ export default function InventoryLayout() {
 
   const isPaneSelected = !!activeInventoryId;
 
+  const handleUpdateSuccess = (updatedItem) => {
+    setRefreshTrigger((prev) => prev + 1);
+    if (updatedItem && updatedItem.id) {
+      setActiveInventoryId(updatedItem.id);
+    } else {
+      setActiveInventoryId(null);
+    }
+  };
+
   return (
     <div
       className={`flex-1 h-full grid ${
-        isPaneSelected ? "grid-cols-[210px_1fr] gap-0" : "grid-cols-[1fr_0px]"
+        isPaneSelected ? "grid-cols-[380px_1fr] gap-0" : "grid-cols-[1fr_0px]"
       } transition-all duration-300 ease-in-out overflow-hidden`}
       id="inventory-layout-grid"
     >
@@ -140,31 +150,21 @@ export default function InventoryLayout() {
       {/* Right Detail Pane Wrapper (Phase 3 Prep) */}
       <div
         className={`bg-white overflow-hidden min-h-0 h-full relative transition-all duration-300 ease-in-out ${
-          isPaneSelected ? "opacity-100" : "opacity-0 pointer-events-none"
+          isPaneSelected ? "opacity-100 border-l border-slate-200" : "opacity-0 pointer-events-none"
         }`}
         id="inventory-details-pane"
       >
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-          <div className="text-center max-w-xs" id="inventory-detail-placeholder">
-            <h3 className="text-xs font-semibold text-slate-800 uppercase tracking-wider font-mono">
-              Item Details Workspace
-            </h3>
-            <p className="text-[10px] text-slate-400 font-mono mt-1">
-              Ref ID: {activeInventoryId}
-            </p>
-            <p className="text-[11px] text-slate-500 mt-3 leading-relaxed">
-              Phase 3: Active Details, Action Panel, and Chronological Audit Trail will mount here.
-            </p>
-            <button
-              onClick={() => setActiveInventoryId(null)}
-              className="mt-4 px-2.5 py-1 text-[9px] uppercase tracking-wider font-bold bg-slate-900 hover:bg-slate-800 text-slate-100 rounded-sm transition-all shadow-sm"
-              type="button"
-              id="close-placeholder-pane-btn"
-            >
-              Minimize Details
-            </button>
-          </div>
-        </div>
+        {isPaneSelected && (
+          <InventoryDetailPane
+            activeInventoryId={activeInventoryId}
+            inventory={[
+              ...(allInventory.pendingInventory || []),
+              ...(allInventory.reviewedInventory || []),
+            ]}
+            onClose={() => setActiveInventoryId(null)}
+            onUpdateSuccess={handleUpdateSuccess}
+          />
+        )}
       </div>
     </div>
   );
