@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { X } from "lucide-react";
 import TabsComponent from "../../components/ui/Tabs";
 import InventoryOverviewTab from "./InventoryOverviewTab";
+import InventoryHistoryTab from "./InventoryHistoryTab";
 import { calculateAge } from "./inventoryUtils";
 
 /**
@@ -110,10 +111,7 @@ export default function InventoryDetailPane({
           </TabsComponent.Content>
 
           <TabsComponent.Content value="history" className="p-3 focus-visible:outline-none h-full" id="tab-history-content">
-            <div className="flex flex-col items-center justify-center py-16 text-slate-400 font-medium text-xs select-none">
-              <span className="font-semibold uppercase text-[10px] tracking-wider text-slate-500 font-mono mb-1">Audit Trail & History</span>
-              <span className="text-[10px] font-mono text-slate-450">Phase 4 Implementation Placeholder</span>
-            </div>
+            <InventoryHistoryTab item={item} />
           </TabsComponent.Content>
         </div>
       </TabsComponent.Root>

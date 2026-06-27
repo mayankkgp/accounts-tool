@@ -147,12 +147,13 @@ export async function transitionItemToReviewed(itemId, { location, hsnCode, buck
   ];
 
   // If buckets are specified and have values, add a bucket distribution event
-  if (buckets && (buckets.toDebit > 0 || buckets.wasteage > 0)) {
+  if (buckets && (buckets.toDebit > 0 || buckets.wasteage > 0 || buckets.debitIssued > 0)) {
     newHistory.push({
       eventId: `EVT-R-${Date.now()}-2`,
       date: dateStr,
       user: user,
       eventType: "Bucket Distribution",
+      debitIssuedQuantity: buckets.debitIssued || 0,
       toDebitQuantity: buckets.toDebit || 0,
       wasteageQuantity: buckets.wasteage || 0
     });
@@ -164,7 +165,7 @@ export async function transitionItemToReviewed(itemId, { location, hsnCode, buck
     status: "Reviewed",
     location: location,
     hsnCode: hsnCode || pendingItem.hsnCode,
-    buckets: buckets || { toDebit: 0, wasteage: 0 },
+    buckets: buckets || { debitIssued: 0, toDebit: 0, wasteage: 0 },
     history: newHistory
   };
 
@@ -203,6 +204,7 @@ export async function updateReviewedItemBuckets(itemId, { buckets, user = "Finan
       date: dateStr,
       user: user,
       eventType: "Bucket Distribution",
+      debitIssuedQuantity: buckets.debitIssued || 0,
       toDebitQuantity: buckets.toDebit || 0,
       wasteageQuantity: buckets.wasteage || 0
     }
