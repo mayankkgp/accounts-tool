@@ -8,7 +8,7 @@ import InventoryActionModule from "./InventoryActionModule";
  */
 export default function InventoryOverviewTab({ item, onUpdateSuccess }) {
   return (
-    <div className="flex flex-col gap-3 h-full overflow-y-auto" id="inventory-overview-tab-container">
+    <div className="flex flex-col gap-3 h-full overflow-visible" id="inventory-overview-tab-container">
       {/* Read-Only Profile Header */}
       <InventoryProfileHeader item={item} />
 

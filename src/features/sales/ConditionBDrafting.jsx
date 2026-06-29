@@ -1,5 +1,6 @@
 import React from "react";
 import { Plus, Trash2 } from "lucide-react";
+import EditableTaxCell from "./EditableTaxCell";
 
 /**
  * Condition B Component: Manual Drafting Spreadsheet for new invoices.
@@ -70,7 +71,21 @@ export default function ConditionBDrafting({
 
   // Math formulas
   const basicSum = lineItems.reduce((acc, curr) => acc + (Number(curr.rate) || 0) * (Number(curr.quantity) || 0), 0);
-  const taxSum = basicSum * 0.18;
+  
+  const taxSum = lineItems.reduce((acc, curr) => {
+    const qtyVal = Number(curr.quantity) || 0;
+    const rateVal = Number(curr.rate) || 0;
+    const rowBasic = qtyVal * rateVal;
+    if (isHaryana) {
+      const cgstRate = curr.cgst !== undefined ? Number(curr.cgst) : 9;
+      const sgstRate = curr.sgst !== undefined ? Number(curr.sgst) : 9;
+      return acc + (rowBasic * (cgstRate + sgstRate) / 100);
+    } else {
+      const igstRate = curr.igst !== undefined ? Number(curr.igst) : 18;
+      return acc + (rowBasic * igstRate / 100);
+    }
+  }, 0);
+
   const totalWithTax = basicSum + taxSum;
 
   const numericInputClass = "[&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]";
@@ -106,15 +121,22 @@ export default function ConditionBDrafting({
                 <th className="py-0.5 px-1 text-right w-[10%] whitespace-normal break-words">Subtotal</th>
                 <th className="py-0.5 px-1 text-right w-[12%] whitespace-normal break-words">Adj Total</th>
                 {/* Strict Directive: Remove Del text label but keep empty cell */}
-                <th className="py-0.5 px-1 text-center w-[6%]"></th>
+                <th className="py-0.5 px-1 text-right w-[6%] pr-3"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-150 font-mono text-xs bg-white">
               {lineItems.map((it, idx) => {
+                const igstRate = it.igst !== undefined ? Number(it.igst) : 18;
+                const cgstRate = it.cgst !== undefined ? Number(it.cgst) : 9;
+                const sgstRate = it.sgst !== undefined ? Number(it.sgst) : 9;
+
                 const qtyVal = Number(it.quantity) || 0;
                 const rateVal = Number(it.rate) || 0;
                 const rowBasic = qtyVal * rateVal;
-                const rowTax = rowBasic * 0.18;
+                
+                const rowTax = isHaryana 
+                  ? (rowBasic * (cgstRate + sgstRate) / 100) 
+                  : (rowBasic * igstRate / 100);
                 const rowSubtotal = rowBasic + rowTax;
 
                 // Landed proportional adjustment math: (freight - discount) * (rowBasic / basicSum)
@@ -191,7 +213,7 @@ export default function ConditionBDrafting({
                           handleRowChange(it.id, "rate", val);
                         }}
                         disabled={isLocked}
-                        className="w-full text-right bg-transparent border border-transparent hover:border-slate-300 focus:border-indigo-500 rounded-sm text-xs py-0.5 px-1 font-mono resize-none whitespace-normal break-all leading-tight outline-none"
+                        className="w-full text-center bg-transparent border border-transparent hover:border-slate-300 focus:border-indigo-500 rounded-sm text-xs py-0.5 px-1 font-mono resize-none whitespace-normal break-all leading-tight outline-none"
                         style={{ height: "auto", minHeight: "22px" }}
                       />
                     </td>
@@ -200,25 +222,31 @@ export default function ConditionBDrafting({
                       Strict Directive: Inside Tax columns, stack tax percentage and absolute value: [Percentage]% \n (₹[Abs Value])
                     */}
                     {!isHaryana ? (
-                      <td className="py-0.5 px-1 text-center text-slate-700 whitespace-normal break-words">
-                        <div className="flex flex-col leading-tight select-none font-sans">
-                          <span className="font-semibold text-[10px] break-words whitespace-normal">18%</span>
-                          <span className="text-[9px] text-slate-400 font-normal font-mono break-all whitespace-normal">(₹{rowTax.toFixed(1)})</span>
-                        </div>
+                      <td className="p-0 h-7 text-center">
+                        <EditableTaxCell
+                          value={igstRate}
+                          rowBasic={rowBasic}
+                          onChange={(newVal) => handleRowChange(it.id, "igst", newVal)}
+                          disabled={isLocked}
+                        />
                       </td>
                     ) : (
                       <>
-                        <td className="py-0.5 px-1 text-center text-slate-700 whitespace-normal break-words">
-                          <div className="flex flex-col leading-tight select-none font-sans">
-                            <span className="font-semibold text-[10px] break-words whitespace-normal">9%</span>
-                            <span className="text-[9px] text-slate-400 font-normal font-mono break-all whitespace-normal">(₹{(rowTax / 2).toFixed(1)})</span>
-                          </div>
+                        <td className="p-0 h-7 text-center">
+                          <EditableTaxCell
+                            value={cgstRate}
+                            rowBasic={rowBasic}
+                            onChange={(newVal) => handleRowChange(it.id, "cgst", newVal)}
+                            disabled={isLocked}
+                          />
                         </td>
-                        <td className="py-0.5 px-1 text-center text-slate-700 whitespace-normal break-words">
-                          <div className="flex flex-col leading-tight select-none font-sans">
-                            <span className="font-semibold text-[10px] break-words whitespace-normal">9%</span>
-                            <span className="text-[9px] text-slate-400 font-normal font-mono break-all whitespace-normal">(₹{(rowTax / 2).toFixed(1)})</span>
-                          </div>
+                        <td className="p-0 h-7 text-center">
+                          <EditableTaxCell
+                            value={sgstRate}
+                            rowBasic={rowBasic}
+                            onChange={(newVal) => handleRowChange(it.id, "sgst", newVal)}
+                            disabled={isLocked}
+                          />
                         </td>
                       </>
                     )}
@@ -226,16 +254,18 @@ export default function ConditionBDrafting({
                     <td className="py-0.5 px-1 text-right text-slate-800 pr-1 select-none font-bold whitespace-normal break-all">₹{rowSubtotal.toFixed(1)}</td>
                     <td className="py-0.5 px-1 text-right text-indigo-700 pr-1 select-none font-bold bg-indigo-50/10 whitespace-normal break-all">₹{rowAdjustedTotal.toFixed(1)}</td>
 
-                    <td className="py-0.5 px-1 text-center">
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteRow(it.id)}
-                        disabled={isLocked}
-                        className="w-5 h-5 flex items-center justify-center text-slate-400 hover:text-red-600 disabled:opacity-30 border-none bg-transparent cursor-pointer"
-                        title="Delete line"
-                      >
-                        <Trash2 size={11} />
-                      </button>
+                    <td className="py-0.5 px-1 text-right pr-3">
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteRow(it.id)}
+                          disabled={isLocked}
+                          className="w-5 h-5 flex items-center justify-center text-slate-400 hover:text-red-600 disabled:opacity-30 border-none bg-transparent cursor-pointer"
+                          title="Delete line"
+                        >
+                          <Trash2 size={11} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );

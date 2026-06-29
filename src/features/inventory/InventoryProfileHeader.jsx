@@ -36,7 +36,7 @@ export default function InventoryProfileHeader({ item }) {
     { label: "Type", value: item.type || "—" },
     { label: "Inward Date", value: item.inwardDate ? `${item.inwardDate} (${dynamicAge}d)` : "—" },
     // Row 2
-    { label: "Qty", value: `${formatNumber(item.qty)} m` },
+    { label: "Qty", value: `${formatNumber(item.qty)} ${item.uom || 'm'}` },
     { label: "Rate", value: formatCurrency(item.rate) },
     { label: "Value", value: formatCurrency(item.value || (item.qty * item.rate)) },
     // Row 3
@@ -105,7 +105,7 @@ export default function InventoryProfileHeader({ item }) {
                       e.stopPropagation();
                       const element = document.createElement("a");
                       const file = new Blob([
-                        `INVOICE DETAILS\n==============\nInvoice No: ${item.invoice}\nSKU: ${item.sku || "—"}\nType: ${item.type || "—"}\nSupplier: ${item.supplier || "—"}\nHSN Code: ${item.hsnCode || "—"}\nInward Date: ${item.inwardDate || "—"}\nQuantity: ${formatNumber(item.qty)} m\nRate: ${formatCurrency(item.rate)}\nTotal Value: ${formatCurrency(item.value || (item.qty * item.rate))}`
+                        `INVOICE DETAILS\n==============\nInvoice No: ${item.invoice}\nSKU: ${item.sku || "—"}\nType: ${item.type || "—"}\nSupplier: ${item.supplier || "—"}\nHSN Code: ${item.hsnCode || "—"}\nInward Date: ${item.inwardDate || "—"}\nQuantity: ${formatNumber(item.qty)} ${item.uom || 'm'}\nRate: ${formatCurrency(item.rate)}\nTotal Value: ${formatCurrency(item.value || (item.qty * item.rate))}`
                       ], { type: "text/plain" });
                       element.href = URL.createObjectURL(file);
                       element.download = `Invoice-${item.invoice}.txt`;

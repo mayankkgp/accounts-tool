@@ -68,7 +68,7 @@ export default function InventoryDetailPane({
               <span className="text-slate-300">•</span>
               <span>{item.type || "—"}</span>
               <span className="text-slate-300">•</span>
-              <span>{new Intl.NumberFormat("en-IN").format(item.qty || 0)}m</span>
+              <span>{new Intl.NumberFormat("en-IN").format(item.qty || 0)}{item.uom || 'm'}</span>
               <span className="text-slate-300">•</span>
               <span>{calculateAge(item.inwardDate)}d</span>
             </div>

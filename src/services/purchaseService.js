@@ -3,11 +3,14 @@ import { simulateNetwork } from "../utils/simulateNetwork";
 // Helper parsers for robust date boundary checks in backend scope
 const parseDateDDMMYYYY = (dateStr) => {
   if (!dateStr) return null;
-  const parts = dateStr.split("-");
+  const parts = dateStr.split(/[-/]/);
   if (parts.length === 3) {
     const day = parseInt(parts[0], 10);
     const month = parseInt(parts[1], 10) - 1;
-    const year = parseInt(parts[2], 10);
+    let year = parseInt(parts[2], 10);
+    if (!isNaN(year) && year < 100) {
+      year = 2000 + year;
+    }
     return new Date(year, month, day);
   }
   return new Date(dateStr);

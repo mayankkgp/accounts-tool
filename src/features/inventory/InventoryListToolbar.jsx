@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import Tabs from "../../components/ui/Tabs";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Search, ListFilter, X } from "lucide-react";
+import InventoryFilterPopover from "./InventoryFilterPopover";
+import InventoryFilterPills from "./InventoryFilterPills";
 
 /**
  * InventoryListToolbar Component
@@ -13,7 +15,12 @@ export default function InventoryListToolbar({
   searchQuery,
   setSearchQuery,
   isCompressed = false,
+  filters,
+  setFilters,
+  inventory = [],
 }) {
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
   const tabs = [
     { value: "Pending", label: "Pending" },
     { value: "Reviewed", label: "Reviewed" },
@@ -46,7 +53,7 @@ export default function InventoryListToolbar({
         </Tabs.Root>
 
         {/* 3. Micro Toolbar: Compact Search Input, Filter Button */}
-        <div className="flex gap-1 items-center" id="inventory-search-filter-row">
+        <div className="flex gap-1 items-center relative" id="inventory-search-filter-row">
           <div className="relative flex-1">
             <Search className="absolute left-1.5 top-1/2 -translate-y-1/2 text-slate-500 font-medium" size={10} />
             <input
@@ -70,16 +77,28 @@ export default function InventoryListToolbar({
             )}
           </div>
 
-          {/* Placeholder/button for advanced filters */}
           <button
             type="button"
-            className="h-6 bg-white border border-slate-300 text-slate-700 rounded-sm px-2 text-[11px] outline-none hover:bg-slate-50 focus:border-indigo-500 cursor-pointer font-sans flex items-center justify-center gap-1 transition-all shrink-0"
+            onClick={() => setIsPopoverOpen(!isPopoverOpen)}
+            className={`h-6 bg-white border ${isPopoverOpen ? "border-indigo-500 bg-indigo-50/10 text-indigo-700" : "border-slate-300 text-slate-700"} rounded-sm px-2 text-[11px] outline-none hover:bg-slate-50 cursor-pointer font-sans flex items-center justify-center gap-1 transition-all shrink-0`}
             id="inventory-filter-visual-btn"
           >
-            <SlidersHorizontal size={10} className="text-slate-500 shrink-0" />
+            <ListFilter size={10} className={`${isPopoverOpen ? "text-indigo-600" : "text-slate-500"} shrink-0`} />
             <span>Filter</span>
           </button>
+
+          <InventoryFilterPopover
+            inventory={inventory}
+            filters={filters}
+            setFilters={setFilters}
+            isOpen={isPopoverOpen}
+            onClose={() => setIsPopoverOpen(false)}
+            isCompressed={isCompressed}
+          />
         </div>
+
+        {/* Active Filter Pills */}
+        <InventoryFilterPills filters={filters} setFilters={setFilters} />
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import PurchaseListToolbar from "./PurchaseListToolbar";
 import PurchaseDataGrid from "./PurchaseDataGrid";
 import PurchaseDetailPane from "./PurchaseDetailPane";
 import PurchaseCreateForm from "./PurchaseCreateForm";
-import PurchaseAIVerification from "./PurchaseAIVerification";
+import PurchaseDraftingWorkspace from "./PurchaseDraftingWorkspace";
 import { fetchPurchases } from "../../services/purchaseService";
 import { getVendorLookupMap } from "../../services/entityService";
 import useDebounce from "../../hooks/useDebounce";
@@ -11,11 +11,14 @@ import useDebounce from "../../hooks/useDebounce";
 // Helper parsers for robust date boundary checks
 const parseDateDDMMYYYY = (dateStr) => {
   if (!dateStr) return null;
-  const parts = dateStr.split("-");
+  const parts = dateStr.split(/[-/]/);
   if (parts.length === 3) {
     const day = parseInt(parts[0], 10);
     const month = parseInt(parts[1], 10) - 1;
-    const year = parseInt(parts[2], 10);
+    let year = parseInt(parts[2], 10);
+    if (!isNaN(year) && year < 100) {
+      year = 2000 + year;
+    }
     return new Date(year, month, day);
   }
   return new Date(dateStr);
@@ -170,6 +173,24 @@ export default function PurchasesLayout() {
 
   const isPaneSelected = !!activePurchaseId;
 
+  if (isAiOpen && aiFile) {
+    return (
+      <PurchaseDraftingWorkspace
+        file={aiFile}
+        onClose={() => {
+          setIsAiOpen(false);
+          setAiFile(null);
+        }}
+        onSaveSuccess={() => {
+          setIsAiOpen(false);
+          setAiFile(null);
+          setRefreshTrigger((prev) => prev + 1);
+          setActivePurchaseId(null);
+        }}
+      />
+    );
+  }
+
   return (
     <div
       className={`flex-1 h-full grid ${
@@ -252,22 +273,6 @@ export default function PurchasesLayout() {
         />
       )}
 
-      {isAiOpen && (
-        <PurchaseAIVerification
-          isOpen={isAiOpen}
-          file={aiFile}
-          onClose={() => {
-            setIsAiOpen(false);
-            setAiFile(null);
-          }}
-          onSaveSuccess={() => {
-            setIsAiOpen(false);
-            setAiFile(null);
-            setRefreshTrigger((prev) => prev + 1);
-            setActivePurchaseId(null);
-          }}
-        />
-      )}
     </div>
   );
 }

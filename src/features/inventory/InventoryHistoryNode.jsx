@@ -33,6 +33,10 @@ export default function InventoryHistoryNode({ event, isLast }) {
       badgeClasses = "bg-indigo-50 text-indigo-700 border border-indigo-250";
       dotColor = "bg-indigo-500";
       break;
+    case "Remarks Update":
+      badgeClasses = "bg-sky-50 text-sky-700 border border-sky-250";
+      dotColor = "bg-sky-500";
+      break;
     default:
       break;
   }
@@ -133,9 +137,22 @@ export default function InventoryHistoryNode({ event, isLast }) {
             </div>
           )}
 
-          {event.eventType === "Status Change" && event.assignedLocation && (
-            <div className="font-mono text-[10px] text-slate-800 font-semibold">
-              {event.assignedLocation}
+          {event.eventType === "Status Change" && (event.assignedLocation || event.remarks) && (
+            <div className="font-mono text-[10px] text-slate-800 font-semibold flex flex-col gap-0.5">
+              {event.assignedLocation && <span>{event.assignedLocation}</span>}
+              {event.remarks && (
+                <span className="text-slate-500 font-normal font-sans text-[10px]">
+                  Remarks: <span className="font-semibold text-slate-700 font-mono">{event.remarks}</span>
+                </span>
+              )}
+            </div>
+          )}
+
+          {event.eventType === "Remarks Update" && (
+            <div className="flex items-center gap-1.5 font-mono text-[10px] text-slate-700 font-medium">
+              <span className="text-slate-500">{event.previousRemarks || "None"}</span>
+              <span className="text-indigo-500 font-bold">→</span>
+              <span className="text-slate-800 font-bold">{event.newRemarks || "None"}</span>
             </div>
           )}
 

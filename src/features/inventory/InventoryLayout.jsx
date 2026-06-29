@@ -17,6 +17,12 @@ export default function InventoryLayout() {
   const [isLoading, setIsLoading] = useState(true);
   const [allInventory, setAllInventory] = useState({ pendingInventory: [], reviewedInventory: [] });
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [filters, setFilters] = useState({
+    type: [],
+    supplier: [],
+    location: [],
+    age: { min: "", max: "" }
+  });
 
   // Sort Config state tracking
   const [sortConfig, setSortConfig] = useState({
@@ -55,13 +61,40 @@ export default function InventoryLayout() {
   const activeItems = allInventory[activeTab === "Pending" ? "pendingInventory" : "reviewedInventory"] || [];
 
   const filteredInventory = activeItems.filter((item) => {
-    if (!searchQuery) return true;
-    const q = searchQuery.toLowerCase().trim();
-    const matchSku = (item.sku || "").toLowerCase().includes(q);
-    const matchItem = (item.item || "").toLowerCase().includes(q);
-    const matchSupplier = (item.supplier || "").toLowerCase().includes(q);
-    const matchInvoice = (item.invoice || "").toLowerCase().includes(q);
-    return matchSku || matchItem || matchSupplier || matchInvoice;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase().trim();
+      const matchSku = (item.sku || "").toLowerCase().includes(q);
+      const matchItem = (item.item || "").toLowerCase().includes(q);
+      const matchSupplier = (item.supplier || "").toLowerCase().includes(q);
+      const matchInvoice = (item.invoice || "").toLowerCase().includes(q);
+      if (!(matchSku || matchItem || matchSupplier || matchInvoice)) {
+        return false;
+      }
+    }
+
+    if (filters.type && filters.type.length > 0) {
+      if (!filters.type.includes(item.type)) return false;
+    }
+
+    if (filters.supplier && filters.supplier.length > 0) {
+      if (!filters.supplier.includes(item.supplier)) return false;
+    }
+
+    if (filters.location && filters.location.length > 0) {
+      if (!filters.location.includes(item.location)) return false;
+    }
+
+    if (filters.age) {
+      const ageVal = calculateAge(item.inwardDate);
+      if (filters.age.min !== "" && filters.age.min !== undefined && filters.age.min !== null) {
+        if (ageVal < Number(filters.age.min)) return false;
+      }
+      if (filters.age.max !== "" && filters.age.max !== undefined && filters.age.max !== null) {
+        if (ageVal > Number(filters.age.max)) return false;
+      }
+    }
+
+    return true;
   });
 
   // Multi-Column Sort Logic
@@ -133,6 +166,12 @@ export default function InventoryLayout() {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             isCompressed={isPaneSelected}
+            filters={filters}
+            setFilters={setFilters}
+            inventory={[
+              ...(allInventory.pendingInventory || []),
+              ...(allInventory.reviewedInventory || []),
+            ]}
           />
 
           <InventoryDataGrid

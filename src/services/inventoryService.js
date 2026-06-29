@@ -26,6 +26,7 @@ function getRawStorage() {
     // Also, check if we need to force update to include the revisedQuantity in history of INV-R-001
     let needsRevisedQtyUpdate = false;
     let needsInwardInvoiceUpdate = false;
+    let needsUomUpdate = false;
     if (parsed && parsed.reviewedInventory) {
       const invR001 = parsed.reviewedInventory.find(item => item.id === "INV-R-001");
       if (invR001 && invR001.history) {
@@ -39,8 +40,14 @@ function getRawStorage() {
         }
       }
     }
+    if (parsed && parsed.pendingInventory) {
+      const invP001 = parsed.pendingInventory.find(item => item.id === "INV-P-001");
+      if (invP001 && !invP001.uom) {
+        needsUomUpdate = true;
+      }
+    }
 
-    if (isOldArray || isEmptyNewSchema || needsRevisedQtyUpdate || needsInwardInvoiceUpdate) {
+    if (isOldArray || isEmptyNewSchema || needsRevisedQtyUpdate || needsInwardInvoiceUpdate || needsUomUpdate) {
       console.log("Stale or old inventory structure detected. Migrating to Phase 2 mock inventory...");
       localStorage.setItem(STORAGE_KEY, JSON.stringify(mockInventory));
       return mockInventory;
@@ -120,10 +127,10 @@ export async function fetchInventory() {
 /**
  * Updates a pending inventory item with its assigned location and moves it to reviewed.
  * @param {string} itemId - The ID of the pending inventory item.
- * @param {object} reviewData - Object containing { location, hsnCode, buckets, user }
+ * @param {object} reviewData - Object containing { location, hsnCode, buckets, remarks, user }
  * @returns {Promise<object>} The newly updated/reviewed item.
  */
-export async function transitionItemToReviewed(itemId, { location, hsnCode, buckets, user = "Amit Patel" }) {
+export async function transitionItemToReviewed(itemId, { location, hsnCode, buckets, remarks, user = "Amit Patel" }) {
   await simulateNetwork("large"); // large preset (1200ms) for write mutations
   
   const raw = getRawStorage();
@@ -159,7 +166,8 @@ export async function transitionItemToReviewed(itemId, { location, hsnCode, buck
       eventType: "Status Change",
       previousStatus: "Pending",
       newStatus: "Reviewed",
-      assignedLocation: location
+      assignedLocation: location,
+      remarks: remarks || ""
     }
   ];
 
@@ -184,6 +192,7 @@ export async function transitionItemToReviewed(itemId, { location, hsnCode, buck
     location: location,
     hsnCode: hsnCode || pendingItem.hsnCode,
     buckets: buckets || { debitIssued: 0, toDebit: 0, wasteage: 0 },
+    remarks: remarks || "",
     history: newHistory
   };
 
@@ -193,6 +202,49 @@ export async function transitionItemToReviewed(itemId, { location, hsnCode, buck
 
   saveRawStorage(raw);
   return reviewedItem;
+}
+
+/**
+ * Updates remarks for an already reviewed inventory item.
+ * @param {string} itemId - The ID of the reviewed inventory item.
+ * @param {object} data - Object containing { remarks, user }
+ * @returns {Promise<object>} The updated reviewed item.
+ */
+export async function updateReviewedItemRemarks(itemId, { remarks, user = "Amit Patel" }) {
+  await simulateNetwork("large");
+  
+  const raw = getRawStorage();
+  const idx = raw.reviewedInventory.findIndex(item => item.id === itemId);
+  
+  if (idx === -1) {
+    throw new Error(`Reviewed inventory item with ID ${itemId} not found.`);
+  }
+
+  const item = raw.reviewedInventory[idx];
+  const now = new Date();
+  const dateStr = now.toLocaleDateString("en-GB");
+
+  const newHistory = [
+    ...item.history,
+    {
+      eventId: `EVT-R-${Date.now()}`,
+      date: dateStr,
+      user: user,
+      eventType: "Remarks Update",
+      previousRemarks: item.remarks || "",
+      newRemarks: remarks || ""
+    }
+  ];
+
+  const updatedItem = {
+    ...item,
+    remarks: remarks || "",
+    history: newHistory
+  };
+
+  raw.reviewedInventory[idx] = updatedItem;
+  saveRawStorage(raw);
+  return updatedItem;
 }
 
 /**

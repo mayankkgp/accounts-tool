@@ -1,43 +1,26 @@
 import React, { useRef } from "react";
-import { Search, PanelLeftOpen } from "lucide-react";
-
-// Common list of fallback vendor options
-const defaultVendors = [
-  "Trident Group",
-  "Arvind Mills",
-  "Loom & Co Dyeing Unit",
-  "Vogue Garments",
-  "Mysore Silk Board Vendor",
-  "Shree Textiles",
-  "DEEPSHIKHA FASHIONS",
-  "Arvind Textiles"
-];
+import { Search, PanelLeftOpen, CheckCircle2 } from "lucide-react";
 
 const labelsList = ["Finished", "Greige", "RFD", "Yarn", "Jobwork"];
 
-/**
- * Compact form header for cost inwarding. Contains ledger lookups and metadata parameters inline.
- */
-export default function LedgerLookupHeader({
-  vendor,
-  setVendor,
-  invoiceNo,
-  setInvoiceNo,
-  lValue,
-  setLValue,
-  label,
-  setLabel,
+export default function PurchaseDraftingHeader({
+  vendorId,
+  setVendorId,
+  invoiceNumber,
+  setInvoiceNumber,
   purchaseDate = "",
   setPurchaseDate = () => {},
-  isLocked,
-  onSearch,
-  isSearching,
-  companies = [],
+  lValue,
+  setLValue,
+  label = "Finished",
+  setLabel = () => {},
+  vendors = [],
   isLeftPaneOpen = true,
-  onToggleLeftPane
+  onToggleLeftPane,
+  onVerify = () => {},
+  isVerifying = false,
+  isSaving = false
 }) {
-  const currentVendors = companies.length > 0 ? companies : defaultVendors;
-
   const ddRef = useRef(null);
   const mmRef = useRef(null);
   const yyRef = useRef(null);
@@ -87,23 +70,41 @@ export default function LedgerLookupHeader({
     }
   };
 
-  // Handle keypress enter on the invoice input to trigger immediate search
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      onSearch();
+      onVerify();
     }
   };
 
   return (
-    <div className="bg-slate-50 border border-slate-200/80 rounded-sm p-2 flex flex-col gap-2 shrink-0 font-sans text-xs select-none shadow-xs" id="ledger-lookup-header-container">
-      {/* 
-        Strict Directive: Completely delete the "lookup triggers..." subheader text.
-      */}
+    <div className="bg-slate-50 border border-slate-200/80 rounded-sm p-2 flex flex-col gap-2 shrink-0 font-sans text-xs select-none shadow-xs" id="purchase-drafting-header-container">
+      {/* AI Extraction Status and Toggle Row */}
+      <div className="flex items-center justify-between border-b border-slate-200/60 pb-1.5">
+        <div className="flex items-center gap-2">
+          {!isLeftPaneOpen && onToggleLeftPane && (
+            <button
+              type="button"
+              onClick={onToggleLeftPane}
+              className="h-5 px-1.5 flex items-center justify-center bg-white border border-slate-300 rounded-[1px] hover:bg-slate-50 text-slate-500 hover:text-indigo-600 text-[10px] font-bold cursor-pointer shadow-xs mr-1 shrink-0"
+              title="Show Document Pane"
+            >
+              Show Source
+            </button>
+          )}
+          <span className="text-slate-800 font-bold uppercase tracking-wider text-[11px]">
+            Purchase Ledger Drafting Entry
+          </span>
+        </div>
+        
+        {/* Status Badge */}
+        <div className="flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200/80 rounded-[2px] px-1.5 py-0.5 text-[9px] font-semibold">
+          <CheckCircle2 size={10} className="text-emerald-600 animate-none shrink-0" />
+          <span>Extracted via AI OCR (99% confidence)</span>
+        </div>
+      </div>
 
-      {/* 
-        Strict Directive: "Vendor Entity", "Invoice No", "Invoice Label" (Dropdown), and "L-Value" sitting inline.
-      */}
+      {/* Inputs flex row styling replicating LedgerLookupHeader exactly */}
       <div className="flex flex-col sm:flex-row gap-2 items-end">
         {!isLeftPaneOpen && onToggleLeftPane && (
           <button
@@ -115,56 +116,63 @@ export default function LedgerLookupHeader({
             <PanelLeftOpen size={13} className="stroke-[2.5]" />
           </button>
         )}
-        {/* 1. Vendor Entity Dropdown Selector */}
+
+        {/* 1. Vendor Selection */}
         <div className="flex-1 min-w-[140px] flex flex-col gap-1 w-full sm:w-auto">
           <label className="text-[9px] uppercase tracking-wide text-slate-500 font-bold">Vendor Entity *</label>
           <select
-            value={vendor}
-            onChange={(e) => setVendor(e.target.value)}
-            disabled={isLocked || isSearching}
+            value={vendorId}
+            onChange={(e) => setVendorId(e.target.value)}
+            disabled={isSaving || isVerifying}
             className="w-full h-6 bg-white border border-slate-300 rounded-[1px] px-1 text-xs font-semibold hover:border-slate-400 focus:border-indigo-500 outline-none select-none"
-            id="lookup-select-vendor"
+            id="drafting-select-vendor"
           >
             <option value="">-- Choose Vendor --</option>
-            {currentVendors.map((vend, idx) => (
-              <option key={idx} value={vend}>{vend}</option>
+            {vendors.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.brandName || v.businessName || v.name}
+              </option>
             ))}
           </select>
         </div>
 
-        {/* 2. Invoice Number Input */}
+        {/* 2. Invoice Number with Contextual Verify CTA Button */}
         <div className="flex-1 min-w-[140px] flex flex-col gap-1 w-full sm:w-auto">
           <label className="text-[9px] uppercase tracking-wide text-slate-500 font-bold">Invoice No *</label>
           <div className="relative">
             <input
               type="text"
-              value={invoiceNo}
-              onChange={(e) => setInvoiceNo(e.target.value)}
+              value={invoiceNumber}
+              onChange={(e) => setInvoiceNumber(e.target.value)}
               onKeyDown={handleKeyDown}
-              disabled={isLocked || isSearching}
+              disabled={isSaving || isVerifying}
               className="w-full h-6 bg-white border border-slate-300 rounded-[1px] pl-1 pr-6 text-xs text-slate-800 leading-tight outline-none focus:border-indigo-500 font-semibold"
-              placeholder="e.g. PI_Trident_441.pdf"
-              id="lookup-input-invoice"
+              placeholder="e.g. INV-2026-001"
+              id="drafting-input-invoice"
             />
             <button
               type="button"
-              onClick={onSearch}
-              disabled={isSearching}
-              className="absolute right-0 top-0 h-6 w-6 bg-slate-100 hover:bg-slate-205 border-l border-slate-300 flex items-center justify-center cursor-pointer disabled:opacity-50"
-              title="Click to search ledger"
+              onClick={onVerify}
+              disabled={isSaving || isVerifying}
+              className="absolute right-0 top-0 h-6 w-6 bg-slate-100 hover:bg-slate-200 border-l border-slate-300 flex items-center justify-center cursor-pointer disabled:opacity-50"
+              title="Verify Invoice Data"
             >
-              <Search size={11} className="text-slate-550 shrink-0" />
+              {isVerifying ? (
+                <div className="w-2 h-2 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin shrink-0" />
+              ) : (
+                <Search size={11} className="text-slate-550 shrink-0" />
+              )}
             </button>
           </div>
         </div>
 
-        {/* 3. Invoice Label (Dropdown selector sits inline) */}
+        {/* 3. Invoice Label (Strict fixed width dropdown selector) */}
         <div className="w-[92px] flex flex-col gap-1 shrink-0">
           <label className="text-[9px] uppercase tracking-wide text-slate-500 font-bold truncate" title="Label *">Label *</label>
           <select
             value={label}
             onChange={(e) => setLabel(e.target.value)}
-            disabled={isLocked || isSearching}
+            disabled={isSaving || isVerifying}
             className="w-full h-6 bg-white border border-slate-300 rounded-[1px] px-1 text-xs font-semibold outline-none focus:border-indigo-500"
           >
             {labelsList.map((lbl, idx) => (
@@ -178,7 +186,7 @@ export default function LedgerLookupHeader({
           <label className="text-[9px] uppercase tracking-wide text-slate-500 font-bold whitespace-nowrap">Purchase Date *</label>
           <div
             className={`w-full h-6 px-1 flex items-center justify-center gap-0 border border-slate-300 rounded-[1px] hover:border-slate-400 focus-within:border-indigo-500 ${
-              isLocked ? "bg-slate-100 text-slate-500 cursor-not-allowed" : "bg-white"
+              isSaving || isVerifying ? "bg-slate-100 text-slate-500 cursor-not-allowed" : "bg-white"
             }`}
           >
             <input
@@ -189,7 +197,7 @@ export default function LedgerLookupHeader({
               value={dd}
               onChange={(e) => handleDatePartChange(0, e.target.value)}
               onKeyDown={(e) => handleDateKeyDown(0, e)}
-              disabled={isLocked || isSearching}
+              disabled={isSaving || isVerifying}
               className="w-[18px] text-center bg-transparent outline-none p-0 text-xs font-semibold text-slate-800 placeholder:text-[9px] placeholder:font-normal placeholder:text-slate-400 focus:text-indigo-600 disabled:text-slate-500"
             />
             <span className="text-slate-400 font-semibold select-none text-[10px] mx-[2px] scale-90">/</span>
@@ -201,7 +209,7 @@ export default function LedgerLookupHeader({
               value={mm}
               onChange={(e) => handleDatePartChange(1, e.target.value)}
               onKeyDown={(e) => handleDateKeyDown(1, e)}
-              disabled={isLocked || isSearching}
+              disabled={isSaving || isVerifying}
               className="w-[18px] text-center bg-transparent outline-none p-0 text-xs font-semibold text-slate-800 placeholder:text-[9px] placeholder:font-normal placeholder:text-slate-400 focus:text-indigo-600 disabled:text-slate-500"
             />
             <span className="text-slate-400 font-semibold select-none text-[10px] mx-[2px] scale-90">/</span>
@@ -213,7 +221,7 @@ export default function LedgerLookupHeader({
               value={yy}
               onChange={(e) => handleDatePartChange(2, e.target.value)}
               onKeyDown={(e) => handleDateKeyDown(2, e)}
-              disabled={isLocked || isSearching}
+              disabled={isSaving || isVerifying}
               className="w-[18px] text-center bg-transparent outline-none p-0 text-xs font-semibold text-slate-800 placeholder:text-[9px] placeholder:font-normal placeholder:text-slate-400 focus:text-indigo-600 disabled:text-slate-500"
             />
           </div>
@@ -228,9 +236,9 @@ export default function LedgerLookupHeader({
             max={500}
             value={lValue}
             onChange={(e) => setLValue(e.target.value)}
-            disabled={isLocked || isSearching}
+            disabled={isSaving || isVerifying}
             className={`w-full h-6 px-1 border border-slate-300 rounded-[1px] outline-none text-right font-mono font-bold hover:border-slate-400 focus:border-indigo-500 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield] ${
-              isLocked ? "bg-slate-100 text-slate-500 cursor-not-allowed" : "bg-white"
+              isSaving || isVerifying ? "bg-slate-100 text-slate-500 cursor-not-allowed" : "bg-white"
             }`}
           />
         </div>

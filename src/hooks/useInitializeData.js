@@ -95,6 +95,7 @@ export function useInitializeData() {
         
         let needsRevisedQtyUpdate = false;
         let needsInwardInvoiceUpdate = false;
+        let needsUomUpdate = false;
         if (parsed && parsed.reviewedInventory) {
           const invR001 = parsed.reviewedInventory.find(item => item.id === "INV-R-001");
           if (invR001 && invR001.history) {
@@ -108,8 +109,14 @@ export function useInitializeData() {
             }
           }
         }
+        if (parsed && parsed.pendingInventory) {
+          const invP001 = parsed.pendingInventory.find(item => item.id === "INV-P-001");
+          if (invP001 && !invP001.uom) {
+            needsUomUpdate = true;
+          }
+        }
         
-        if (isOldArray || isEmptyNewSchema || needsRevisedQtyUpdate || needsInwardInvoiceUpdate) {
+        if (isOldArray || isEmptyNewSchema || needsRevisedQtyUpdate || needsInwardInvoiceUpdate || needsUomUpdate) {
           shouldSeed = true;
         }
       } catch (e) {

@@ -60,6 +60,7 @@ export default function CostInwardingWorkspace({ req, onClose, onRefresh, onProc
         freight: 1200,
         discount: 400,
         label: "Greige",
+        purchaseDate: "",
         stageStatus: "Pending", // "Pending" | "Staged" | "Skipped"
         isStagingLoading: false
       };
@@ -267,6 +268,8 @@ export default function CostInwardingWorkspace({ req, onClose, onRefresh, onProc
             setLValue={l => updateActiveInvoice({ lValue: Number(l) })}
             label={activeInvoice.label}
             setLabel={l => updateActiveInvoice({ label: l })}
+            purchaseDate={activeInvoice.purchaseDate || ""}
+            setPurchaseDate={d => updateActiveInvoice({ purchaseDate: d })}
             isLocked={activeInvoice.stageStatus !== "Pending"}
             onSearch={handleSearchLedger}
             isSearching={activeInvoice.isStagingLoading}

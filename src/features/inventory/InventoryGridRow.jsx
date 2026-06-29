@@ -62,7 +62,7 @@ export default function InventoryGridRow({
           {/* Column 3: Quantity & Rate */}
           <div className="flex flex-col min-w-0 text-left">
             <span className="font-mono font-bold text-slate-900 text-[11px] truncate">
-              {formatNumber(item.qty)} m
+              {formatNumber(item.qty)} {item.uom || 'm'}
             </span>
             <span className="font-mono text-[10px] text-slate-500 font-medium truncate">
               {formatCurrency(item.rate)}
@@ -93,7 +93,7 @@ export default function InventoryGridRow({
 
           {/* Qty Column */}
           <span className="font-mono text-slate-900 text-left text-[11px]">
-            {formatNumber(item.qty)}
+            {formatNumber(item.qty)} {item.uom || 'm'}
           </span>
 
           {/* Rate Column */}
